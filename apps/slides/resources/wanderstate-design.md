@@ -1,4 +1,4 @@
-# WanderPlan — Design Spec
+# WanderState — Design Spec
 
 **Conférence :** State Management React — Deep Dive (3h)  
 **Date :** 2026-05-16  
@@ -9,7 +9,7 @@
 
 ## Concept
 
-WanderPlan est une app de planification de voyages. Elle sert de fil conducteur à une conférence de 3h sur le state management React. Chaque chapitre introduit une technologie en ajoutant une feature concrète ou en refactorant le code existant.
+WanderState est une app de planification de voyages. Elle sert de fil conducteur à une conférence de 3h sur le state management React. Chaque chapitre introduit une technologie en ajoutant une feature concrète ou en refactorant le code existant.
 
 L'app reste délibérément simple côté UI pour que l'attention reste sur le state management, pas sur le design.
 

@@ -23,7 +23,7 @@ importers:
         specifier: ^3.5.29
         version: 3.5.35(typescript@5.9.3)
 
-  apps/wanderplan: {}
+  apps/wanderstate: {}
 
 packages:
 

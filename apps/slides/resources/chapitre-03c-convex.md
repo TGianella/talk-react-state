@@ -84,73 +84,50 @@ function TripList() {
 
 ---
 
-## Sous le capot — la stack technique
+## Sous le capot
 
-### Réseau
-- Communication via **WebSockets** — pas de HTTP polling, connexion persistante.
-- Convex maintient la connexion et pousse les mises à jour dès qu'une query est invalidée.
-- Reconnexion automatique en cas de coupure réseau.
+### WebSocket unique
+- Une seule connexion persistante partagée par toutes les subscriptions de l'app.
+- Toutes les mises à jour arrivent par ce canal — pas de requête HTTP par `useQuery`.
 
-### Base de données
-- Moteur de base de données **propriétaire** (ni Postgres, ni MongoDB, ni SQLite).
-- Modèle document avec relations via `v.id()` — pense Firestore mais avec des transactions ACID réelles.
-- Les queries sont des **fonctions**, pas du SQL — Convex trace exactement quelles lignes ont été lues pour savoir quand re-exécuter.
+### Dependency tracking — le même principe que React
+- Convex trace quelles lignes de DB chaque query a lues à l'exécution.
+- Quand une ligne change → seules les queries qui l'ont lue sont re-exécutées.
+- C'est le même principe que les Signals ou `useMemo` — mais appliqué côté serveur, sur la DB.
 
-### Exécution des fonctions
-- Fonctions exécutées dans des **V8 isolates** sur l'infra Convex (similaire à Cloudflare Workers).
-- Pas de cold start notable — les fonctions sont déjà chargées.
-- TypeScript compilé à la volée — pas de build step manuel.
+### Le cache comme projection automatique
+- Le cache client n'est pas géré manuellement — c'est une projection des subscriptions actives.
+- Pas d'invalidation, pas de staleTime. La donnée est soit en cours de chargement, soit à jour.
 
-### React ou agnostique ?
-- SDK React officiel (`convex/react`) — c'est la cible principale.
-- Mais aussi : **Vue**, **Svelte**, **React Native**, **Next.js** (avec support SSR).
-- SDK bas niveau en **Python** et **Rust** pour des cas backend/scripts.
-- Le core est agnostique — les hooks React sont une surcouche sur le client JS universel.
-
-### Le Provider global
+### Un seul Provider
+- `ConvexProvider` en racine — comme `QueryClientProvider`.
+- Gère la connexion WS, le cache et la propagation des updates à tous les `useQuery` de l'arbre.
 
 ```tsx
-// main.tsx
-import { ConvexProvider, ConvexReactClient } from "convex/react";
-
 const convex = new ConvexReactClient(import.meta.env.VITE_CONVEX_URL);
 
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <ConvexProvider client={convex}>
-    <App />
-  </ConvexProvider>
-);
+<ConvexProvider client={convex}>
+  <App />
+</ConvexProvider>
 ```
-
-- `ConvexProvider` fonctionne comme `QueryClientProvider` — un seul provider en racine.
-- Gère la connexion WebSocket, le cache local et la propagation des mises à jour.
-- Tous les `useQuery` / `useMutation` de l'arbre sont automatiquement abonnés via ce client.
 
 ### Sécurité
-
-- Par défaut, toutes les fonctions `query` et `mutation` sont **publiques** — appelables depuis le client.
-- Les fonctions `internalQuery` / `internalMutation` ne sont appelables que depuis d'autres fonctions Convex, jamais depuis le client.
-- La sécurité métier s'implémente dans les fonctions elles-mêmes via `ctx.auth` :
+- Les fonctions sont **publiques par défaut** — appelables depuis le client.
+- `internalQuery` / `internalMutation` = fonctions serveur uniquement, jamais exposées au client.
+- La logique d'accès s'écrit dans la fonction via `ctx.auth` — pas de RLS déclaratif, la sécurité est dans le code.
 
 ```ts
-export const createTrip = mutation({
-  args: { name: v.string() },
-  handler: async (ctx, args) => {
-    const identity = await ctx.auth.getUserIdentity();
-    if (!identity) throw new Error("Non authentifié");
-    return ctx.db.insert("trips", { ...args, userId: identity.subject });
-  },
-});
+const identity = await ctx.auth.getUserIdentity();
+if (!identity) throw new Error("Non authentifié");
 ```
 
-- Intégration native avec **Clerk**, **Auth0**, **NextAuth** — Convex vérifie le JWT côté serveur.
-- Pas de règles déclaratives type Row Level Security (Postgres) — la logique d'accès est dans le code, ce qui la rend testable.
+- Intégration native avec Clerk, Auth0, NextAuth — JWT vérifié côté serveur.
 
 ---
 
 ## La démo — co-planning en temps réel
 
-- Deux onglets ouverts sur WanderPlan.
+- Deux onglets ouverts sur WanderState.
 - Ajout d'une étape dans l'onglet A → visible dans l'onglet B en < 100ms.
 - Suppression dans l'onglet B → disparaît dans l'onglet A.
 - Rechargement de page → état intact, persisté dans Convex DB.
