@@ -1,0 +1,26 @@
+/* ============================================================
+   Variables globales & reset — seul CSS global de l'app
+   ============================================================ */
+:root {
+  --color-primary:        #0f172a;
+  --color-accent:         #ff4d1a;
+  --color-bg:             #f1f5f9;
+  --color-surface:        #ffffff;
+  --color-surface-alt:    #f8fafc;
+  --color-surface-accent: #fff7f5;
+  --color-text:           #0f172a;
+  --color-text-muted:     #64748b;
+  --color-error:          #dc2626;
+  --color-border:         #e2e8f0;
+  --color-border-muted:   #cbd5e1;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--color-bg);
+  color: var(--color-text);
+  min-height: 100vh;
+  padding: 32px;
+}
