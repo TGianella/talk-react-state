@@ -1,12 +1,9 @@
 import type { Trip } from '../types'
 import styles from './TripCard.module.css'
+import { formatBudget } from '../utils/format'
 
 export interface TripCardProps {
   trip: Trip
-}
-
-function formatBudget(n: number): string {
-  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '\u00a0') + '\u00a0€'
 }
 
 export default function TripCardCh1a({ trip }: TripCardProps) {

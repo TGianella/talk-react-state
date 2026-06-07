@@ -1,9 +1,6 @@
 import { useTripContext } from '../context/TripContext'
 import styles from './TripSummary.ch1b.module.css'
-
-function formatBudget(n: number): string {
-  return n.toLocaleString('fr-FR') + '\u00a0€'
-}
+import { formatBudget } from '../utils/format'
 
 // Ce composant n'a aucune prop — il lit directement le contexte.
 // Point pédagogique : aucune prop trips ne traverse Layout pour arriver ici.
