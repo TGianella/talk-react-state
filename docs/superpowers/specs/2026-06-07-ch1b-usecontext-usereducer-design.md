@@ -37,6 +37,8 @@ components/
   TripCard.ch1a.tsx           ← NOUVEAU : actuel TripCard.tsx renommé
   TripCard.ch1b.tsx           ← NOUVEAU : wrappe TripCard.ch1a + bouton supprimer
   TripCard.module.css         ← inchangé
+  TripSummary.ch1b.tsx        ← NOUVEAU : encart résumé (context sans prop drilling)
+  TripSummary.ch1b.module.css ← NOUVEAU
 
 chapters/
   ch1b.tsx                    ← MODIFIÉ : stub → implémentation complète
@@ -174,10 +176,12 @@ export default TripCard
 ```tsx
 import { TripContextProvider, useTripContext } from '../context/TripContext'
 import Layout from '../Layout'
+import TripSummaryCh1b from '../components/TripSummary.ch1b'
 
 // Ch. 1b — useContext + useReducer
 // TripForm : inchangé (reçoit toujours onAddTrip en prop)
 // TripCard : TripCardDeletable via barrel (dispatch sans prop drilling)
+// TripSummaryCh1b : lit le contexte directement, injecté via children
 
 function Ch1bInner() {
   const { trips, dispatch } = useTripContext()
@@ -186,7 +190,9 @@ function Ch1bInner() {
       trips={trips}
       onAddTrip={(trip) => dispatch({ type: 'ADD_TRIP', payload: trip })}
       chapter="Ch. 1b · useContext + useReducer"
-    />
+    >
+      <TripSummaryCh1b />
+    </Layout>
   )
 }
 
@@ -198,6 +204,33 @@ export function Ch1bApp() {
   )
 }
 ```
+
+---
+
+### `components/TripSummary.ch1b.tsx`
+
+Lit `useTripContext()` directement — aucune prop. Affiche le nombre de voyages et le budget total cumulé.
+
+```tsx
+import { useTripContext } from '../context/TripContext'
+import styles from './TripSummary.ch1b.module.css'
+
+export default function TripSummaryCh1b() {
+  const { trips } = useTripContext()
+  const total = trips.reduce((sum, t) => sum + t.budget, 0)
+  const formatted = total.toLocaleString('fr-FR') + '\u00a0€'
+
+  return (
+    <div className={styles.summary}>
+      <span>{trips.length} voyage{trips.length !== 1 ? 's' : ''}</span>
+      <span className={styles.sep}>•</span>
+      <span>{formatted}</span>
+    </div>
+  )
+}
+```
+
+Point pédagogique : ce composant est dans un autre sous-arbre que `TripList` et `TripForm`, mais il se met à jour instantanément sans qu'aucune prop `trips` ne lui soit passée.
 
 ---
 
@@ -213,9 +246,9 @@ export function Ch1bApp() {
 
 ---
 
-## CSS du bouton Supprimer
+## CSS du bouton Supprimer et de l'encart
 
-Nouveau fichier `TripCard.ch1b.module.css` colocalisé. Contraintes (cf. AGENTS.md) :
+Nouveaux fichiers `TripCard.ch1b.module.css` et `TripSummary.ch1b.module.css` colocalisés. Contraintes (cf. AGENTS.md) :
 
 - Couleurs via variables CSS uniquement (`var(--color-*)`)
 - Ombre plate néo-brutaliste : `box-shadow: Xpx Xpx 0 var(--color-primary)`
