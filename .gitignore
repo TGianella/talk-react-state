@@ -7,3 +7,4 @@ dist
 components.d.ts
 .idea
 .superpowers
+*.tsbuildinfo
