@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { Trip } from '../types'
 import styles from './TripForm.module.css'
 
-interface TripFormProps {
+export interface TripFormProps {
   onAddTrip: (trip: Trip) => void
 }
 
