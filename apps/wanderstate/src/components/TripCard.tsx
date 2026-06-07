@@ -1,9 +1,30 @@
-import { CURRENT_CHAPTER } from '../current-chapter'
-import TripCardCh1a from './TripCard.ch1a'
-import TripCardCh1b from './TripCard.ch1b'
+import { formatBudget } from '../utils/format'
+import styles from './TripCard.module.css'
+import type { Trip } from '../types'
 
-export type { TripCardProps } from './TripCard.ch1a'
+export interface TripCardProps {
+  trip: Trip
+  onDelete?: (id: string) => void
+}
 
-// Ajouter une variante ici quand un chapitre ultérieur introduit un nouveau TripCard.
-const TripCard = CURRENT_CHAPTER === '1b' ? TripCardCh1b : TripCardCh1a
-export default TripCard
+export default function TripCard({ trip, onDelete }: TripCardProps) {
+  return (
+    <div>
+      <div className={styles.tripCard}>
+        <div className={styles.tripCardName}>{trip.name}</div>
+        <div className={styles.tripCardDestination}>{trip.destination}</div>
+        <div className={styles.tripCardBudget}>{formatBudget(trip.budget)}</div>
+      </div>
+      {onDelete ? (
+        <button
+          type="button"
+          className={styles.deleteBtn}
+          aria-label={`Supprimer ${trip.name}`}
+          onClick={() => onDelete(trip.id)}
+        >
+          Supprimer
+        </button>
+      ) : null}
+    </div>
+  )
+}
