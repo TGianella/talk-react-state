@@ -6,7 +6,14 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "chapter:1a":  "node ../../scripts/set-chapter.mjs 1a",
+    "chapter:1b":  "node ../../scripts/set-chapter.mjs 1b",
+    "chapter:2":   "node ../../scripts/set-chapter.mjs 2",
+    "chapter:3a":  "node ../../scripts/set-chapter.mjs 3a",
+    "chapter:3c":  "node ../../scripts/set-chapter.mjs 3c",
+    "chapter:4b":  "node ../../scripts/set-chapter.mjs 4b",
+    "chapter:5a":  "node ../../scripts/set-chapter.mjs 5a"
   },
   "dependencies": {
     "react": "^18.3.1",
