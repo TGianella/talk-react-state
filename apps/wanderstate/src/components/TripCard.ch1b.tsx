@@ -10,6 +10,7 @@ export default function TripCardCh1b({ trip }: TripCardProps) {
       <TripCardCh1a trip={trip} />
       <button
         className={styles.deleteBtn}
+        aria-label={`Supprimer ${trip.name}`}
         onClick={() => dispatch({ type: 'REMOVE_TRIP', payload: trip.id })}
       >
         Supprimer
