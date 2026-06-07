@@ -45,6 +45,75 @@ rgba(255, 77, 26, 0.4)
 - **Pas de `border-radius`** sur les éléments qui ont une ombre plate — Firefox/Windows
   crée des artefacts blancs aux coins arrondis avec ce pattern. Coins francs uniquement.
 
+## Architecture
+
+### Composants visuels (`components/`)
+
+Les composants visuels sont de **purs composants de présentation** :
+
+- Reçoivent les **données en props** — aucun accès à un contexte, store ou hook métier
+- Reçoivent les **actions en callbacks** — `onAddTrip`, `onDeleteTrip`, etc.
+- Contiennent **tout leur CSS** dans leur `*.module.css` colocalisé
+- N'importent **jamais** depuis `chapters/`
+
+**Activation d'une feature optionnelle :** présence du callback = feature visible.
+```tsx
+<TripList trips={trips} />                        // pas de suppression
+<TripList trips={trips} onDeleteTrip={handler} /> // bouton supprimer actif
+```
+
+**Slots Layout :** `Layout` est un wrapper structurel qui accepte des enfants.
+`LayoutHeader`, `LayoutBody`, `LayoutFooter` sont des slots nommés composés
+directement dans chaque chapitre.
+
+```tsx
+<Layout>
+  <LayoutHeader chapter="Ch. 1b · useContext + useReducer" />
+  <LayoutBody>
+    <TripForm ... />
+    <TripList ... />
+  </LayoutBody>
+  <LayoutFooter>
+    <TripSummary ... />
+  </LayoutFooter>
+</Layout>
+```
+
+### Composants logiques (`chapters/`)
+
+Les chapitres contiennent **uniquement la logique qui change** entre démos :
+providers, hooks d'état, calculs dérivés, dispatch.
+
+- **Un dossier par chapitre** : `chapters/ch1a/`, `chapters/ch1b/`, etc.
+- `index.tsx` — point d'entrée, compose les visuels avec la logique
+- Fichiers support colocalisés : `TripContext.tsx`, reducer, store, machine...
+- N'importent **aucun CSS** directement
+
+```
+chapters/
+  ch1a/
+    index.tsx          ← ~15 lignes, useState
+  ch1b/
+    index.tsx          ← ~30 lignes, useContext + useReducer
+    TripContext.tsx     ← reducer + provider + hook
+```
+
+Les calculs dérivés (ex: `totalBudget`) sont effectués dans le chapitre et
+passés en props aux composants visuels — jamais calculés dans les visuels.
+
+### Switching de chapitre
+
+`current-chapter.ts` est réécrit par `scripts/set-chapter.mjs` à chaque
+`pnpm chapter:Xx`. `main.tsx` résout automatiquement `./chapters/chXx` vers
+`./chapters/chXx/index.tsx`.
+
+```bash
+pnpm --filter wanderstate chapter:1b   # active ch1b
+pnpm --filter wanderstate chapter:1a   # revient à ch1a (défaut)
+```
+
+`current-chapter.ts` est commité avec `'1a'` comme valeur par défaut.
+
 ## JSX
 
 ### Rendu conditionnel
