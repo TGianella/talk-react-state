@@ -9,7 +9,7 @@ App de démo pédagogique pour une conférence sur React state management.
 
 ## Stack
 
-- Vite 5 + React 18 + TypeScript 5
+- Vite 8 + React 19 + TypeScript 6
 - pnpm monorepo — workspace root : `../../`
 - Commandes utiles :
   - `pnpm --filter wanderstate dev` — dev server (port 5173)
