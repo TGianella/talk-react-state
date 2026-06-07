@@ -1,5 +1,5 @@
 import { createContext, useContext, useReducer } from 'react'
-import type { ReactNode } from 'react'
+import type { Dispatch, ReactNode } from 'react'
 import type { Trip } from '../types'
 
 // ── Actions ──────────────────────────────────────────────────
@@ -26,7 +26,7 @@ function tripsReducer(state: TripState, action: Action): TripState {
 // ── Context ──────────────────────────────────────────────────
 interface TripContextValue {
   trips: Trip[]
-  dispatch: React.Dispatch<Action>
+  dispatch: Dispatch<Action>
 }
 
 const TripContext = createContext<TripContextValue | null>(null)
