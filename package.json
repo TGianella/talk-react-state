@@ -4,6 +4,6 @@
   "scripts": {
     "dev:slides": "pnpm --filter slides dev",
     "build:slides": "pnpm --filter slides build",
-    "dev:wanderstate": "pnpm --filter wanderstate dev"
+    "dev:app": "pnpm --filter wanderstate dev"
   }
 }
