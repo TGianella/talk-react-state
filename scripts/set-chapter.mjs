@@ -16,8 +16,10 @@ if (!valid.includes(chapter)) {
   process.exit(1)
 }
 
+const unionType = valid.map((c) => `'${c}'`).join(' | ')
+
 const content = `// Ce fichier est écrit par scripts/set-chapter.mjs — ne pas éditer manuellement
-export const CURRENT_CHAPTER = '${chapter}' as const
+export const CURRENT_CHAPTER: ${unionType} = '${chapter}'
 `
 
 const dest = resolve(__dirname, '../apps/wanderstate/src/current-chapter.ts')
