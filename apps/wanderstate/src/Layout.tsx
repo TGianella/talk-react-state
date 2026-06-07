@@ -8,8 +8,7 @@ import styles from './Layout.module.css'
 interface LayoutProps {
   trips: Trip[]
   onAddTrip: (trip: Trip) => void
-  badge: string
-  subtitle: string
+  chapter: string
   TripFormOverride?: ComponentType<TripFormProps>
   children?: ReactNode
 }
@@ -17,8 +16,7 @@ interface LayoutProps {
 export default function Layout({
   trips,
   onAddTrip,
-  badge,
-  subtitle,
+  chapter,
   TripFormOverride,
   children,
 }: LayoutProps) {
@@ -28,8 +26,7 @@ export default function Layout({
     <div className={styles.appWrapper}>
       <header className={styles.topbar}>
         <span className={styles.topbarLogo}>WanderState</span>
-        <span className={styles.topbarBadge}>{badge}</span>
-        <span className={styles.topbarSub}>{subtitle}</span>
+        <span className={styles.topbarBadge}>{chapter}</span>
       </header>
       <main className={styles.appFrame}>
         <TripForm onAddTrip={onAddTrip} />
