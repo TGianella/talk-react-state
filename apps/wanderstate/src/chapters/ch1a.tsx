@@ -9,8 +9,7 @@ export function Ch1aApp() {
     <Layout
       trips={trips}
       onAddTrip={(trip) => setTrips((prev) => [...prev, trip])}
-      badge="useState"
-      subtitle="Ch. 1a · State local"
+      chapter="Ch. 1a · useState"
     />
   )
 }

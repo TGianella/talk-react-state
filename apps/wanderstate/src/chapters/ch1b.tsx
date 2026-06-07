@@ -7,8 +7,7 @@ export function Ch1bApp() {
     <Layout
       trips={[]}
       onAddTrip={() => {}}
-      badge="useContext + useReducer"
-      subtitle="Ch. 1b · Contexte partagé — à venir"
+      chapter="Ch. 1b · useContext + useReducer"
     />
   )
 }

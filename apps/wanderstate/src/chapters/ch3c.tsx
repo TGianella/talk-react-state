@@ -7,8 +7,7 @@ export function Ch3cApp() {
     <Layout
       trips={[]}
       onAddTrip={() => {}}
-      badge="Convex"
-      subtitle="Ch. 3c · Temps réel — à venir"
+      chapter="Ch. 3c · Convex"
     />
   )
 }

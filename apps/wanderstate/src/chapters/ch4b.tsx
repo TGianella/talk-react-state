@@ -7,8 +7,7 @@ export function Ch4bApp() {
     <Layout
       trips={[]}
       onAddTrip={() => {}}
-      badge="Zustand"
-      subtitle="Ch. 4b · Store global — à venir"
+      chapter="Ch. 4b · Zustand"
     />
   )
 }

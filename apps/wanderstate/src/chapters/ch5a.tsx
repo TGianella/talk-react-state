@@ -7,8 +7,7 @@ export function Ch5aApp() {
     <Layout
       trips={[]}
       onAddTrip={() => {}}
-      badge="XState"
-      subtitle="Ch. 5a · Machine d'états — à venir"
+      chapter="Ch. 5a · XState"
     />
   )
 }

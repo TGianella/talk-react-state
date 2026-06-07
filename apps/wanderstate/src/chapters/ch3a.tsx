@@ -7,8 +7,7 @@ export function Ch3aApp() {
     <Layout
       trips={[]}
       onAddTrip={() => {}}
-      badge="TanStack Query"
-      subtitle="Ch. 3a · State réseau — à venir"
+      chapter="Ch. 3a · TanStack Query"
     />
   )
 }
