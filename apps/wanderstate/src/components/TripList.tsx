@@ -4,9 +4,10 @@ import styles from './TripList.module.css'
 
 interface TripListProps {
   trips: Trip[]
+  onDeleteTrip?: (id: string) => void
 }
 
-export default function TripList({ trips }: TripListProps) {
+export default function TripList({ trips, onDeleteTrip }: TripListProps) {
   return (
     <section className={styles.listSection}>
       <h2 className={styles.sectionTitle}>
@@ -22,7 +23,11 @@ export default function TripList({ trips }: TripListProps) {
       ) : (
         <div className={styles.cardsGrid}>
           {trips.map((trip) => (
-            <TripCard key={trip.id} trip={trip} />
+            <TripCard
+              key={trip.id}
+              trip={trip}
+              onDelete={onDeleteTrip}
+            />
           ))}
         </div>
       )}
