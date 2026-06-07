@@ -1,6 +1,6 @@
 import { createContext, useContext, useReducer } from 'react'
 import type { Dispatch, ReactNode } from 'react'
-import type { Trip } from '../types'
+import type { Trip } from '../../types'
 
 // ── Actions ──────────────────────────────────────────────────
 type Action =

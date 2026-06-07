@@ -4,34 +4,3 @@
   border: 3px solid var(--color-primary);
   box-shadow: 6px 6px 0 var(--color-primary);
 }
-
-.topbar {
-  background: var(--color-primary);
-  color: var(--color-surface);
-  padding: 20px 32px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-.topbarLogo {
-  font-size: 1.5rem;
-  font-weight: 900;
-  letter-spacing: -0.02em;
-}
-
-.topbarBadge {
-  background: var(--color-accent);
-  color: var(--color-surface);
-  font-size: 0.72rem;
-  font-weight: 800;
-  padding: 3px 10px;
-  border-radius: 4px;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-}
-
-.appFrame {
-  background: var(--color-surface);
-  overflow: hidden;
-}
