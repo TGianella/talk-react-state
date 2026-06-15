@@ -1,0 +1,25 @@
+.header {
+  background: var(--color-primary);
+  color: var(--color-surface);
+  padding: 20px 32px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo {
+  font-size: 1.5rem;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+
+.badge {
+  background: var(--color-accent);
+  color: var(--color-surface);
+  font-size: 0.72rem;
+  font-weight: 800;
+  padding: 3px 10px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}

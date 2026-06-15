@@ -1,0 +1,63 @@
+.tripCard {
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  padding: 20px;
+  box-shadow: 3px 3px 0 var(--color-primary);
+  transition: box-shadow 0.1s, background 0.1s;
+}
+
+.tripCard:hover {
+  box-shadow: 5px 5px 0 var(--color-primary);
+  background: var(--color-surface-accent);
+}
+
+.tripCardName {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--color-text);
+  margin-bottom: 6px;
+}
+
+.tripCardDestination {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+  margin-bottom: 12px;
+}
+
+.tripCardBudget {
+  font-size: 1.3rem;
+  font-weight: 900;
+  color: var(--color-accent);
+  border-top: 2px solid var(--color-border);
+  padding-top: 12px;
+  margin-top: 4px;
+}
+
+.deleteBtn {
+  width: 100%;
+  margin-top: 8px;
+  padding: 8px 0;
+  background: var(--color-surface);
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+  font-family: inherit;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--color-accent);
+}
+
+.deleteBtn:hover {
+  box-shadow: 4px 4px 0 var(--color-accent);
+}
+
+.deleteBtn:active {
+  box-shadow: none;
+}
+
+.deleteBtn:focus-visible {
+  outline: none;
+  box-shadow: 4px 4px 0 var(--color-accent);
+}

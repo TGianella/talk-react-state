@@ -1,0 +1,29 @@
+{
+  "name": "wanderstate",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "chapter:1a":  "node ../../scripts/set-chapter.mjs 1a",
+    "chapter:1b":  "node ../../scripts/set-chapter.mjs 1b",
+    "chapter:2":   "node ../../scripts/set-chapter.mjs 2",
+    "chapter:3a":  "node ../../scripts/set-chapter.mjs 3a",
+    "chapter:3c":  "node ../../scripts/set-chapter.mjs 3c",
+    "chapter:4b":  "node ../../scripts/set-chapter.mjs 4b",
+    "chapter:5a":  "node ../../scripts/set-chapter.mjs 5a"
+  },
+  "dependencies": {
+    "react": "^19.2.7",
+    "react-dom": "^19.2.7"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "typescript": "~6.0.3",
+    "vite": "^8.0.16"
+  }
+}

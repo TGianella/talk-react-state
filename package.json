@@ -1,16 +1,9 @@
 {
   "name": "talk-react-state",
-  "type": "module",
   "private": true,
   "scripts": {
-    "build": "slidev build",
-    "dev": "slidev --open",
-    "export": "slidev export"
-  },
-  "dependencies": {
-    "@slidev/cli": "^52.14.1",
-    "@slidev/theme-default": "latest",
-    "@slidev/theme-seriph": "latest",
-    "vue": "^3.5.29"
+    "dev:slides": "pnpm --filter slides dev",
+    "build:slides": "pnpm --filter slides build",
+    "dev:app": "pnpm --filter wanderstate dev"
   }
 }

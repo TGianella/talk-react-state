@@ -1,0 +1,6 @@
+.appWrapper {
+  max-width: 1000px;
+  margin: 0 auto;
+  border: 3px solid var(--color-primary);
+  box-shadow: 6px 6px 0 var(--color-primary);
+}
