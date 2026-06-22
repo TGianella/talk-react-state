@@ -1,14 +1,44 @@
+/* Wrapper — s'étire dans la cellule de grille */
+.wrapper {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Vue liste — tout sur une ligne */
+.wrapperList {
+  flex-direction: row;
+  align-items: stretch;
+}
+
 .tripCard {
+  flex: 1;
   background: var(--color-surface);
   border: 2px solid var(--color-primary);
   padding: 20px;
   box-shadow: 3px 3px 0 var(--color-primary);
   transition: box-shadow 0.1s, background 0.1s;
+  /* reset button */
+  font-family: inherit;
+  text-align: left;
+  color: inherit;
+  cursor: default;
 }
 
 .tripCard:hover {
   box-shadow: 5px 5px 0 var(--color-primary);
   background: var(--color-surface-accent);
+}
+
+
+
+/* Vue liste — card en ligne flex */
+.tripCardList {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 24px;
+  padding: 14px 20px;
+  cursor: pointer;
 }
 
 .tripCardName {
@@ -18,10 +48,20 @@
   margin-bottom: 6px;
 }
 
+.tripCardList .tripCardName {
+  margin-bottom: 0;
+  flex: 1;
+}
+
 .tripCardDestination {
   font-size: 0.9rem;
   color: var(--color-text-muted);
   margin-bottom: 12px;
+}
+
+.tripCardList .tripCardDestination {
+  margin-bottom: 0;
+  flex: 1;
 }
 
 .tripCardBudget {
@@ -31,6 +71,15 @@
   border-top: 2px solid var(--color-border);
   padding-top: 12px;
   margin-top: 4px;
+}
+
+/* Vue liste — budget sans séparateur */
+.tripCardBudgetList {
+  border-top: none;
+  padding-top: 0;
+  margin-top: 0;
+  font-size: 1rem;
+  white-space: nowrap;
 }
 
 .deleteBtn {
@@ -46,18 +95,26 @@
   letter-spacing: 0.06em;
   text-transform: uppercase;
   cursor: pointer;
-  box-shadow: 2px 2px 0 var(--color-accent);
+  box-shadow: 3px 3px 0 var(--color-accent);
+  transition: box-shadow 0.1s;
+}
+
+/* Vue liste — bouton supprimer à droite, même hauteur que la card */
+.deleteBtnList {
+  width: auto;
+  margin-top: 0;
+  margin-left: 8px;
+  padding: 8px 16px;
+  align-self: stretch;
+  box-shadow: 3px 3px 0 var(--color-accent);
 }
 
 .deleteBtn:hover {
-  box-shadow: 4px 4px 0 var(--color-accent);
+  box-shadow: 5px 5px 0 var(--color-accent);
 }
 
 .deleteBtn:active {
   box-shadow: none;
 }
 
-.deleteBtn:focus-visible {
-  outline: none;
-  box-shadow: 4px 4px 0 var(--color-accent);
-}
+

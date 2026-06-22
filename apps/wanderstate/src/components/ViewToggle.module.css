@@ -1,0 +1,47 @@
+.group {
+  display: flex;
+  align-items: center;
+}
+
+.btn {
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: var(--color-surface);
+  color: var(--color-text-muted);
+  border: 2px solid var(--color-primary);
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  line-height: 1;
+  box-shadow: none;
+  transition: background 0.1s, color 0.1s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn:first-child {
+  border-right: 1px solid var(--color-primary);
+}
+
+.btn:last-child {
+  border-left: 1px solid var(--color-primary);
+}
+
+.btn:hover {
+  background: rgb(from var(--color-primary) r g b / 10%);
+  color: var(--color-primary);
+}
+
+
+
+.btnActive {
+  background: var(--color-primary);
+  color: var(--color-surface);
+}
+
+.btnActive:hover {
+  background: var(--color-primary);
+  color: var(--color-surface);
+}

@@ -7,15 +7,16 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
-    "chapter:1a":  "node ../../scripts/set-chapter.mjs 1a",
-    "chapter:1b":  "node ../../scripts/set-chapter.mjs 1b",
-    "chapter:2":   "node ../../scripts/set-chapter.mjs 2",
-    "chapter:3a":  "node ../../scripts/set-chapter.mjs 3a",
-    "chapter:3c":  "node ../../scripts/set-chapter.mjs 3c",
-    "chapter:4b":  "node ../../scripts/set-chapter.mjs 4b",
-    "chapter:5a":  "node ../../scripts/set-chapter.mjs 5a"
+    "chapter:1a": "node ../../scripts/set-chapter.mjs 1a",
+    "chapter:1b": "node ../../scripts/set-chapter.mjs 1b",
+    "chapter:2": "node ../../scripts/set-chapter.mjs 2",
+    "chapter:3a": "node ../../scripts/set-chapter.mjs 3a",
+    "chapter:3c": "node ../../scripts/set-chapter.mjs 3c",
+    "chapter:4b": "node ../../scripts/set-chapter.mjs 4b",
+    "chapter:5a": "node ../../scripts/set-chapter.mjs 5a"
   },
   "dependencies": {
+    "nuqs": "^2.8.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7"
   },

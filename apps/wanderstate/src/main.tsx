@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { NuqsAdapter } from 'nuqs/adapters/react'
 import { CURRENT_CHAPTER } from './current-chapter'
 import { Ch1aApp }  from './chapters/ch1a'
 import { Ch1bApp }  from './chapters/ch1b'
@@ -24,6 +25,8 @@ const CurrentApp = apps[CURRENT_CHAPTER]
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <CurrentApp />
+    <NuqsAdapter>
+      <CurrentApp />
+    </NuqsAdapter>
   </StrictMode>,
 )
