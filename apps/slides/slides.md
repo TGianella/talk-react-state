@@ -507,8 +507,6 @@ setter et l'état reste immuable. Bilan : plus verbeux, mais un seul sens, prév
 layout: center
 ---
 
-# Le modèle mental : UI = f(state)
-
 <div class="text-6xl font-mono pt-6 pb-4">
   UI = <span v-mark.circle.orange="1">f(state)</span>
 </div>
@@ -521,6 +519,8 @@ Une UI n'est qu'une <b>projection de l'état</b> à un instant T.
 Changer l'UI = changer l'état. <b>Rien d'autre.</b>
 </div>
 
+<div class="flex justify-center pt-12">
+
 ```mermaid {scale: 0.9}
 graph LR
   A(Action) --> S(State)
@@ -529,10 +529,178 @@ graph LR
   style S fill:#f97316,stroke:#ea580c,color:#fff
 ```
 
+</div>
+
 <!--
 Le modèle mental qui accompagne le flux : UI = projection de l'état. Pas unique à React (Vue,
 Solid le partagent), mais c'est ainsi qu'on raisonne. Changer l'écran = changer l'état, rien
 d'autre. Tout le reste du talk : où vit le state, et comment on le change.
+-->
+
+---
+
+# Alors… comment gère-t-on tout ça ?
+
+<div v-click="1" class="text-center text-lg pt-3 opacity-80">
+L'état n'est pas un concept <b>simple</b>.
+</div>
+
+<div v-click="2" class="text-center text-lg opacity-80 pt-2">
+En React, il faut trouver une façon de <b>tout gérer côté client</b>.
+</div>
+
+<div class="flex flex-wrap items-center justify-center gap-x-4 gap-y-3 pt-10 max-w-4xl mx-auto leading-tight">
+<span v-click="3" class="fall text-4xl font-bold" style="transform: rotate(-4deg)">Redux</span>
+<span v-click="4" class="fall text-4xl font-bold text-orange-400" style="transform: rotate(-2deg)">TanStack Query</span>
+<span v-click="5" class="fall text-3xl font-bold" style="transform: rotate(2deg)">Zustand</span>
+<span v-click="6" class="fall text-xl opacity-60" style="transform: rotate(3deg); transition-delay: 0ms">useState</span>
+<span v-click="6" class="fall text-lg opacity-50" style="transform: rotate(-5deg); transition-delay: 70ms">Context API</span>
+<span v-click="6" class="fall text-2xl" style="transform: rotate(5deg); transition-delay: 140ms">Jotai</span>
+<span v-click="6" class="fall text-base opacity-40" style="transform: rotate(4deg); transition-delay: 210ms">useReducer</span>
+<span v-click="6" class="fall text-2xl text-orange-400" style="transform: rotate(-6deg); transition-delay: 280ms">MobX</span>
+<span v-click="6" class="fall text-lg opacity-55" style="transform: rotate(2deg); transition-delay: 350ms">Recoil</span>
+<span v-click="6" class="fall text-3xl font-bold" style="transform: rotate(3deg); transition-delay: 420ms">Apollo</span>
+<span v-click="6" class="fall text-xl" style="transform: rotate(-3deg); transition-delay: 490ms">SWR</span>
+<span v-click="6" class="fall text-2xl font-bold text-orange-400" style="transform: rotate(4deg); transition-delay: 560ms">Convex</span>
+<span v-click="6" class="fall text-base opacity-45" style="transform: rotate(-4deg); transition-delay: 630ms">Valtio</span>
+<span v-click="6" class="fall text-2xl" style="transform: rotate(2deg); transition-delay: 700ms">Redux Toolkit</span>
+<span v-click="6" class="fall text-lg opacity-60" style="transform: rotate(-2deg); transition-delay: 770ms">nuqs</span>
+<span v-click="6" class="fall text-3xl font-bold" style="transform: rotate(5deg); transition-delay: 840ms">XState</span>
+<span v-click="6" class="fall text-xl opacity-50" style="transform: rotate(-5deg); transition-delay: 910ms">RTK Query</span>
+<span v-click="6" class="fall text-2xl text-orange-400" style="transform: rotate(3deg); transition-delay: 980ms">Firebase</span>
+<span v-click="6" class="fall text-lg opacity-55" style="transform: rotate(-3deg); transition-delay: 1050ms">Relay</span>
+<span v-click="6" class="fall text-xl" style="transform: rotate(4deg); transition-delay: 1120ms">Supabase</span>
+<span v-click="6" class="fall text-2xl font-bold" style="transform: rotate(2deg); transition-delay: 1190ms">Signals</span>
+<span v-click="6" class="fall text-lg opacity-50" style="transform: rotate(-6deg); transition-delay: 1260ms">Nano Stores</span>
+<span v-click="6" class="fall text-base opacity-45" style="transform: rotate(5deg); transition-delay: 1330ms">useSyncExternalStore</span>
+<span v-click="6" class="fall text-xl opacity-60" style="transform: rotate(-2deg); transition-delay: 1400ms">Immer</span>
+<span v-click="6" class="fall text-lg opacity-40" style="transform: rotate(3deg); transition-delay: 1470ms">Flux</span>
+</div>
+
+<div v-click="7" class="text-center text-sm opacity-50 pt-10">
+…et chacun finit par faire un peu de <b>tout</b> : cache, sélecteurs, middleware, persistance, optimistic updates, normalisation…
+</div>
+
+<style>
+.fall {
+  transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.4s ease;
+}
+.fall.slidev-vclick-hidden {
+  transform: translateY(-80px) !important;
+  opacity: 0 !important;
+}
+</style>
+
+<!--
+Slide-charnière entre l'intro conceptuelle et le plan. On rembobine : l'état n'est pas un
+concept simple, et React/SPA rapatrie TOUT le state côté client — c'est à nous de trouver
+une façon de tout gérer. Réaction de l'écosystème : une avalanche d'outils. Les trois premiers
+(Redux, TanStack Query, Zustand) tombent un par un, puis au dernier clic le reste dégringole
+en cascade — l'effet doit submerger, volontairement chaotique et illisible. Double problème :
+il y a BEAUCOUP d'outils, ET chacun déborde de son rôle (un store qui fait du cache, un client
+réseau qui fait du state global…). C'est exactement le brouillard qu'on va dissiper — à l'oral :
+on va remettre de l'ordre dans ce nuage, chapitre par chapitre, via la grille "où vit l'état".
+-->
+
+---
+layout: center
+---
+
+<div class="flex flex-col gap-5 max-w-3xl mx-auto">
+
+<div v-click="1" class="flex items-center gap-5 border border-gray-600 rounded-xl p-5">
+<div class="text-4xl font-bold text-orange-400 opacity-80">01</div>
+<div class="text-xl">Comment <b>s'y retrouver</b> dans tous ces outils ?</div>
+</div>
+
+<div v-click="2" class="flex items-center gap-5 border border-gray-600 rounded-xl p-5">
+<div class="text-4xl font-bold text-orange-400 opacity-80">02</div>
+<div class="text-xl"><b>Quel outil</b> pour <b>quel besoin</b> ?</div>
+</div>
+
+<div v-click="3" class="flex items-center gap-5 border-2 border-orange-500 rounded-xl p-5 bg-orange-400/10">
+<div class="text-4xl font-bold text-orange-400">03</div>
+<div class="text-xl">Comment <b>tirer le meilleur</b> de chacun ?</div>
+</div>
+
+</div>
+
+<!--
+On sort du brouillard du nuage pour poser les trois questions auxquelles le talk répond.
+(1) Se repérer dans l'écosystème — une carte, pas une liste à apprendre par cœur.
+(2) Choisir : associer un type d'état à l'outil adapté, plutôt qu'un outil par défaut pour tout.
+(3) Maîtriser : une fois le bon outil choisi, en exploiter les forces (sélecteurs, cache,
+invalidation, machines à états…). À l'oral : le fil rouge qui répond aux trois reste "où vit
+l'état ?" — la grille de lecture posée en intro, qu'on déroule chapitre par chapitre.
+-->
+
+---
+
+# Ce qu'on va voir aujourd'hui
+
+<div class="flex gap-6 max-w-3xl mx-auto pt-4">
+
+<div v-click="6" class="flex flex-col items-center self-stretch text-orange-400">
+<div class="text-[10px] uppercase tracking-widest opacity-70 pb-2 text-center leading-tight">Le plus<br>courant</div>
+<div class="w-0.5 flex-1 bg-gradient-to-b from-orange-400/20 to-orange-500"></div>
+<div class="text-xl leading-none -mt-1">▼</div>
+<div class="text-[10px] uppercase tracking-widest opacity-70 pt-2 text-center leading-tight">Le plus<br>spécialisé</div>
+</div>
+
+<div class="flex flex-col gap-3 flex-1">
+
+<div v-click="1" class="flex items-baseline gap-5 border-b border-gray-700 pb-3">
+<div class="text-2xl font-bold text-orange-400 opacity-80 w-8">1</div>
+<div>
+<div class="text-xl font-medium">Les API natives de React</div>
+<div class="text-sm opacity-50">useState · useContext · useReducer</div>
+</div>
+</div>
+
+<div v-click="2" class="flex items-baseline gap-5 border-b border-gray-700 pb-3">
+<div class="text-2xl font-bold text-orange-400 opacity-80 w-8">2</div>
+<div>
+<div class="text-xl font-medium">L'état dans l'URL</div>
+<div class="text-sm opacity-50">nuqs</div>
+</div>
+</div>
+
+<div v-click="3" class="flex items-baseline gap-5 border-b border-gray-700 pb-3">
+<div class="text-2xl font-bold text-orange-400 opacity-80 w-8">3</div>
+<div>
+<div class="text-xl font-medium">L'état serveur</div>
+<div class="text-sm opacity-50">SWR · TanStack Query · Apollo · Convex</div>
+</div>
+</div>
+
+<div v-click="4" class="flex items-baseline gap-5 border-b border-gray-700 pb-3">
+<div class="text-2xl font-bold text-orange-400 opacity-80 w-8">4</div>
+<div>
+<div class="text-xl font-medium">Les state managers classiques</div>
+<div class="text-sm opacity-50">Redux &amp; RTK · Zustand</div>
+</div>
+</div>
+
+<div v-click="5" class="flex items-baseline gap-5 pb-1">
+<div class="text-2xl font-bold text-orange-400 opacity-80 w-8">5</div>
+<div>
+<div class="text-xl font-medium">Les solutions exotiques</div>
+<div class="text-sm opacity-50">XState · Jotai · MobX</div>
+</div>
+</div>
+
+</div>
+
+</div>
+
+<!--
+Le plan, révélé chapitre par chapitre. On suit la grille "où vit l'état" : on part des API
+natives (state client local/partagé), on passe par l'URL (souvent oubliée), puis le state
+serveur (asynchrone, le gros morceau), avant les state managers classiques (tout-en-un) et on
+finit par les paradigmes exotiques. Ordre voulu : du plus natif/courant au plus spécialisé.
+La flèche (clic 6) matérialise ce gradient : plus on descend, plus la solution est rare/de
+niche. À l'oral : dans ~90 % des cas aujourd'hui (API natives + URL + state serveur), on n'a
+pas besoin d'un state manager dédié — d'où l'ordre du talk.
 -->
 
 ---
