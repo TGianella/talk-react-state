@@ -8,50 +8,80 @@ layout: section
 
 ---
 
-# ⚠️ D'abord, une mise en garde
+# ⚠️ Mise en garde
 
-<div class="text-lg pt-2">Ce qu'on range d'habitude dans un store… on l'a déjà couvert :</div>
-
-<div class="grid grid-cols-3 gap-4 pt-6">
-<div v-click class="border border-gray-600 rounded-lg p-4">
-
-### <span class="line-through opacity-50">État local & UI</span>
-<div class="opacity-70 text-sm pt-1">→ <b>API natives</b><br><code>useState</code>, Context, Reducer</div>
-
-</div>
-<div v-click class="border border-gray-600 rounded-lg p-4">
-
-### <span class="line-through opacity-50">État partageable</span>
-<div class="opacity-70 text-sm pt-1">→ <b>l'URL</b><br><code>nuqs</code>, filtres, sélection</div>
-
-</div>
-<div v-click class="border border-gray-600 rounded-lg p-4">
-
-### <span class="line-through opacity-50">État serveur</span>
-<div class="opacity-70 text-sm pt-1">→ <b>cache réseau</b><br>TanStack Query, Convex</div>
-
-</div>
+<div class="text-base pt-1 opacity-80 text-center">
+Une grande partie de la donnée qu'on met d'instinct dans un store est <b>déjà couverte</b> par les chapitres précédents.
 </div>
 
-<div v-click class="pt-8 text-center text-xl">
-Il reste… <span v-mark.orange>l'état client, global, vraiment complexe</span>.
+<!-- Diagramme : Serveur ↔ URL ↔ Client -->
+<div class="pt-8 max-w-3xl mx-auto grid grid-cols-[1fr_auto_1fr_auto_1fr] gap-x-3 gap-y-5 items-center">
+
+<!-- ligne 1 : les trois lieux -->
+<div class="text-center">
+<div class="text-4xl">🖥️</div>
+<div class="text-sm opacity-60 pt-1">Serveur</div>
+</div>
+<div class="text-2xl opacity-30">↔</div>
+<div class="text-center">
+<div class="text-4xl">🔗</div>
+<div class="text-sm opacity-60 pt-1">URL <span class="opacity-50 text-xs">· au milieu</span></div>
+</div>
+<div class="text-2xl opacity-30">↔</div>
+<div class="text-center">
+<div class="text-4xl">💻</div>
+<div class="text-sm opacity-60 pt-1">Client</div>
 </div>
 
-<div v-click class="pt-3 text-center text-base opacity-70">
-Un store classique est un outil <b>de niche</b> : gros projets, beaucoup de state client.<br>
+<!-- ligne 2 : les boîtes d'état (apparition : URL → serveur → client) -->
+<div v-click="2" class="border border-gray-600 rounded-lg p-3 text-center self-start">
+<div class="font-bold">État serveur</div>
+<div class="opacity-70 text-xs pt-1">→ cache réseau<br>TanStack Query, Convex <span class="opacity-50">· ch. 3</span></div>
+</div>
+<div></div>
+<div v-click="1" class="border border-gray-600 rounded-lg p-3 text-center self-start">
+<div class="font-bold">État d'URL</div>
+<div class="opacity-70 text-xs pt-1">→ <code>nuqs</code><br>filtres, sélection <span class="opacity-50">· ch. 2</span></div>
+</div>
+<div></div>
+<div v-click="3" class="border-2 border-orange-500 rounded-lg p-3 text-center self-start">
+<div class="font-bold">État client</div>
+<div class="opacity-70 text-xs pt-1">→ <b class="text-orange-400">store managers</b><br>global &amp; complexe <span class="opacity-50">· ce chapitre</span></div>
+</div>
+
+</div>
+
+<div v-click="4" class="pt-6 text-center">
+<div class="text-base">Côté client, les state managers font le travail des <b>API natives</b>… <span v-mark.orange>en mieux à l'échelle</span>.</div>
+<div class="text-sm opacity-60 pt-2">
+<code>useState</code> <span class="opacity-40 px-1">→</span> <code>useReducer</code> <span class="opacity-40 px-1">→</span> <code>Context</code> <span class="opacity-40 px-1">→</span> <b class="opacity-100">store</b>
+</div>
+</div>
+
+<div v-click="5" class="pt-5 text-center text-lg">
+Leur cas d'usage est la gestion <span v-mark.orange>de l'état client global réellement complexe</span>
+</div>
+
+<div v-click="6" class="pt-3 text-center text-base opacity-70">
+Store classique = outil <b>de niche</b> : gros projets, beaucoup de state client.<br>
 Dans la majorité des apps, les chapitres précédents suffisent.
 </div>
 
 <!--
-Mise en garde d'ouverture. Le réflexe "j'installe Redux/Zustand" est souvent prématuré :
-état local → API natives, état partageable → URL, état serveur → cache réseau. Une fois
-ces trois retirés, il reste peu : du state client global et interdépendant. C'est LÀ, et
-seulement là, qu'un store manager classique se justifie. Sinon on sur-architecture.
+Mise en garde d'ouverture, version diagramme. Le réflexe « j'installe Redux/Zustand » est
+souvent prématuré. On situe la donnée par son lieu de vie : l'URL au milieu (état partageable
+→ nuqs, ch. 2), le serveur (état serveur → cache réseau, ch. 3), le client (état purement
+client). Apparition URL → serveur → client : une fois l'URL et le serveur retirés, ce qui
+reste est de l'état client — et c'est là, seulement là, que les store managers se justifient.
+Côté client, ils ne font pas autre chose que les API natives (useState → useReducer → Context) :
+ils font le MÊME travail, en mieux à l'échelle (réactivité fine, outillage). D'où les lignes du
+bas : outil de niche (gros projets, beaucoup de state client) ; dans la majorité des apps, les
+chapitres précédents suffisent.
 -->
 
 ---
 
-# Un store manager, pour résoudre quoi ?
+# Store manager, quelle utilité ?
 
 <div class="grid grid-cols-2 gap-8 pt-4">
 <div>
@@ -69,7 +99,7 @@ seulement là, qu'un store manager classique se justifie. Sinon on sur-architect
 </v-clicks>
 
 </div>
-<div v-click>
+<div>
 
 ### La promesse d'un store
 <div class="opacity-80 text-sm pt-1">Un état qui vit <b>hors</b> du cycle de vie React.</div>
@@ -86,58 +116,11 @@ seulement là, qu'un store manager classique se justifie. Sinon on sur-architect
 </div>
 </div>
 
-<div v-click class="pt-6 text-center text-base opacity-70">
-Au fond, tous reposent sur <code>useSyncExternalStore</code> : un état externe, branché sur React.
-</div>
-
 <!--
 Le problème que résolvent les stores : à grande échelle, Context+Reducer re-render tout
 l'arbre, pas d'abonnement fin, pas d'outillage. Un store = état externe + sélecteurs +
 devtools. Mécanisme commun : useSyncExternalStore. Mais ils ne se ressemblent pas tous,
 d'où deux axes pour les ranger.
--->
-
----
-
-# On revient à l'état client
-
-<div class="text-base pt-2 opacity-80">
-Pendant trois chapitres, on a confié l'état à d'autres outils :
-</div>
-
-<div class="flex justify-center gap-12 pt-5 text-sm">
-<div v-click class="text-center">
-<div class="opacity-60">État serveur</div>
-<div class="text-xl opacity-50">↓</div>
-<div><b>cache réseau</b> <span class="opacity-50 text-xs">ch. 3</span></div>
-</div>
-<div v-click class="text-center">
-<div class="opacity-60">État d'URL</div>
-<div class="text-xl opacity-50">↓</div>
-<div><b>nuqs</b> <span class="opacity-50 text-xs">ch. 2</span></div>
-</div>
-</div>
-
-<div v-click class="pt-7 text-center text-xl">
-Reste l'<span v-mark.orange>état purement client</span> — on revient dans React.
-</div>
-
-<div v-click class="pt-7 text-center">
-<div class="text-sm opacity-70 pb-2">Notre première réponse, c'étaient les API natives :</div>
-<div class="text-base">
-<code>useState</code> <span class="opacity-40 px-1">→</span> <code>useReducer</code> <span class="opacity-40 px-1">→</span> <code>Context</code>
-</div>
-</div>
-
-<div v-click class="pt-7 text-center text-lg">
-Les state managers de ce chapitre sont des <span v-mark.orange>réponses à leurs limites</span>.
-</div>
-
-<!--
-Slide de transition. On a délégué l'état serveur (cache réseau) et l'état d'URL (nuqs) ;
-ce qui reste est de l'état purement client, géré dans React. Les API natives étaient
-notre première réponse (useState → useReducer → Context) mais elles plafonnent à l'échelle.
-Les state managers du chapitre sont la réponse à ces limites — d'où les deux axes qui suivent.
 -->
 
 ---
@@ -323,28 +306,25 @@ class: text-center
 
 ---
 
-# `Zustand` — carte d'identité
+# `Zustand`
 
-<div class="text-base opacity-70 pt-1 pb-4">« Zustand » signifie « état » en allemand 🇩🇪</div>
-
-<v-clicks>
-
-- 📅 Créé en **2019** par le collectif **Poimandres** (`pmndrs`)
-- 🪶 **Ultra-léger** — ~1 Ko gzippé, zéro dépendance
-- 🎣 **Sans provider** — un simple hook, pas de `<Context>` à brancher
-- 🧩 **API minimale** — `create`, puis `set` / `get`
-- 🎯 **Sélecteurs** — abonnement fin, re-renders ciblés
-- 🔌 **Middlewares** — `persist`, `devtools`, `immer`
-
-</v-clicks>
+<FicheSolution
+  annee="2019"
+  auteur="Paul Henschel — pmndrs (Poimandres)"
+  tagline="Une gestion de state minimaliste, rapide et qui passe à l'échelle."
+  probleme="Le boilerplate de Redux et le re-render global du Context : avoir du state partagé sans provider ni cérémonie."
+  creneau="State global client, simple et performant, via un hook et des sélecteurs."
+  :infos="[
+    'Zustand = « état » en allemand (clin d\'œil à Redux/Valtio/Jotai, tous nommés par l\'équipe pmndrs).',
+    'Même écurie que Jotai et Valtio ; maintenu notamment par Daishi Kato.',
+    'API minuscule (~1 kB gzip), sans dépendance, agnostique du framework.',
+    'Sélecteurs → re-render ciblé ; middlewares persist / devtools / immer fournis.',
+  ]"
+/>
 
 <!--
-Carte d'identité Zustand. Créé en 2019 par Paul Henschel (drcmda) au sein du collectif
-Poimandres (pmndrs, aussi react-three-fiber, react-spring). Mainteneur clé : Daishi Kato,
-par ailleurs auteur de Jotai et Valtio. Le nom = « état » en allemand.
-Arguments : minuscule (~1 Ko), zéro dépendance, pas de provider (contrairement à Redux/Context),
-API très réduite. S'appuie sur useSyncExternalStore → sûr en concurrent rendering, pas de
-tearing. Sélecteurs pour cibler les re-renders. Écosystème de middlewares (persist en 1 ligne).
+Slide d'ouverture de la sous-section Zustand. Poser le décor avant la démo 4b :
+d'où ça vient, quel problème, son créneau. Enchaîner sur le hook + sélecteur.
 -->
 
 ---
