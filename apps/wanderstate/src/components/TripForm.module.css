@@ -50,7 +50,6 @@
 
 .field input[type="text"] {
   border: 2px solid var(--color-primary);
-  border-radius: 6px;
   padding: 14px 16px;
   font-size: 1.05rem;
   font-family: inherit;
@@ -58,13 +57,22 @@
   background: var(--color-surface);
   width: 100%;
   font-weight: 500;
-  transition: border-color 0.15s, box-shadow 0.15s;
+  box-shadow: 3px 3px 0 var(--color-primary);
+  transition: box-shadow 0.1s;
+}
+
+.field input[type="text"]:hover {
+  box-shadow: 5px 5px 0 var(--color-primary);
 }
 
 .field input[type="text"]:focus {
   outline: none;
-  border-color: var(--color-accent);
-  box-shadow: 0 0 0 3px rgb(from var(--color-accent) r g b / 15%);
+  box-shadow: 5px 5px 0 var(--color-primary);
+}
+
+.field input[type="text"]:focus-visible {
+  outline: 3px solid rgb(from var(--color-accent) r g b / 40%);
+  outline-offset: 2px;
 }
 
 .fieldError {
@@ -102,6 +110,7 @@
   font-weight: 900;
   color: var(--color-text);
   line-height: 1;
+  font-variant-numeric: tabular-nums;
 }
 
 .budgetValue span {
@@ -109,6 +118,8 @@
   color: var(--color-accent);
   font-weight: 800;
   margin-left: 4px;
+  display: inline-block;
+  width: 1.2ch;
 }
 
 .budgetRow input[type="range"] {
@@ -118,7 +129,7 @@
   -webkit-appearance: none;
   appearance: none;
   background: var(--color-primary);
-  border-radius: 3px;
+  border-radius: 0;
   cursor: pointer;
 }
 

@@ -1,0 +1,115 @@
+.dropdown {
+  position: relative;
+  width: 100%;
+  outline: none;
+}
+
+.trigger {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  border: 2px solid var(--color-primary);
+  padding: 14px 16px;
+  font-size: 1.05rem;
+  font-family: inherit;
+  color: var(--color-text);
+  background: var(--color-surface);
+  font-weight: 500;
+  cursor: pointer;
+  text-align: left;
+  box-shadow: 3px 3px 0 var(--color-primary);
+  transition: box-shadow 0.1s;
+}
+
+.trigger:hover {
+  box-shadow: 5px 5px 0 var(--color-primary);
+}
+
+.trigger:focus-visible {
+  outline: 3px solid rgb(from var(--color-accent) r g b / 40%);
+  outline-offset: 2px;
+}
+
+.triggerOpen {
+  box-shadow: 5px 5px 0 var(--color-primary);
+}
+
+.placeholder {
+  color: var(--color-text-muted);
+  font-weight: 400;
+}
+
+.selectedValue {
+  color: var(--color-text);
+  font-weight: 500;
+}
+
+.arrow {
+  font-size: 0.7rem;
+  color: var(--color-text-muted);
+  transition: transform 0.15s;
+  flex-shrink: 0;
+  margin-left: 8px;
+}
+
+.arrowOpen {
+  transform: rotate(180deg);
+}
+
+.options {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  box-shadow: 5px 5px 0 var(--color-primary);
+  list-style: none;
+  z-index: 100;
+  max-height: 240px;
+  overflow-y: auto;
+}
+
+.option {
+  padding: 12px 16px;
+  font-size: 1rem;
+  font-family: inherit;
+  color: var(--color-text);
+  cursor: pointer;
+  border-bottom: 1px solid var(--color-border);
+  font-weight: 400;
+}
+
+.option:last-child {
+  border-bottom: none;
+}
+
+.option:hover {
+  background: var(--color-surface-alt);
+}
+
+.option:focus-visible {
+  outline: none;
+  background: rgb(from var(--color-accent) r g b / 10%);
+}
+
+.optionSelected {
+  background: var(--color-surface-accent);
+  font-weight: 700;
+  color: var(--color-accent);
+}
+
+.optionSelected:hover {
+  background: var(--color-surface-accent);
+}
+
+.optionActive {
+  background: rgb(from var(--color-accent) r g b / 12%);
+  color: var(--color-text);
+}
+
+.optionActive.optionSelected {
+  background: rgb(from var(--color-accent) r g b / 20%);
+  color: var(--color-accent);
+}

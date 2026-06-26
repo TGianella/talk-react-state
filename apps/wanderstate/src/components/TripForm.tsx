@@ -1,12 +1,29 @@
 import { useState } from 'react'
 import type { Trip } from '../types'
 import styles from './TripForm.module.css'
+import DropdownSelect from './DropdownSelect'
 
 export interface TripFormProps {
   onAddTrip: (trip: Trip) => void
 }
 
 const INITIAL_BUDGET = 500
+
+const DESTINATIONS = [
+  'Collonges-la-Rouge',
+  'Cordes-sur-Ciel',
+  'Eguisheim',
+  'Entrevaux',
+  'Gordes',
+  'Hunspach',
+  'Les Baux-de-Provence',
+  'Locronan',
+  'Pérouges',
+  'Rochefort-en-Terre',
+  'Saint-Cirq-Lapopie',
+  'Sophia Antipolis',
+  'Vézelay',
+]
 
 export default function TripForm({ onAddTrip }: TripFormProps) {
   const [name, setName] = useState('')
@@ -58,11 +75,12 @@ export default function TripForm({ onAddTrip }: TripFormProps) {
           </div>
           <div className={styles.field}>
             <label htmlFor="trip-destination">Destination</label>
-            <input
+            <DropdownSelect
               id="trip-destination"
-              type="text"
+              options={DESTINATIONS}
               value={destination}
-              onChange={(e) => setDestination(e.target.value)}
+              onChange={setDestination}
+              placeholder="Choisir une destination…"
             />
             <span className={styles.fieldError}>{errors.destination ? errors.destination : '\u00a0'}</span>
           </div>
