@@ -16,9 +16,12 @@
     "chapter:5a": "node ../../scripts/set-chapter.mjs 5a"
   },
   "dependencies": {
+    "@statelyai/inspect": "^0.7.2",
+    "@xstate/react": "^6.1.0",
     "nuqs": "^2.8.9",
     "react": "^19.2.7",
-    "react-dom": "^19.2.7"
+    "react-dom": "^19.2.7",
+    "xstate": "^5.32.2"
   },
   "devDependencies": {
     "@types/react": "^19.2.17",
