@@ -8,3 +8,5 @@ components.d.ts
 .idea
 .superpowers
 *.tsbuildinfo
+# Slidev generates this file during build/dev - do not commit
+apps/slides/index.html
