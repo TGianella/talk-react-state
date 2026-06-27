@@ -1,0 +1,87 @@
+/* apps/wanderstate/src/components/WizardStepDestination.module.css */
+/* Identique à WizardStepName.module.css — copie complète */
+.step {
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.stepLabel {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--color-text-muted);
+}
+
+.stepTitle {
+  font-size: 1.4rem;
+  font-weight: 900;
+  color: var(--color-text);
+  line-height: 1.1;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.field label {
+  font-size: 0.75rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--color-text-muted);
+}
+
+.actions {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+  padding-top: 8px;
+  border-top: 2px solid var(--color-border);
+}
+
+.btnPrimary {
+  background: var(--color-accent);
+  color: var(--color-surface);
+  border: 2px solid var(--color-primary);
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--color-primary);
+  transition: box-shadow 0.1s;
+}
+
+.btnPrimary:hover {
+  box-shadow: 5px 5px 0 var(--color-primary);
+}
+
+.btnPrimary:active {
+  box-shadow: 1px 1px 0 var(--color-primary);
+}
+
+.btnSecondary {
+  background: var(--color-surface);
+  color: var(--color-text);
+  border: 2px solid var(--color-primary);
+  padding: 12px 28px;
+  font-size: 1rem;
+  font-weight: 800;
+  font-family: inherit;
+  cursor: pointer;
+  box-shadow: 3px 3px 0 var(--color-primary);
+  transition: box-shadow 0.1s;
+}
+
+.btnSecondary:hover {
+  box-shadow: 5px 5px 0 var(--color-primary);
+}
+
+.btnSecondary:active {
+  box-shadow: 1px 1px 0 var(--color-primary);
+}

@@ -155,7 +155,3 @@
 .ctaBtn:active {
   box-shadow: 1px 1px 0 var(--color-primary);
 }
-
-.ctaBtn:active {
-  box-shadow: none;
-}
