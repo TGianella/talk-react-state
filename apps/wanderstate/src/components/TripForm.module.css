@@ -152,10 +152,7 @@
   cursor: pointer;
 }
 
-.budgetRow input[type="range"]:focus-visible {
-  outline: 3px solid rgb(from var(--color-accent) r g b / 40%);
-  outline-offset: 2px;
-}
+
 
 .btnSubmit {
   background: var(--color-accent);
@@ -179,7 +176,4 @@
   box-shadow: 1px 1px 0 var(--color-primary);
 }
 
-.btnSubmit:focus-visible {
-  outline: 3px solid rgb(from var(--color-accent) r g b / 40%);
-  outline-offset: 2px;
-}
+

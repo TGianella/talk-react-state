@@ -3,13 +3,20 @@
   background: var(--color-surface-alt);
 }
 
+.sectionHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
 .sectionTitle {
   font-size: 0.85rem;
   font-weight: 800;
   color: var(--color-text);
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  margin-bottom: 20px;
+  margin-bottom: 0;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -50,4 +57,9 @@
   font-size: 1.2rem;
   margin-bottom: 8px;
   color: var(--color-text-muted);
+}
+
+/* Vue liste — colonne pleine largeur */
+.cardsGridList {
+  grid-template-columns: 1fr;
 }
