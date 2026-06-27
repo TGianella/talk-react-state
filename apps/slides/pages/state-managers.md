@@ -760,7 +760,7 @@ class: text-center
   creneau="Gros état client complexe, où la traçabilité, le time-travel et l'outillage priment."
   :infos="[
     'Redux = implémentation de l\'architecture Flux ; premier et plus connu des store managers React.',
-    '« Dispatching is the only feature of Redux » (Dan Abramov) — le store global avec provider n\'est qu\'un bénéfice collatéral.',
+    'Conçu initialement pour pouvoir suivre les actions plus que partager un état global',
     'L\'architecture state → action → reducer a été reprise par React lui-même (useReducer + useContext).',
     'Redux Toolkit (RTK) standard moderne de Redux : configureStore, createSlice, createAsyncThunk → fin du boilerplate.',
   ]"
@@ -1124,7 +1124,7 @@ le logging, les devtools, la persistance. RTK fournit createAsyncThunk par-dessu
 
 ---
 
-# Thunks — la logique à effets de bord
+# Thunks : la logique à effets de bord
 
 <div class="text-sm opacity-80 pb-1 text-center">Le reducer doit rester <b>pur</b>. Les effets de bord et la logique impérative vivent dans un <b>thunk</b> : une fonction dispatchée, qui reçoit <code>dispatch</code> et <code>getState</code>.</div>
 
@@ -1523,9 +1523,9 @@ case ADD:
 </div>
 <div v-click>
 
-💡 **Le vrai coupable : l'âge.** Redux date de **2015** — beaucoup d'apps ont été écrites *avant* les bonnes pratiques d'aujourd'hui :
+💡 Redux date de **2015**. Beaucoup d'apps écrites *avant* les bonnes pratiques d'aujourd'hui :
 
-<div class="text-xs opacity-70 pt-1">
+<div class="text-xs opacity-70">
 
 - l'état serveur vit dans un cache réseau, **pas** dans le store
 - l'état d'URL vit dans l'**URL**
@@ -1629,7 +1629,7 @@ Slide d'intro RTK, conçue en diptyque avec la slide réputation précédente : 
 sa réponse, dans la même grille 3 colonnes pour la rime visuelle.
 RTK = Redux Toolkit, la boîte à outils OFFICIELLE et opinionated de l'équipe Redux. Point clé à
 dire : ce n'est plus « une option » — la doc Redux la présente comme LA façon d'écrire du Redux
-aujourd'hui (createStore brut est déconseillé).
+aujourd'hui si on part de 0 (createStore brut est déconseillé). Sur une app legacy la migration progressive est possible.
 Réponses aux 3 reproches :
 1. Config compliquée → configureStore : un seul appel, reducer en objet (combineReducers
    implicite), redux-thunk + Redux DevTools branchés PAR DÉFAUT (defaults sains).
@@ -1747,12 +1747,12 @@ produce(state, (draft) => {
 Immer passe un <b>draft</b> (un Proxy) : on le modifie librement, il en déduit le <span v-mark.orange>nouvel état immuable</span>.
 </div>
 
-<div class="text-sm opacity-80 pt-5 pb-2 text-center">Pas réservé à RTK — Immer est une <b>lib autonome</b> :</div>
+<div v-click="3" class="text-sm opacity-80 pt-5 pb-2 text-center">Pas réservé à RTK — Immer est une <b>lib autonome</b> :</div>
 
 <div class="grid grid-cols-3 gap-3 text-xs">
-<div v-click="3" class="border-2 border-orange-500 rounded-lg p-3">⚡ <b>RTK</b> — déjà intégré, <code>createSlice</code> l'utilise sans rien installer</div>
-<div v-click="4" class="border border-gray-600 rounded-lg p-3">🗄️ <b>Redux classique</b> — <code>npm i immer</code>, on enveloppe le reducer avec <code>produce</code></div>
-<div v-click="5" class="border border-gray-600 rounded-lg p-3">⚛️ <b>React natif</b> — pareil avec <code>useState</code> / <code>useReducer</code> (ou <code>use-immer</code>)</div>
+<div v-click="4" class="border-2 border-orange-500 rounded-lg p-3">⚡ <b>RTK</b> — déjà intégré, <code>createSlice</code> l'utilise sans rien installer</div>
+<div v-click="5" class="border border-gray-600 rounded-lg p-3">🗄️ <b>Redux classique</b> — <code>npm i immer</code>, on enveloppe le reducer avec <code>produce</code></div>
+<div v-click="6" class="border border-gray-600 rounded-lg p-3">⚛️ <b>React natif</b> — pareil avec <code>useState</code> / <code>useReducer</code> (ou <code>use-immer</code>)</div>
 </div>
 
 <!--
