@@ -156,7 +156,7 @@ beaucoup de code pour un seul fetch, et il manque encore tout le reste. D'où un
 <div v-click class="border-2 border-orange-500 rounded-lg p-4 text-center w-56 bg-orange-400/10 flex flex-col justify-center">
 <div class="font-bold pb-2">Le gestionnaire de state async</div>
 <div class="opacity-80 leading-relaxed">gère la donnée quand elle arrive au client</div>
-<div class="text-xs opacity-50 pt-2">cache · dédup · revalidation · invalidation</div>
+<div class="text-xs opacity-50 pt-2">cache · dédup · revalidation · invalidation · gestion d'erreurs</div>
 </div>
 
 <div v-click class="flex flex-col items-center justify-center px-2 text-orange-400 w-44">
