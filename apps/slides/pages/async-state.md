@@ -1412,74 +1412,260 @@ Et si le cache n'existait tout simplement pas ?"
 -->
 
 ---
+layout: center
+class: text-center
+---
 
-# 3c · `Convex` — réactif par défaut
-
-<div class="text-center text-xl pt-2 opacity-80">
-Et si la réactivité était le comportement <span v-mark.orange>par défaut</span> de toute la stack ?
-</div>
-
-```mermaid {scale: 0.8}
-graph LR
-  A(Client A) -->|mutation| S[("Convex DB")]
-  S -->|push| A
-  S -->|push| B(Client B)
-  S -->|push| C(Client C)
-  style S fill:#f97316,stroke:#ea580c,color:#fff
-```
-
-<div class="grid grid-cols-3 gap-3 pt-2 text-xs text-center opacity-75">
-<div v-click>Pas de cache à invalider</div>
-<div v-click>Pas de polling</div>
-<div v-click>Pas de websocket à brancher</div>
-</div>
+<h1 class="text-7xl font-bold">Convex</h1>
+<div class="text-2xl opacity-60 pt-6">Base de données réactive</div>
 
 <!--
-Killer feature du talk. Question différente : et si la réactivité était le défaut ?
-Dès qu'une donnée change, tout le monde se met à jour, automatiquement.
+Transition depuis Apollo : "on vient de voir deux approches où le client gère un cache.
+Et si le cache n'existait tout simplement pas ?"
 -->
 
 ---
 
-# Convex — TypeScript de bout en bout
+# `Convex`
 
-<div class="grid grid-cols-2 gap-4 text-sm">
+<FicheSolution
+  annee="2023"
+  auteur="James Cowling — Convex"
+  tagline="Le backend temps réel comme infrastructure, pas comme feature à câbler."
+  probleme="La réactivité multi-clients est difficile à implémenter : cache à invalider, polling, websockets à gérer, synchronisation à la main."
+  creneau="App React avec des données partagées en temps réel — sans backend custom à maintenir."
+  :infos="[
+    'Base de données + fonctions serveur + types client dans un seul repo TypeScript.',
+    'Chaque query est une subscription live : les clients reçoivent les updates sans code explicite.',
+    'Conçu React-first — ConvexProvider, useQuery, useMutation reprennent les patterns connus.',
+  ]"
+/>
+
+<!--
+Convex n'est pas juste un outil de plus : c'est un changement de paradigme.
+On ne gère plus le state réseau, on s'y abonne.
+-->
+
+---
+
+# Réactif par défaut
+
+<div class="text-center text-lg pt-1 opacity-80">
+Et si la réactivité était le comportement <span v-mark.orange>par défaut</span> de toute la stack ?
+</div>
+
+<div class="flex items-center justify-center gap-6 pt-6">
+
+  <!-- Client A -->
+  <div class="flex flex-col items-center gap-2">
+    <div v-click="1" class="border-2 border-orange-500 rounded-lg px-5 py-3 text-center bg-orange-400/10 w-32">
+      <div class="text-xs uppercase tracking-widest opacity-60 pb-1">Client A</div>
+      <div class="text-sm font-bold">mutation</div>
+    </div>
+  </div>
+
+  <!-- Flèche mutation → DB -->
+  <div v-click="1" class="flex flex-col items-center gap-1 text-orange-400">
+    <div class="text-[10px] uppercase tracking-widest opacity-70">mutation</div>
+    <div class="text-2xl">→</div>
+  </div>
+
+  <!-- Convex DB -->
+  <div v-click="1" class="border-2 border-orange-500 rounded-xl px-6 py-4 text-center bg-orange-500 text-white w-36">
+    <div class="text-xs uppercase tracking-widest opacity-80 pb-1">Convex</div>
+    <div class="text-2xl">🗄️</div>
+  </div>
+
+  <!-- Flèches push → clients -->
+  <div class="flex flex-col gap-3">
+    <div v-click="2" class="flex items-center gap-3">
+      <div class="flex flex-col items-center gap-0.5 text-orange-400">
+        <div class="text-[10px] uppercase tracking-widest opacity-70">push</div>
+        <div class="text-xl">→</div>
+      </div>
+      <div class="border border-gray-500 rounded-lg px-4 py-2 text-center w-28">
+        <div class="text-xs opacity-50 pb-0.5">Client A</div>
+        <div class="text-xs opacity-70">mis à jour ✓</div>
+      </div>
+    </div>
+    <div v-click="3" class="flex items-center gap-3">
+      <div class="flex flex-col items-center gap-0.5 text-orange-400">
+        <div class="text-[10px] uppercase tracking-widest opacity-70">push</div>
+        <div class="text-xl">→</div>
+      </div>
+      <div class="border border-gray-500 rounded-lg px-4 py-2 text-center w-28">
+        <div class="text-xs opacity-50 pb-0.5">Client B</div>
+        <div class="text-xs opacity-70">mis à jour ✓</div>
+      </div>
+    </div>
+    <div v-click="4" class="flex items-center gap-3">
+      <div class="flex flex-col items-center gap-0.5 text-orange-400">
+        <div class="text-[10px] uppercase tracking-widest opacity-70">push</div>
+        <div class="text-xl">→</div>
+      </div>
+      <div class="border border-gray-500 rounded-lg px-4 py-2 text-center w-28">
+        <div class="text-xs opacity-50 pb-0.5">Client C</div>
+        <div class="text-xs opacity-70">mis à jour ✓</div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<div class="grid grid-cols-3 gap-3 pt-5 text-sm text-center">
+<div v-click="5" class="border border-gray-600 rounded-lg p-3">Pas de cache à invalider</div>
+<div v-click="6" class="border border-gray-600 rounded-lg p-3">Pas de polling</div>
+<div v-click="7" class="border border-gray-600 rounded-lg p-3">Un WebSocket géré automatiquement</div>
+</div>
+
+<!--
+Killer feature du talk. La question n'est plus "comment je synchronise ?" mais "pourquoi ce n'est pas le défaut ?"
+Animer click par click : d'abord Client A + la mutation vers la DB, puis les push vers chaque client un par un.
+Le WebSocket existe bien — il est juste géré par le ConvexProvider, pas par le développeur.
+-->
+
+---
+
+# TypeScript de bout en bout
+
+<div class="grid grid-cols-2 gap-6 text-sm pt-2">
 <div>
 
 ```ts
 // convex/schema.ts — la source de vérité
-defineTable({
-  name: v.string(),
-  destination: v.string(),
-  budget: v.number(),
+export default defineSchema({
+  trips: defineTable({
+    name: v.string(),
+    destination: v.string(),
+    budget: v.number(),
+  }),
 })
-```
-
-```ts
-// convex/trips.ts — fonction serveur
-export const list = query({
-  handler: (ctx) =>
-    ctx.db.query('trips').collect(),
-})
+// Types inférés automatiquement côté client
+// Pas de codegen. Pas d'étape de build.
+// Une seule source de vérité.
 ```
 
 </div>
 <div>
 
-```tsx
-// côté client — typé end-to-end
-function TripList() {
-  const trips = useQuery(api.trips.list)
-  //    ↑ ne refetch jamais : il REÇOIT
-  return <ul>{trips?.map(/* … */)}</ul>
-}
+<v-clicks>
+
+- Schéma en TypeScript — pas de SQL, pas de Zod séparé
+- Types propagés automatiquement jusqu'au client
+- `v.string()`, `v.number()`, `v.id("trips")` — validators intégrés
+
+</v-clicks>
+
+<div v-click class="border-l-4 border-orange-500 pl-4 mt-4 text-xs opacity-80">
+Zéro contrat d'API à maintenir entre le schéma, les fonctions serveur et le client.
+</div>
+
+</div>
+</div>
+
+<!--
+Pas de SQL, pas de Zod séparé, pas de JSON Schema.
+Le schéma est la source de vérité — le reste en découle automatiquement.
+Montrer que c'est exactement ce qu'on a dans l'app : convex/schema.ts → convex/trips.ts → ch3c/index.tsx.
+-->
+
+---
+
+# Les 3 primitives
+
+<div class="grid grid-cols-3 gap-4 pt-4 text-sm">
+
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col gap-2">
+<div class="text-xs uppercase tracking-widest opacity-50">Query</div>
+
+```ts
+export const list = query({
+  handler: async (ctx) =>
+    ctx.db.query('trips')
+      .filter(q => q.gt(q.field('budget'), 0))
+      .collect(),
+})
 ```
+
+<div class="opacity-70 text-xs pt-1">
+Lecture <b>réactive</b> — Convex trace les lignes lues et re-exécute dès qu'une change.<br>
+ORM intégré : <code>.filter()</code>, <code>.order()</code>, <code>.take()</code>…
+</div>
+</div>
+
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col gap-2">
+<div class="text-xs uppercase tracking-widest opacity-50">Mutation</div>
+
+```ts
+export const create = mutation({
+  args: { name: v.string(), … },
+  handler: async (ctx, args) =>
+    ctx.db.insert('trips', args),
+})
+```
+
+<div class="opacity-70 text-xs pt-1">
+Écriture <b>transactionnelle ACID</b> — déclenche les updates sur tous les clients abonnés.<br>
+Les <code>args</code> sont <b>revalidés côté serveur</b> — le client ne peut pas tricher.
+</div>
+</div>
+
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col gap-2">
+<div class="text-xs uppercase tracking-widest opacity-50">Action</div>
+
+```ts
+export const notify = action({
+  handler: async (ctx) => {
+    await fetch('https://…/webhook')
+  },
+})
+```
+
+<div class="opacity-70 text-xs pt-1">
+Appels <b>externes</b> — webhooks, emails, APIs tierces. Pas de contrainte déterministe.<br>
+Appelable depuis le client <b>ou déclenchée par une mutation</b> côté serveur.
+</div>
+</div>
+
+</div>
+
+<!--
+Trois primitives, trois responsabilités claires.
+Query : ORM intégré avec filter/order/take — pas de SQL, pas d'ORM externe à installer.
+La réactivité est automatique : Convex trace les lignes lues et re-push si elles changent.
+Mutation : ACID + revalidation des args côté serveur. Même si le client envoie n'importe quoi,
+les validators v.string(), v.number() rejettent les données invalides avant l'exécution.
+Action : escape hatch non-déterministe. Peut être appelée depuis useAction côté client,
+ou déclenchée par ctx.scheduler.runAfter() / ctx.runAction() depuis une mutation.
+Dans notre démo on n'utilise que query + mutation — c'est suffisant pour 95% des apps.
+-->
+
+---
+
+# Côté client — `useQuery` reçoit, ne refetch pas
+
+<div class="grid grid-cols-2 gap-6 pt-2">
+<div>
+
+```ts
+const rawTrips = useQuery(api.trips.list)
+//    ↑ subscription live — reçoit les updates
+const createTrip = useMutation(api.trips.create)
+const removeTrip = useMutation(api.trips.remove)
+
+const trips = (rawTrips ?? []).map((t) => ({
+  id: t._id, name: t.name, budget: t.budget,
+}))
+```
+
+</div>
+<div class="flex flex-col gap-4 pt-2">
 
 <v-clicks>
 
-- **query** = lecture réactive
-- **mutation** = écriture ACID
-- **action** = appels externes
+- `useQuery` ne refetch jamais. Il **reçoit** via le WebSocket partagé
+- `rawTrips` est `undefined` le temps que la subscription s'établisse
+- `useMutation` retourne une fonction, typée end-to-end depuis le schéma
 
 </v-clicks>
 
@@ -1487,22 +1673,24 @@ function TripList() {
 </div>
 
 <!--
-Schema + fonctions serveur + types client dans le même repo TS. Zéro codegen.
-useQuery ressemble à TanStack mais ne refetch jamais : il reçoit via subscription.
+Montrer le code de ch3c/index.tsx — c'est exactement ce que l'audience voit ici.
+L'API ressemble à TanStack Query mais le modèle est inverse : pas de refetch, pas de staleTime.
+La donnée arrive quand elle change. C'est tout.
+Le ?? [] est le seul endroit où on gère l'état "chargement" — Convex n'a que deux états : loading ou à jour.
 -->
 
 ---
 
-# Convex — sous le capot
+# Sous le capot
 
 <div class="grid grid-cols-2 gap-6 pt-2">
 <div>
 
 <v-clicks>
 
-- **un seul WebSocket** partagé par toute l'app
-- **dependency tracking** : Convex sait quelles lignes chaque query a lues
-- une ligne change → seules les queries concernées re-tournent
+- `ConvexProvider` ouvre **un seul WebSocket** partagé par toutes les subscriptions de l'app
+- **Dependency tracking** : Convex sait quelles lignes de DB chaque query a lues à l'exécution
+- Une ligne change → seules les queries qui l'ont lue sont re-exécutées et pushées
 
 </v-clicks>
 
@@ -1511,7 +1699,7 @@ useQuery ressemble à TanStack mais ne refetch jamais : il reçoit via subscript
 
 Le **cache n'est pas géré** : c'est une **projection** des subscriptions actives.
 
-<div class="pt-3 opacity-70">
+<div class="pt-3 opacity-70 text-sm">
 Pas d'invalidation. Pas de <code>staleTime</code>.<br>
 La donnée est soit en chargement, soit à jour.
 </div>
@@ -1519,40 +1707,83 @@ La donnée est soit en chargement, soit à jour.
 </div>
 </div>
 
-<div v-click class="pt-5 text-center text-sm opacity-70">
+<div v-click="5" class="pt-5 text-center text-sm opacity-70">
 Même principe que les Signals / <code>useMemo</code> — mais appliqué <b>côté serveur, sur la DB</b>.
 </div>
 
 <!--
-Le dependency tracking est exactement le principe de la réactivité fine, mais sur la base.
-Le cache devient une conséquence, pas une chose à gérer.
+Le dependency tracking est exactement le principe de la réactivité fine-grained, appliqué à la base.
+Convex instrumente l'exécution de chaque query pour savoir exactement quelles lignes elle a touchées.
+Quand une mutation modifie une ligne, seules les queries qui ont lu cette ligne sont re-poussées.
+Le cache client devient une conséquence automatique, pas quelque chose à gérer.
 -->
 
 ---
 
-# Convex vs les autres BaaS
+# Limitations
 
-<div class="text-sm pt-2">
+<div class="grid grid-cols-3 gap-5 pt-6">
 
-| | Firebase | Supabase | **Convex** |
-|---|---|---|---|
-| Temps réel | RTDB / Firestore | Postgres + WS | **natif, toutes les queries** |
-| Langage | JS/TS + config JSON | SQL + REST/GraphQL | **TypeScript pur, e2e** |
-| Typage | partiel | génération CLI | **inféré automatiquement** |
-| Fonctions serveur | séparées | séparées | **co-localisées** |
-| Cible | mobile / web | web, profils SQL | **React / frontend-first** |
-
+<div v-click class="border-2 border-gray-600 rounded-lg p-5 flex flex-col gap-3">
+<div class="text-2xl">🔒</div>
+<div class="font-bold">Vendor lock-in</div>
+<div class="text-sm opacity-70">
+Tourne sur l'infra Convex, pas sur votre serveur. Migration difficile si besoin de changer.
+</div>
 </div>
 
-<div class="grid grid-cols-3 gap-3 pt-5 text-xs opacity-70">
-<div v-click>⚠️ <b>Vendor lock-in</b> — infra Convex</div>
-<div v-click>⚠️ <b>Pas universel</b> — reporting, legacy</div>
-<div v-click>⚠️ <b>Pricing</b> — à la consommation</div>
+<div v-click class="border-2 border-gray-600 rounded-lg p-5 flex flex-col gap-3">
+<div class="text-2xl">⚠️</div>
+<div class="font-bold">Pas universel</div>
+<div class="text-sm opacity-70">
+Reporting complexe, bases existantes, migrations à grande échelle : Convex n'est pas adapté.
+</div>
+</div>
+
+<div v-click class="border-2 border-gray-600 rounded-lg p-5 flex flex-col gap-3">
+<div class="text-2xl">💰</div>
+<div class="font-bold">Pricing</div>
+<div class="text-sm opacity-70">
+Gratuit jusqu'à un certain volume. Au-delà : facturation à la consommation.
+</div>
+</div>
+
 </div>
 
 <!--
-Démo 3c : deux onglets côte à côte, ajout d'étape visible en <100ms dans l'autre,
-refresh → état intact. "Pas une ligne de code temps réel écrite." Rester honnête
-sur les limites : lock-in, pas universel, pricing.
+Convex est impressionnant mais pas une solution universelle.
+Lock-in réel — si demain Convex change son pricing ou ferme, migrer est coûteux.
+Pas adapté aux bases existantes, aux gros volumes d'écriture, ou aux besoins SQL complexes.
+Le gratuit est généreux pour une démo ou un side project — en production il faut budgéter.
+-->
+
+---
+
+# `Convex` — bilan
+
+<Bilan
+  :scores="[4, 4, 5, 3, 3]"
+  poids="~13 kB (gzip)"
+  perimetre="State serveur / temps réel"
+  idealPour="App React avec données partagées en temps réel, sans backend custom"
+  :avantages="[
+    'Réactivité multi-clients sans une ligne de code temps réel',
+    'TypeScript end-to-end — schéma, fonctions serveur et client unifiés',
+    'Cache, invalidation, polling : ces problèmes disparaissent',
+  ]"
+  :limites="[
+    'Vendor lock-in fort : dépendance à l\'infra Convex',
+    'Pas adapté aux bases existantes ou au reporting complexe',
+    'Écosystème encore jeune comparé à Firebase ou Supabase',
+  ]"
+/>
+
+<!--
+Bilan Convex. Score Prise en main : 4 — l'API est familière (ressemble à TanStack Query) mais le paradigme
+"base réactive" demande un vrai changement mental.
+Poids : 4 — ~13 kB, raisonnable. Mais le vrai poids c'est la dépendance à l'infra externe.
+Performance : 5 — c'est le point fort, latence <100ms, WebSocket unique, dependency tracking fin.
+Écosystème : 3 — jeune, moins de ressources que Firebase ou Supabase.
+Montée en charge : 3 — vendor lock-in + pricing à la consommation = incertitude sur les gros volumes.
 -->
 
