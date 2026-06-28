@@ -106,6 +106,62 @@ Dès que le problème ressemble à un graphe, XState est le bon outil.
 
 ---
 
+# Deux sens du mot « état »
+
+<div class="grid grid-cols-2 gap-8 pt-2">
+<div v-click>
+
+### Etat étendu : données de l'application
+
+```ts
+{
+  name: 'Tokyo',
+  budget: 2400,
+  isOpen: true,
+  isSubmitting: false,
+  hasError: false,
+}
+```
+
+<div class="text-sm opacity-70 pt-2">
+Un <b>instantané</b> de la donnée runtime.<br>
+Granulaire, nombre <b>infini</b> de valeurs possibles.
+</div>
+
+</div>
+<div v-click>
+
+### Etat fini : mode de l'application
+
+```
+○ closed
+● name          ← un seul actif
+○ destination
+○ budget
+○ confirm
+○ submitting
+```
+
+<div class="text-sm opacity-70 pt-2">
+<b>Mode</b> qualitatif dans lequel le système se trouve.<br>
+Discret, énumérable :  nombre <b>fini</b> d'états.
+</div>
+
+</div>
+</div>
+
+<div v-click class="mt-4 border-l-4 border-orange-500 pl-3 text-sm">
+Machine = <b>mode</b>. Donnée = <b>contexte</b>.
+</div>
+
+<!--
+Le glissement conceptuel à faire passer : on quittait l'état = "toutes les variables runtime" pour
+l'état = "le mode parmi une liste finie". C'est ce passage de l'infini au fini qui rend les états
+impossibles… impossibles. La donnée granulaire ne disparaît pas — elle se range dans le contexte.
+-->
+
+---
+
 # `XState` · rendre les états impossibles… impossibles
 
 Toutes les solutions basées sur des actions partagent la même limite :
