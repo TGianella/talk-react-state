@@ -1,5 +1,7 @@
 ---
 layout: section
+image: /covers/factory-assunta-darnault.jpg
+credit: Assunta Darnault
 ---
 
 # Chapitre 2

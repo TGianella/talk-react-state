@@ -1,5 +1,7 @@
 ---
 layout: section
+image: /covers/hatfield-coilliery-mechanical-landscapes.jpg
+credit: Industrial Landscapes
 ---
 
 # Chapitre 1

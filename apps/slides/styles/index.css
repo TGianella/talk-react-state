@@ -1,0 +1,102 @@
+/*
+ * Light/dark adaptive palette.
+ *
+ * `--accent` holds RGB channels consumed by the redefined `orange` UnoCSS colour
+ * (see ../uno.config.ts) — it drives every accent class and every `v-mark`.
+ * `--slidev-theme-primary` recolours seriph's h1 (its default is a slate-blue
+ * that reads poorly on white).
+ *
+ * Slidev sets `class="light"` / `class="dark"` on <html>; both selectors
+ * out-specify seriph's `:root { --slidev-theme-primary }`. `:root` carries the
+ * accent default so it is correct even before the scheme class is applied.
+ */
+:root {
+  --accent: 234 88 12; /* orange-600 — readable on a light background */
+}
+
+html.dark {
+  --accent: 251 146 60; /* orange-400 — pops on a dark background */
+}
+
+/* Headings: neutral instead of seriph's slate-blue, per scheme. */
+html.light {
+  --slidev-theme-primary: #1e293b; /* slate-800 on white */
+}
+
+html.dark {
+  --slidev-theme-primary: #e2e8f0; /* slate-200 on dark */
+}
+
+/*
+ * Cover / divider slides — see layouts/cover.vue (and its alias section.vue).
+ * Kept here (global, not scoped) so the rules also reach the slotted markdown
+ * title. The text is always light-on-dim so any background photo works,
+ * regardless of the deck's light/dark scheme.
+ */
+.slidev-layout.cover-slide {
+  width: 100%;
+  height: 100%;
+  padding: 0; /* full-bleed: cancel the base .slidev-layout px-14 py-10 */
+  display: grid;
+  place-items: center;
+  background-color: #0f172a;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+/* No image yet → a neutral greyscale gradient (no colour cast). */
+.cover-slide:not(.has-image) {
+  background-image: linear-gradient(135deg, #262626, #0a0a0a);
+}
+
+/* Minimalist: the title sits directly on the photo, no panel box. */
+.cover-slide .cover-panel {
+  max-width: 80%;
+  text-align: center;
+}
+
+/* Title hierarchy — white text, kept legible with a soft shadow. */
+.cover-slide .cover-panel h1 {
+  color: #fff;
+  font-size: 3.25rem;
+  line-height: 1.1;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 12px rgb(0 0 0 / 0.5);
+}
+
+.cover-slide .cover-panel h2 {
+  color: #fff;
+  font-size: 1.9rem;
+  font-weight: 500;
+  text-shadow: 0 2px 12px rgb(0 0 0 / 0.5);
+}
+
+.cover-slide .cover-panel p,
+.cover-slide .cover-panel div {
+  color: #e2e8f0;
+  text-shadow: 0 1px 8px rgb(0 0 0 / 0.5);
+}
+
+/* Conference-logo placeholder on the title slide — swap for an <img> later. */
+.cover-slide .cover-logo {
+  margin: 1.75rem auto 0;
+  width: 200px;
+  height: 64px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed rgb(255 255 255 / 0.5);
+  font-size: 0.8rem;
+  letter-spacing: 0.05em;
+  color: rgb(255 255 255 / 0.7);
+}
+
+/* Photo credit — discreet, pinned to the bottom-right corner. */
+.cover-slide .cover-credit {
+  position: absolute;
+  right: 0.75rem;
+  bottom: 0.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.02em;
+  color: rgb(255 255 255 / 0.7);
+  text-shadow: 0 1px 4px rgb(0 0 0 / 0.8);
+}

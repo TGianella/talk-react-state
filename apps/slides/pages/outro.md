@@ -1,5 +1,6 @@
 ---
 layout: section
+image: /covers/factory.avif
 ---
 
 # Conclusion
