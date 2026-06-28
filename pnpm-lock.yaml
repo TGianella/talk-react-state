@@ -6,11 +6,7 @@ settings:
 
 importers:
 
-  .:
-    dependencies:
-      convex:
-        specifier: ^1.42.0
-        version: 1.42.0(react@19.2.7)
+  .: {}
 
   apps/slides:
     dependencies:
