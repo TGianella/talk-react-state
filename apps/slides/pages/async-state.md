@@ -1356,7 +1356,7 @@ Les deux peuvent coexister dans un même projet si une partie de l'API est REST 
 
 ---
 
-# Apollo — limites honnêtes
+# Limitations
 
 <div class="grid grid-cols-3 gap-4 pt-6 text-sm">
 <div v-click class="border border-gray-600 rounded-lg p-4">
