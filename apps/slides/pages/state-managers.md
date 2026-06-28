@@ -307,6 +307,113 @@ Réf : interbolt.org/blog/react-ui-tearing, thread Tanner Linsley.
 
 ---
 
+# Sérialiser le state ?
+
+<div class="text-sm opacity-70 pb-4">Sérialiser = transformer l'état (un graphe d'objets en mémoire) en une chaîne transportable, et le reconstruire à l'identique.</div>
+
+```ts
+const snap = JSON.stringify(state)   // état   → string
+const back = JSON.parse(snap)        // string → état
+```
+
+<div v-click="1" class="pt-4 pb-2 text-base">Une chaîne ne contient que des <b>données plates</b> — deux choses n'y entrent pas :</div>
+
+<div class="grid grid-cols-2 gap-4">
+<div v-click="2" class="border border-gray-600 rounded-lg p-3">
+<b>Type absent de JSON</b>
+<div class="text-xs opacity-50 pb-2">la grammaire JSON ne le connaît pas</div>
+<div class="text-sm opacity-80"><code>Map</code>, <code>Set</code>, <code>Date</code>, <code>BigInt</code>, <code>undefined</code>, <code>Symbol</code> <span class="opacity-60">→ ignorés, déformés, ou erreur</span></div>
+</div>
+<div v-click="3" class="border border-gray-600 rounded-lg p-3">
+<b>Lié au runtime</b>
+<div class="text-xs opacity-50 pb-2">pas une donnée, mais un état vivant de la VM</div>
+<div class="text-sm opacity-80">fonctions <span class="opacity-60">(du code + une closure)</span>, instances de classe <span class="opacity-60">(méthodes sur le prototype)</span>, références circulaires <span class="opacity-60">(un graphe, pas un arbre)</span></div>
+</div>
+</div>
+
+<!--
+On reste général : sérialiser, c'est transformer l'état vivant (un graphe d'objets en mémoire)
+en une représentation texte transportable, et désérialiser c'est reconstruire ce graphe. En
+pratique JSON.stringify / JSON.parse.
+Le point clé : une chaîne ne contient que des données plates, et il y a DEUX raisons distinctes
+qu'une valeur n'y rentre pas.
+1) Elle est liée au runtime — ce n'est pas vraiment une donnée, mais un état vivant de la VM.
+Une fonction, c'est du code + une closure (des variables capturées dans une portée) : aucune
+chaîne ne peut capturer ça. Une instance de classe : les champs sont des données, mais les
+méthodes vivent sur le prototype, dans le runtime — JSON.stringify ne sérialise que les champs
+propres et on récupère un objet nu, sans son comportement ni son type. Une référence circulaire :
+JSON représente un arbre, pas un graphe avec des pointeurs qui bouclent → TypeError.
+2) C'est un type que la grammaire JSON ne définit pas. JSON ne connaît que objet, tableau,
+string, number, boolean, null. Tout le reste est traité au cas par cas par stringify, en général
+silencieusement : Date → string ISO (on perd le type, parse rend une string), Map/Set → {} (vidés),
+undefined / fonction / Symbol → la clé est carrément omise, BigInt → TypeError. Le piège, c'est
+que la plupart de ces cas ne lèvent PAS d'erreur : la donnée disparaît sans bruit.
+D'où la question qui structure la slide suivante : est-ce que le store GARANTIT un état
+sérialisable, ou est-ce qu'il laisse passer n'importe quel objet ? C'est un vrai choix de design.
+-->
+
+---
+
+# Les bénéfices d'un état sérialisable
+
+<div class="grid grid-cols-2 gap-4">
+
+<div v-click="1" class="border border-gray-600 rounded-lg p-4">
+<div class="text-2xl">💾</div>
+<b>Persistance</b>
+<div class="text-sm opacity-70 pt-1">l'état entier tient dans <code>localStorage</code> — survit au refresh, à la fermeture de l'onglet</div>
+</div>
+
+<div v-click="2" class="border border-gray-600 rounded-lg p-4">
+<div class="text-2xl">🖥️</div>
+<b>SSR & hydratation</b>
+<div class="text-sm opacity-70 pt-1">le serveur sérialise l'état dans le HTML, le client le reprend tel quel</div>
+</div>
+
+<div v-click="3" class="border border-gray-600 rounded-lg p-4">
+<div class="text-2xl">⏪</div>
+<b>Time-travel & DevTools</b>
+<div class="text-sm opacity-70 pt-1">chaque état = un snapshot → enregistrer, rejouer, revenir en arrière, exporter un bug</div>
+</div>
+
+<div v-click="4" class="border border-gray-600 rounded-lg p-4">
+<div class="text-2xl">🔗</div>
+<b>Transport & sync</b>
+<div class="text-sm opacity-70 pt-1">envoyer l'état sur le réseau, entre onglets, client ↔ serveur</div>
+</div>
+
+</div>
+
+<div v-click="5" class="pt-5 text-center text-sm">
+À part Redux qui force la sérialisabilité, toutes les solutions acceptent des données non sérialisables. Pour débloquer les features ci-dessus, il faut <span v-mark.orange>réintroduire soi-même la contrainte</span>.
+</div>
+
+<!--
+L'angle : le bénéfice de NE PAS contraindre est évident (pas de contrainte = on stocke ce qu'on
+veut, instances, méthodes, Map). Donc on passe vite dessus. Ce qui mérite qu'on s'y attarde, c'est
+ce que la contrainte DÉBLOQUE — pas intuitif tant qu'on ne l'a pas vu. D'où une slide tournée vers
+les bénéfices de la sérialisabilité.
+Les quatre, c'est le même mécanisme (state ↔ string) sous quatre angles :
+- Persistance : tout l'état tient dans localStorage / IndexedDB, donc il survit au refresh et à la
+  fermeture de l'onglet. JSON.stringify au save, JSON.parse au boot.
+- SSR & hydratation : le serveur calcule un état, le sérialise dans le HTML envoyé, le client le
+  désérialise et reprend exactement là où le serveur s'est arrêté — sans refetch.
+- Time-travel & DevTools : si chaque état est un snapshot, on peut les empiler, revenir en arrière,
+  rejouer une séquence, et exporter l'historique dans un rapport de bug reproductible.
+- Transport & sync : un état sérialisable se met sur le réseau — synchro multi-onglets, client ↔
+  serveur (c'est exactement ce que fait un Convex, par ex.).
+La dernière ligne pose l'alternative sans s'y attarder : ne rien contraindre, c'est juste la liberté
+de stocker des objets riches — évident — au prix de tout ce qui précède.
+À NUANCER si on te pose la question : presque aucune lib n'IMPOSE la sérialisabilité au runtime.
+Zustand stocke des objets plats par convention mais ne t'empêche pas d'y mettre une Map ; rien ne
+casse jusqu'à ce que tu actives persist ou devtools, qui eux exigent un état sérialisable. C'est
+opt-in partout via middleware/plugins ; même Redux ne bloque pas, RTK se contente d'avertir
+(serializableCheck). Enchaîne sur l'axe immuable/mutable — un état sérialisable est presque
+toujours immuable et plat.
+-->
+
+---
+
 # Critères distinctifs
 
 <div class="text-sm opacity-70 pb-2">
@@ -331,22 +438,28 @@ Réf : interbolt.org/blog/react-ui-tearing, thread Tanner Linsley.
 </div>
 
 <div class="font-bold opacity-70 self-center text-right pr-2">Mutable</div>
-<div v-click class="border border-gray-600 rounded-lg p-4">
+<div class="flex flex-col gap-2">
+<div v-click class="border border-gray-600 rounded-lg p-3">
 <b class="text-lg">MobX</b>
 <div class="opacity-60 text-xs pt-1">observables, mutation directe</div>
 </div>
-<div v-click class="border border-gray-600 rounded-lg p-4">
+<div v-click class="border border-gray-600 rounded-lg p-3">
 <b class="text-lg">Jotai</b>
-<div class="opacity-60 text-xs pt-1">atomes, granulaire</div>
+<div class="opacity-60 text-xs pt-1">atomes, granulaire <span class="opacity-80">· provider optionnel</span></div>
 </div>
+</div>
+<div v-click class="self-center opacity-40 text-3xl">—</div>
 
 </div>
 
 <!--
 Deux axes orthogonaux. Mutabilité : immuable (fonctionnel, comme React — Redux, Zustand)
-vs mutable (signaux/observables — MobX, Jotai). Provider : Redux et Jotai wrappent l'app,
-Zustand et MobX non. Le tableau situe chaque lib. Jotai range-able en mutable car modèle
-atomique/granulaire proche des signaux. On démarre par Zustand (coin simple), puis Redux.
+vs mutable (signaux/observables — MobX, Jotai). Provider : SEUL Redux impose de wrapper l'app
+dans un <Provider>. Zustand et MobX n'en ont pas, et Jotai marche sans (store global par
+défaut) — son <Provider> est optionnel et niche (scoping de plusieurs stores, SSR, isolation
+en test). D'où la colonne « Avec Provider » qui ne contient que Redux, et la case mutable +
+provider laissée vide. Jotai range-able en mutable car modèle atomique/granulaire proche des
+signaux. On démarre par Zustand (coin simple), puis Redux.
 -->
 
 ---
