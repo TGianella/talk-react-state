@@ -759,7 +759,7 @@ Différentes stratégies de staleTime: 2 minutes pour ne pas spammer, jamais si 
 <div class="grid grid-cols-[5fr_4fr] gap-8 items-center pt-2">
 <div>
 
-```ts {all|5-7|all}
+```ts
 const { mutate } = useMutation({
   mutationFn: (trip) => api.post('/trips', trip),
   onSuccess: () => {
