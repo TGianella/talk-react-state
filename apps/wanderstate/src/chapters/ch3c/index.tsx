@@ -2,7 +2,7 @@
 // useQuery = subscription live, useMutation = écriture transactionnelle
 // Pas de cache à gérer, pas de polling, pas de websocket à câbler.
 import { ConvexProvider, ConvexReactClient, useQuery, useMutation } from 'convex/react'
-import { api } from '../../../../../convex/_generated/api'
+import { api } from '../../../convex/_generated/api'
 import type { Trip } from '../../types'
 import Layout from '../../Layout'
 import LayoutHeader from '../../components/LayoutHeader'

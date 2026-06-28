@@ -23,7 +23,13 @@ pnpm --filter wanderstate chapter:5a   # XState
 
 ## Chapitre 3c — Convex (temps réel)
 
+Dans deux terminaux séparés :
+
 ```bash
+# Terminal 1 — depuis apps/wanderstate/
+npx convex dev
+
+# Terminal 2 — depuis la racine du workspace
 pnpm --filter wanderstate chapter:3c
 pnpm --filter wanderstate dev
 ```
