@@ -1330,7 +1330,7 @@ de la mutation, soit l'id est absent et la normalisation n'a pas fonctionné.
 - n'importe quelle API (REST, RPC…)
 - cache **par query** (par clé)
 - agnostique du transport
-- pas d'API GraphQL côté back
+- quelques endpoints → pas besoin de gérer un cache d'entités
 
 </div>
 <div v-click class="border-2 border-orange-500 rounded-lg p-5">
@@ -1349,9 +1349,9 @@ Apollo n'est pas un remplaçant de TanStack Query — <span v-mark.orange>c'est 
 </div>
 
 <!--
-La question de départ est simple : est-ce que le back expose du GraphQL ?
-Non → TanStack Query. Oui, avec des entités partagées entre vues → Apollo.
-Les deux peuvent coexister dans un même projet si une partie de l'API est REST et l'autre GraphQL.
+TanStack Query supporte GraphQL — un fetcher graphql-request suffit, et le bundle reste à 13 kB.
+Apollo se justifie quand le graphe d'entités est complexe : beaucoup d'entités partagées entre vues,
+mutations qui doivent se propager partout automatiquement. Si c'est 2-3 queries GraphQL, TanStack fait le job.
 -->
 
 ---
