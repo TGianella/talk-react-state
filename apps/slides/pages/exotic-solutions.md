@@ -6,7 +6,7 @@ credit: German Simonson
 
 # Chapitre 5
 ## Les solutions exotiques
-<div class="opacity-60 pt-2">Quand un paradigme différent colle mieux au problème</div>
+<div class="opacity-80 pt-2">Quand un paradigme différent colle mieux au problème</div>
 
 ---
 

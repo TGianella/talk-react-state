@@ -6,7 +6,7 @@ credit: Assunta Darnault
 
 # Chapitre 2
 ## L'état dans l'URL
-<div class="opacity-60 pt-2">La source de vérité qu'on oublie</div>
+<div class="opacity-80 pt-2">La source de vérité qu'on oublie</div>
 
 ---
 

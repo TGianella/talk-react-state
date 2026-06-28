@@ -55,26 +55,50 @@ html.dark {
   text-align: center;
 }
 
-/* Title hierarchy — white text, kept legible with a soft shadow. */
+/*
+ * Title hierarchy — white text made legible by its own "halo" shadow (a tight
+ * dark blur), so the background gradient can stay light and the photo visible.
+ *
+ * Subtlety on the subtitle comes from a softer COLOUR, never element opacity:
+ * `opacity` would also fade the halo, which is the whole reason we had to darken
+ * the gradient before. We reset any `opacity-*` utility back to 1 here.
+ */
 .cover-slide .cover-panel h1 {
   color: #fff;
   font-size: 3.25rem;
   line-height: 1.1;
   margin-bottom: 0.5rem;
-  text-shadow: 0 2px 12px rgb(0 0 0 / 0.5);
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.9), 0 0 18px rgb(0 0 0 / 0.6);
 }
 
 .cover-slide .cover-panel h2 {
   color: #fff;
   font-size: 1.9rem;
   font-weight: 500;
-  text-shadow: 0 2px 12px rgb(0 0 0 / 0.5);
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.9), 0 0 18px rgb(0 0 0 / 0.6);
 }
 
 .cover-slide .cover-panel p,
 .cover-slide .cover-panel div {
   color: #e2e8f0;
-  text-shadow: 0 1px 8px rgb(0 0 0 / 0.5);
+  opacity: 1;
+  text-shadow: 0 1px 3px rgb(0 0 0 / 0.9), 0 0 12px rgb(0 0 0 / 0.6);
+}
+
+/* Chapter dividers (layout: section) — larger type than solution dividers. */
+.cover-slide.cover-section .cover-panel h1 {
+  font-size: 4.25rem;
+  margin-bottom: 1rem;
+}
+
+.cover-slide.cover-section .cover-panel h2 {
+  font-size: 2.75rem;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
+
+.cover-slide.cover-section .cover-panel div {
+  font-size: 1.35rem;
 }
 
 /* Conference-logo placeholder on the title slide — swap for an <img> later. */

@@ -6,7 +6,7 @@ credit: Atsushi Maeda
 
 # Chapitre 3
 ## L'état serveur
-<div class="opacity-60 pt-2">Le cache d'appels réseau</div>
+<div class="opacity-80 pt-2">Le cache d'appels réseau</div>
 
 ---
 layout: center
@@ -200,7 +200,7 @@ credit: Jon Meyer
 
 # SWR
 
-<div class="text-xl opacity-60 pt-3">Une bibliothèque minimaliste de gestion de state serveur</div>
+<div class="text-xl opacity-80 pt-3">Une bibliothèque minimaliste de gestion de state serveur</div>
 
 ---
 layout: center
@@ -496,7 +496,7 @@ credit: Wolfgang Weiser
 
 # TanStack Query
 
-<div class="text-xl opacity-60 pt-3">Le standard de la gestion de state serveur</div>
+<div class="text-xl opacity-80 pt-3">Le standard de la gestion de state serveur</div>
 
 ---
 layout: center
