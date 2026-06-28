@@ -1,5 +1,7 @@
 ---
 layout: section
+image: /covers/factory-atsushi-maeda.jpg
+credit: Atsushi Maeda
 ---
 
 # Chapitre 3
@@ -191,12 +193,14 @@ queryFn de TanStack, qui ne sont que ce point de contact.
 -->
 
 ---
-layout: center
-class: text-center
+layout: cover
+image: /covers/factory-jon-meyer.jpg
+credit: Jon Meyer
 ---
 
-<h1 class="text-8xl font-bold">SWR</h1>
-<div class="text-2xl opacity-60 pt-6">Une bibliothèque minimaliste de gestion de state serveur</div>
+# SWR
+
+<div class="text-xl opacity-60 pt-3">Une bibliothèque minimaliste de gestion de state serveur</div>
 
 ---
 layout: center
@@ -485,12 +489,14 @@ qu'on mute beaucoup). D'où le passage à TanStack Query.
 -->
 
 ---
-layout: center
-class: text-center
+layout: cover
+image: /covers/factory-wolfgang-weiser.jpg
+credit: Wolfgang Weiser
 ---
 
-<h1 class="text-7xl font-bold">TanStack Query</h1>
-<div class="text-2xl opacity-60 pt-6">Le standard de la gestion de state serveur</div>
+# TanStack Query
+
+<div class="text-xl opacity-60 pt-3">Le standard de la gestion de state serveur</div>
 
 ---
 layout: center

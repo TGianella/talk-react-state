@@ -1,5 +1,7 @@
 ---
 layout: section
+image: /covers/factory-german-simonson-1.jpg
+credit: German Simonson
 ---
 
 # Chapitre 4
@@ -463,8 +465,9 @@ signaux. On démarre par Zustand (coin simple), puis Redux.
 -->
 
 ---
-layout: center
-class: text-center
+layout: cover
+image: /covers/factory-luca-cavallin.jpeg
+credit: Luca Cavallin
 ---
 
 # Zustand
@@ -853,8 +856,9 @@ imposer ses propres conventions (slices, un store par domaine) sur les gros proj
 -->
 
 ---
-layout: center
-class: text-center
+layout: cover
+image: /covers/factory-pablo-unzueta.jpg
+credit: Pablo Unzueta
 ---
 
 # Redux

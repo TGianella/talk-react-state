@@ -1,5 +1,7 @@
 ---
 layout: section
+image: /covers/factory-german-simonson-2.jpg
+credit: German Simonson
 ---
 
 # Chapitre 5
