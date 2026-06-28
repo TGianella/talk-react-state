@@ -219,9 +219,9 @@ Qui empêche les combinaisons invalides ? Personne — des if dans les composant
 
 <div class="flex gap-8 items-center">
   <div v-click="1" class="flex flex-col items-center gap-2">
-    <div class="w-14 h-14 rounded-full border-4 border-gray-600" :class="{ 'bg-red-500 shadow-[0_0_20px_4px_rgba(239,68,68,0.6)]': true }"></div>
     <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
     <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600" :class="{ 'bg-green-500 shadow-[0_0_20px_4px_rgba(34,197,94,0.6)]': true }"></div>
   </div>
   <div v-click="2" class="text-3xl text-gray-400">→</div>
   <div v-click="2" class="flex flex-col items-center gap-2">
@@ -231,25 +231,20 @@ Qui empêche les combinaisons invalides ? Personne — des if dans les composant
   </div>
   <div v-click="3" class="text-3xl text-gray-400">→</div>
   <div v-click="3" class="flex flex-col items-center gap-2">
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600" :class="{ 'bg-red-500 shadow-[0_0_20px_4px_rgba(239,68,68,0.6)]': true }"></div>
     <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
     <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
-    <div class="w-14 h-14 rounded-full border-4 border-gray-600" :class="{ 'bg-green-500 shadow-[0_0_20px_4px_rgba(34,197,94,0.6)]': true }"></div>
   </div>
-</div>
-
-<div v-click="4" class="text-xs opacity-50 text-center">
-  rouge → orange → vert → rouge…<br>jamais rouge → vert directement
 </div>
 
 </div>
 <div>
 
-<v-clicks at="5">
+<v-clicks at="4">
 
 - Un seul **état actif** à la fois
 - Des **événements** déclenchent des **transitions**
 - Ce qui n'est pas défini **ne peut pas arriver**
-- Formalisé par David Harel (1987) — électronique, protocoles, jeux vidéo
 
 </v-clicks>
 
@@ -257,7 +252,7 @@ Qui empêche les combinaisons invalides ? Personne — des if dans les composant
 </div>
 
 <!--
-Insister sur l'absence : rouge → vert n'existe pas dans le graphe, donc c'est impossible par construction.
+vert → orange → rouge → vert…<br>jamais vert → rouge directement
 C'est ça, la garantie. Pas un if, pas une convention — une absence dans la spec.
 -->
 
