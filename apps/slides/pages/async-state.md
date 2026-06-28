@@ -1077,11 +1077,11 @@ const { data, loading, error } = useQuery(gql`
 </div>
 
 <div v-click class="pt-5 text-center opacity-80">
-Même ergonomie que TanStack Query — sauf que la <span v-mark.orange>query GraphQL est le contrat</span>, pas une clé arbitraire.
+Plus proche de SWR que de TanStack : la <span v-mark.orange>query GraphQL est à la fois la clé et le contrat</span> — pas de découplage.
 </div>
 
 <!--
-Les variables jouent le rôle de la queryKey de TanStack : si tripId change, Apollo refetch automatiquement.
+Les variables jouent le rôle de la clé dynamique : si tripId change, Apollo refetch automatiquement.
 Différence notable : loading (pas isPending) — Apollo garde son API historique.
 -->
 
@@ -1128,8 +1128,19 @@ InMemoryCache (store plat)
 </div>
 </div>
 
-<div v-click class="pt-6 text-center text-sm opacity-80">
+<div v-click class="pt-4 text-center text-sm opacity-80">
 Chaque objet a une clé : <code class="text-orange-400">__typename + id</code> → <code class="text-orange-400">Trip:1</code>, <code class="text-orange-400">Step:7</code>…
+</div>
+
+<div v-click class="pt-4 max-w-sm mx-auto">
+
+```ts
+// pas de onSuccess, pas d'invalidation
+const [updateTrip] = useMutation(UPDATE_TRIP)
+updateTrip({ variables: { id, budget } })
+// Trip:1 se propage automatiquement
+```
+
 </div>
 
 <!--
