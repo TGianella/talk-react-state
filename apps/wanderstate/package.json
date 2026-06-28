@@ -18,6 +18,7 @@
   "dependencies": {
     "@statelyai/inspect": "^0.7.2",
     "@xstate/react": "^6.1.0",
+    "convex": "^1.42.0",
     "nuqs": "^2.8.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
