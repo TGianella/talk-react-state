@@ -48,11 +48,13 @@ réactivité fine et synchrone → Jotai / MobX. Le bon outil épouse la forme d
 
 ---
 layout: section
+image: /covers/factory-dietmar-rabich.avif
+credit: Dietmar Rabich
 ---
 
 # Jotai
-<div class="text-2xl opacity-70 pt-2">⚛️ l'état atomique</div>
-<div class="opacity-50 pt-3 text-sm">状態 — « état » en japonais</div>
+<div class="text-2xl opacity-70 pt-2">Un état atomique</div>
+<div class="opacity-50 pt-3 text-sm"></div>
 
 <!--
 Divider de sous-section. On enchaîne sur la fiche d'identité de Jotai, puis le « comment
@@ -66,10 +68,11 @@ Divider de sous-section. On enchaîne sur la fiche d'identité de Jotai, puis le
 <FicheSolution
   annee="2020"
   auteur="Daishi Kato — pmndrs"
-  tagline="L'état, composé de bas en haut, atome par atome."
+  tagline="Un état composé de bas en haut, atome par atome."
   probleme="Un store top-down concentre tout au même endroit. Beaucoup de code si on veut juste partager des valeurs globales."
   creneau="État fragmenté et fortement dérivé, où l'on veut une réactivité fine sans store central."
   :infos="[
+    '状態 — « état » en japonais',
     'Bottom-up : composition d\'atomes, pas de store central',
     'Atome = accessor immuable : la valeur vit dans un store caché',
     'Sous le capot : useReducer, pas useSyncExternalStore',
@@ -264,8 +267,8 @@ const [double, setDouble] = useAtom(doubleAtom)
 </div>
 </div>
 
-<div v-click class="mt-4 border-2 border-orange-500 px-4 py-2 text-sm text-center">
-⚠️ Pouvoir total : lire/écrire <b>n'importe quel</b> atome, effets de bord… <b>À manier avec une extrême prudence.</b>
+<div v-click class="mt-4 px-4 py-2 text-sm text-center">
+⚠️ Pouvoir total : lecture/écriture de <b>n'importe quel</b> atome, exécution d'effets de bord… <b>À manier avec une extrême prudence.</b>
 </div>
 
 <!--
@@ -386,7 +389,7 @@ jamais.
   :scores="[4, 4, 5, 4, 3]"
   poids="~3.5 kB (gzip)"
   perimetre="État client : local → global"
-  idealPour="beaucoup d'état dérivé interdépendant, réactivité fine sans store central"
+  idealPour="beaucoup d'état dérivé interdépendant, réactivité fine sans store central, usage minimal (useState global)"
   :avantages="[
     'Re-renders ultra-ciblés (granularité de l\'atome)',
     'API minuscule et composable : 4 formes d\'atomes',
@@ -413,11 +416,12 @@ aussi quand l'état est très dérivé et qu'on veut une réactivité fine sans 
 
 ---
 layout: section
+image: /covers/factory-jra9393.avif
+credit: jra9393
 ---
 
 # MobX
-<div class="text-2xl opacity-70 pt-2">📊 les observables</div>
-<div class="opacity-50 pt-3 text-sm">mutez l'état — tout ce qui en dépend se recalcule</div>
+<div class="text-2xl opacity-70 pt-2">Un state directement observable</div>
 
 <!--
 Divider de sous-section. Changement de paradigme par rapport à Jotai : on quitte l'immuable
@@ -668,13 +672,39 @@ Impur · produit un <b>effet de bord</b>.
 </div>
 </div>
 
-<div v-click class="pt-6 text-center text-lg">
-<b>state</b> → <code>computed</code> → <b>réactions</b>
+<div v-click class="mt-7 border-2 border-orange-500 px-5 py-4">
+
+<div class="text-center text-lg pb-2">⚡ Toutes les dérivations sont <b>synchrones</b></div>
+
+<div class="opacity-80 text-sm text-center pb-4">
+Dès qu'une action mute le state, les <code>computed</code> sont recalculés et les réactions ont déjà tourné — <b>dans la même pile</b>, avant la fin de l'action. Aucun re-render à attendre.
 </div>
 
-<div v-click class="mt-5 border-2 border-orange-500 px-4 py-2 text-sm text-center">
-⚡ Toutes les dérivations sont <b>synchrones</b> : après une action, computed et réactions sont déjà à jour — <b>aucun re-render à attendre</b>.<br>
-<span class="opacity-70">Contraste <code>useState</code> : la valeur qu'on vient de changer n'est lisible qu'au render suivant.</span>
+<div class="grid grid-cols-2 gap-6 text-sm">
+<div>
+
+```ts
+// MobX — lisible aussitôt
+store.addExpense(50)
+store.totalBudget // ✅ à jour
+```
+
+</div>
+<div>
+
+```ts
+// useState — décalé d'un render
+setCount(c => c + 1)
+count // ❌ encore l'ancienne valeur
+```
+
+</div>
+</div>
+
+<div class="opacity-70 text-xs text-center pt-3">
+Pas de « stale state », pas de <code>useEffect</code> pour réagir à son propre changement.
+</div>
+
 </div>
 
 <!--
@@ -905,7 +935,7 @@ MobX s'abonne à la propriété <b>lue</b>, pas à l'objet. Lire trop tôt = val
 <div class="grid grid-cols-2 gap-6 items-start pt-3">
 <div>
 
-```tsx {all|2|5}
+```tsx {all|2-3|5-6}
 const Parent = observer(() => (
   // ❌ on lit .length ICI → on passe un nombre figé
   <Header count={store.trips.length} />
@@ -919,7 +949,7 @@ const Header = observer(({ count }) => <p>{count}</p>)
 </div>
 <div>
 
-```tsx {all|2|5}
+```tsx {all|2-3|5-6}
 const Parent = observer(() => (
   // ✅ on passe l'observable, pas la valeur
   <Header store={store} />
@@ -1378,7 +1408,7 @@ applySnapshot(store, loaded)
 <v-clicks>
 
 - le state **est** sa propre description : un schéma normé, validé au runtime
-- **plus de classes natives**, un DSL de types à apprendre, API verbeuse
+- **plus de classes natives**, un Domain Specific Language de types à apprendre, API verbeuse
 - sérialisation **native et automatique**
 - `onSnapshot` → un cliché immuable **à chaque mutation** (persistance, SSR)
 - `onPatch` (JSON Patch) → **undo/redo, time-travel, sync**
@@ -1474,10 +1504,10 @@ que quand snapshots/historique/sync structurée sont un vrai besoin.
 # Bilan
 
 <Bilan
-  :scores="[4, 3, 5, 4, 5]"
+  :scores="[3, 3, 5, 4, 5]"
   poids="~16 kB (gzip) + mobx-react-lite"
   perimetre="État client : local → global, modèle objet"
-  idealPour="un modèle de domaine riche en OOP, beaucoup d'état dérivé, réactivité fine sans sélecteurs"
+  idealPour="un modèle de domaine riche en OOP, beaucoup d'état dérivé, réactivité fine sans sélecteurs. Utile pour une application avec beaucoup de state client décentralisé et des contraintes de perfomance."
   :avantages="[
     'Réactivité fine automatique : on mute en JS normal, MobX suit',
     'Re-renders ciblés, sans sélecteurs ni mémoïsation manuelle',
@@ -1504,6 +1534,16 @@ dérivé interdépendant, et qu'on veut une réactivité automatique sans la cé
 le grain idiomatique React. Snapshots/undo/time-travel structurés ⇒ MST ou keystone, sinon le
 RootStore vanille suffit.
 -->
+
+---
+layout: section
+image: /covers/factory-bfenton_photo.avif
+credit: bfenton_photo
+---
+
+# XState
+<div class="text-2xl opacity-70 pt-2">🤖 les machines à états</div>
+<div class="opacity-50 pt-3 text-sm">rendre les états impossibles… impossibles</div>
 
 ---
 
