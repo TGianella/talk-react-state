@@ -39,7 +39,7 @@ wanderstate.app/?trip=abc123&view=grid
 </div>
 
 <div v-click class="pt-6 text-center opacity-70 text-sm">
-Si ton app affiche quelque chose qui <b>dépend d'un paramètre</b>, ce paramètre est du state.
+Si l'app affiche quelque chose qui <b>dépend d'un paramètre</b>, ce paramètre est du state.
 </div>
 
 <!--
@@ -58,7 +58,7 @@ useState → en mémoire, disparaît au refresh. L'URL → déjà là, gratuite,
 
 <v-clicks>
 
-- `?trip=abc123` — la modal du bon voyage s'ouvre depuis un lien
+- `?trip=abc123` — la modale du bon voyage s'ouvre depuis un lien
 - `?view=grid` — vue cards vs liste, persistée entre navigations
 - `?status=confirmed` — filtre actif sur la liste
 - `?page=3` — reload = même page, pas retour à 1
@@ -72,17 +72,17 @@ useState → en mémoire, disparaît au refresh. L'URL → déjà là, gratuite,
 
 <v-clicks>
 
-- Tooltip ouvert — éphémère, sans sens hors contexte
-- Valeur d'un champ en cours de frappe — état intermédiaire
-- Menu mobile ouvert/fermé — UI state pur
+- Tooltip ouvert *(éphémère, sans sens hors contexte)*
+- Valeur d'un champ en cours de frappe *(état intermédiaire)*
+- Menu mobile ouvert/fermé *(UI state pur)*
 
 </v-clicks>
 
 </div>
 </div>
 
-<div v-click="8" class="pt-4 border-l-4 border-orange-500 pl-3 text-sm opacity-80">
-<b>Règle :</b> ce qui doit <span v-mark.underline.orange="8">survivre à un refresh</span> ou être <span v-mark.underline.orange="8">partageable</span> appartient à l'URL. Rien d'autre.
+<div v-click="8" class="pt-12 text-center text-xl">
+Ce qui doit <span v-mark.underline.orange="8">survivre à un refresh</span> ou être <span v-mark.underline.orange="8">partageable</span> appartient à l'URL. Rien d'autre.
 </div>
 
 <!--
@@ -111,7 +111,7 @@ window.history.pushState({}, '', `?${params.toString()}`)
 <code>pushState</code> écrit dans l'URL mais ne déclenche <b>pas</b> de re-render React. Il faut écouter <code>popstate</code> + forcer un re-render manuellement.
 </div>
 <div v-click class="opacity-75">
-Aucun typage : tout est <code>string | null</code>. La conversion est à la charge du développeur. Chaque paramètre = un bloc de code identique à dupliquer.
+Les query params n'ont pas de type : tout arrive en <code>string</code>, à convertir manuellement.
 </div>
 </div>
 
@@ -122,7 +122,30 @@ Tout est string | null : conversion manuelle à chaque paramètre. 5 params = 5 
 
 ---
 
-# `nuqs` — l'URL comme `useState`
+# `nuqs`
+
+<FicheSolution
+  annee="2020"
+  auteur="François Best (franky47) — 47ng"
+  tagline="Des query params typés, avec une API identique à useState."
+  probleme="L'API native (URLSearchParams + pushState) ne déclenche pas de re-render React, impose un typage manuel et force à dupliquer du code pour chaque paramètre."
+  creneau="State navigable côté client (filtres, vues, IDs de ressource), partageable et persisté gratuitement par le navigateur."
+  :infos="[
+    'Initialement next-usequerystate (Next.js only), renommé nuqs en v2 pour supporter React SPA, Remix, React Router, TanStack Router.',
+    'Adopté par shadcn/ui, Supabase, Sentry, Prisma Studio, Uniswap — 3,3M téléchargements/semaine.',
+    'Sponsorisé par Vercel (programme OSS 2025) : testé automatiquement avec chaque release de Next.js.',
+    'Utilise useSyncExternalStore : même mécanique que Zustand ou Redux, appliquée à l\'URL.',
+  ]"
+/>
+
+<!--
+nuqs résout exactement le manque de l'API native : typage, re-render automatique, et batching.
+L'analogie useState est intentionnelle : même destructuring, même ergonomie.
+-->
+
+---
+
+# `useQueryState` — le hook central
 
 <div class="grid grid-cols-2 gap-6 items-center">
 <div>
@@ -144,7 +167,7 @@ setTripId(null)     // supprime le paramètre
 
 <v-clicks>
 
-- API **identique à `useState`** — setter inclus
+- API **identique à `useState`**, setter inclus
 - la valeur est **typée** automatiquement
 - `null` = paramètre absent de l'URL
 - back/forward déclenche un **re-render** React
@@ -163,24 +186,23 @@ setTripId(null) → supprime le paramètre de l'URL.
 
 # Les parsers — le contrat de typage
 
-| Parser | Type TypeScript | Exemple URL |
-|---|---|---|
-| `parseAsString` | `string \| null` | `?q=paris` |
-| `parseAsInteger` | `number \| null` | `?page=3` |
-| `parseAsFloat` | `number \| null` | `?budget=1500.5` |
-| `parseAsBoolean` | `boolean \| null` | `?confirmed=true` |
-| `parseAsStringLiteral(['a','b'])` | `'a' \| 'b' \| null` | `?view=grid` |
-| `parseAsArrayOf(parseAsString)` | `string[] \| null` | `?tags=vol,hotel` |
-| `parseAsJson<T>()` | `T \| null` | `?filter=%7B...%7D` |
+```tsx
+// Primitives
+useQueryState('page',   parseAsInteger)   // number | null
+useQueryState('active', parseAsBoolean)   // boolean | null
 
-<div v-click class="pt-4 border-l-4 border-orange-500 pl-3 text-sm">
-Un parser = deux méthodes : <code>parse(string → T | null)</code> et <code>serialize(T → string)</code>.<br>
-C'est le contrat entre l'URL (string) et le composant (type TypeScript).
+// Union de valeurs : le cas WanderState
+useQueryState('view', parseAsStringLiteral(['grid', 'list'] as const))
+// 'grid' | 'list' | null
+```
+
+<div v-click class="pt-8 text-center text-xl">
+Parsers déjà intégrés pour <span v-mark.underline.orange>les types courants</span> : <code>string</code>, <code>number</code>, <code>boolean</code>, dates, tableaux, JSON, enums…
 </div>
 
 <!--
-parse() : string → T | null. serialize() : T → string. Si null → paramètre ignoré/absent.
-withDefault() : élimine le null quand il y a une valeur par défaut sensée → on voit ça slide suivante.
+Un parser = parse(string → T | null) + serialize(T → string).
+withDefault() élimine le null quand il y a une valeur par défaut sensée → on voit ça slide suivante.
 -->
 
 ---
@@ -231,61 +253,15 @@ const [view, setView] =
 </div>
 
 <div v-click class="pt-4 text-center">
-Ouvrir le voyage <code>abc123</code> en vue liste : <code class="bg-gray-700 px-2 py-1 rounded">?trip=abc123&view=list</code>
-<div class="text-xs opacity-60 pt-1">Ce lien fonctionne directement — modal ouverte + vue liste. Le bouton back ferme la modal. <b>Gratuit.</b></div>
-</div>
-
-<!--
-Démo : créer des voyages → cliquer un voyage → montrer ?trip=<id> dans l'URL → copier/coller dans un nouvel onglet → modal rouverte.
-Back → modal fermée. Toggle vue → ?view=list. Combiner : ?trip=abc123&view=list.
--->
-
----
-
-# Sous le capot — `useSyncExternalStore`
-
-<div class="grid grid-cols-2 gap-8 items-center">
-<div>
-
-```
-        ┌─────────────────────────┐
-        │    nuqs internal store   │
-        │  (cache de l'URL en mém) │
-        └────────────┬────────────┘
-                     │ subscribe / getSnapshot
-         ┌───────────▼──────────┐
-         │  useSyncExternalStore │  ← hook React
-         └───────────┬──────────┘
-                     │
-         ┌───────────▼──────────┐
-         │  composant React      │
-         │  const [v, setV] = …  │
-         └──────────────────────┘
-```
-
-</div>
-<div>
-
-<v-clicks>
-
-- `pushState` seul ne déclenche **pas** de re-render
-- nuqs traite l'URL comme un **store externe**
-- s'abonne aux événements `popstate` (back/forward)
-- quand l'URL change → notifie tous les abonnés → React re-rend
-
-</v-clicks>
-
-<div v-click class="pt-3 text-xs border-l-4 border-gray-500 pl-2 opacity-70">
-C'est le même mécanisme que Zustand, Redux — <code>useSyncExternalStore</code> est l'API officielle React pour les stores externes.
-</div>
-
+L'URL encode l'état complet : <code class="bg-gray-700 px-2 py-1 rounded">?trip=abc123&view=list</code>
+<div class="text-xs opacity-60 pt-1">
+Partager ce lien rouvre la modal en vue liste — avec un router (soft navigation) ou un state serveur pour rehydrater la donnée.
 </div>
 </div>
 
 <!--
-nuqs maintient un cache de l'URL → expose subscribe/getSnapshot → React sait quand re-rendre.
-S'abonne à popstate + intercepte ses propres pushState.
-Pont ch4 : Zustand/Redux = exactement le même pattern. L'URL et un store externe sont identiques pour React.
+Démo : cliquer un voyage → montrer ?trip=<id> dans l'URL → toggle vue → ?view=list → combiner les deux.
+La promesse du lien partageable nécessite un router ou un state serveur — on y vient dans les chapitres suivants.
 -->
 
 ---
@@ -328,6 +304,56 @@ Le batching est la feature silencieuse qui rend le tout cohérent.
 
 ---
 
+# Sous le capot — `useSyncExternalStore`
+
+<div class="grid grid-cols-2 gap-8 items-center">
+<div>
+
+<div class="flex flex-col items-center gap-2">
+  <div class="border border-gray-500 rounded-xl px-4 py-3 w-64 text-center">
+    <div class="text-xs uppercase tracking-widest opacity-40 pb-1">URL</div>
+    <div class="font-mono text-sm opacity-80">window.location</div>
+  </div>
+  <div class="text-orange-400 text-sm opacity-60">↕ pushState · popstate</div>
+  <div class="border-2 border-orange-500 rounded-xl px-4 py-3 w-64 text-center bg-orange-400/10">
+    <div class="text-xs uppercase tracking-widest opacity-40 pb-1">nuqs internal store</div>
+    <div class="font-mono text-sm opacity-80">cache de l'URL</div>
+  </div>
+  <div class="text-orange-400 text-sm opacity-60">↕ subscribe · getSnapshot</div>
+  <div class="border border-gray-500 rounded-xl px-4 py-3 w-64 text-center">
+    <div class="text-xs uppercase tracking-widest opacity-40 pb-1">useSyncExternalStore</div>
+    <div class="font-mono text-sm opacity-80">hook React</div>
+  </div>
+  <div class="text-orange-400 text-sm opacity-60">↓</div>
+  <div class="border border-gray-500 rounded-xl px-4 py-3 w-64 text-center">
+    <div class="text-xs uppercase tracking-widest opacity-40 pb-1">composant React</div>
+    <div class="font-mono text-sm opacity-80">const [v, setV] = …</div>
+  </div>
+</div>
+
+</div>
+<div>
+
+<v-clicks>
+
+- `pushState` seul ne déclenche **pas** de re-render
+- nuqs traite l'URL comme un **store externe**
+- s'abonne aux événements `popstate` (back/forward)
+- quand l'URL change → notifie tous les abonnés → React re-rend
+
+</v-clicks>
+
+</div>
+</div>
+
+<!--
+nuqs maintient un cache de l'URL → expose subscribe/getSnapshot → React sait quand re-rendre.
+S'abonne à popstate + intercepte ses propres pushState.
+Pont ch4 : Zustand/Redux = exactement le même pattern. L'URL et un store externe sont identiques pour React.
+-->
+
+---
+
 # Shallow routing vs adaptateurs
 
 <div class="grid grid-cols-2 gap-8 pt-2 text-sm">
@@ -343,7 +369,7 @@ URL change → History API (pushState)
 ```
 
 <div class="pt-2 opacity-70">
-Parfait pour les SPA (Vite). Le router ne sait pas — pas besoin.
+Parfait pour les SPA (Vite). Le router ne sait pas, et c'est très bien.
 </div>
 
 </div>
@@ -416,25 +442,33 @@ IDs + filtres + vues → aucune de ces limites ne se pose.
 -->
 
 ---
-layout: quote
----
 
-# « L'URL est une base de données gratuite. »
+# `nuqs` — bilan
 
-Elle est déjà là, elle persiste, elle se partage, elle gère le back/forward.
-
-<div class="text-base opacity-60 pt-4">
-<code>useQueryState</code> = <code>useState</code> dont la valeur vit dans l'URL.<br>
-Avant d'inventer du state client, demandez-vous si ça n'appartient pas ici.
-</div>
-
-<div v-click class="text-sm opacity-50 pt-8">
-nuqs utilise <code>useSyncExternalStore</code> — exactement le même mécanisme que Zustand ou Redux.<br>
-L'URL et un store externe sont techniquement identiques du point de vue de React.
-</div>
+<Bilan
+  :scores="[5, 4, 4, 4, 3]"
+  poids="6 kB (gzip)"
+  perimetre="URL comme source de vérité"
+  idealPour="Le state le moins cher à maintenir — pas de store, un seul provider, géré par le navigateur"
+  :avantages="[
+    'API identique à useState — courbe d\'apprentissage quasi nulle',
+    'Typage automatique via parsers',
+    'Batching : plusieurs params, un seul pushState',
+    'Back/forward gratuit, sans une ligne de code',
+  ]"
+  :limites="[
+    'Taille de l\'URL limitée (~8 000 chars) — pas pour les objets volumineux',
+    'SSR : adaptateur requis, lecture seule côté serveur',
+    'État partagé entre plusieurs composants à coordonner manuellement',
+  ]"
+/>
 
 <!--
-Conclusion du chapitre. Le message à emporter : l'URL est sous-utilisée.
-La plupart des filtres, vues, et IDs de ressource devraient y vivre.
-nuqs rend ça aussi simple que useState — il n'y a aucune excuse.
+Scores (sur 5) : prise en main 4 (la notion de parser et de null demande 5 min),
+poids 4 (6 kB gzip — honnête, pas minimal), perf 4 (re-render ciblé via useSyncExternalStore),
+écosystème 4 (3,3M dl/semaine, shadcn/ui, Supabase, Sentry, Prisma, testé contre chaque release Next.js),
+montée en charge 3 (taille URL + SSR complexifient les grands formulaires).
+Idéal pour : filtres de liste, sélection de ressource (tripId), toggle de vue — les cas à 90 %.
+Limite principale : SSR avec Next.js App Router nécessite un adaptateur + comprendre
+la frontière read-only serveur / write client.
 -->
