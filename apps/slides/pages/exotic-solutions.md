@@ -83,36 +83,133 @@ pas l'objet. Attention au déréférencement hors d'un observer → perte de ré
 
 ---
 
+# `XState`
+
+<FicheSolution
+  annee="2018"
+  auteur="David Khourshid"
+  tagline="Des machines d'états et des statecharts pour rendre les états impossibles… impossibles."
+  probleme="Les actions centralisent le state, pas les transitions — les combinaisons invalides restent atteignables."
+  creneau="Workflows complexes (wizard, checkout, onboarding, player) où le problème ressemble à un graphe."
+  :infos="[
+    'XState = implémentation des statecharts de David Harel (1987), formalisés dans un article de la Weizmann Institute of Science.',
+    'La machine ne « tourne » pas : c\'est un objet pur. C\'est l\'acteur (createActor / useMachine) qui l\'exécute.',
+    'Stately Studio : éditeur visuel collaboratif en ligne, les machines se dessinent avant de se coder.',
+    'v5 (2023) : acteurs comme unité centrale, typage fort sans typegen, persistance profonde, API simplifiée.',
+  ]"
+/>
+
+<!--
+XState n'est pas un upgrade des store managers : c'est un paradigme différent pour un problème différent.
+Dès que le problème ressemble à un graphe, XState est le bon outil.
+-->
+
+---
+
 # `XState` · rendre les états impossibles… impossibles
 
-Avec `useReducer`, rien ne contraint les transitions :
+Toutes les solutions basées sur des actions partagent la même limite :
+
+<div class="grid grid-cols-2 gap-8 mt-4">
+<div v-click>
+
+**8 combinaisons, la plupart invalides**
 
 ```ts
-dispatch({ type: 'GO_TO_CONFIRM' })
-// on est encore à l'étape "nom"
+// Ces 3 booléens peuvent coexister
+// dans n'importe quelle combinaison
+const [isOpen, setIsOpen] = useState(false)
+const [isSubmitting, setIsSubmitting] = useState(false)
+const [hasError, setHasError] = useState(false)
+
+// isSubmitting && !isOpen ? 💀
+// hasError && !isSubmitting ? 💀
 ```
 
-<v-clicks>
+</div>
+<div v-click>
 
-- 3 booléens `isOpen / isSubmitting / hasError` = **8 combinaisons**, la plupart invalides
-- Les `if` de validation se dispersent dans les composants
+**Les `if` se dispersent partout**
 
-</v-clicks>
+```ts
+function handleNext() {
+  if (!name) return        // dans StepName.tsx
+  if (!destination) return // dans StepDest.tsx
+  if (!budget) return      // dans StepBudget.tsx
+  dispatch({ type: 'GO_TO_CONFIRM' })
+  // GO_TO_CONFIRM reste dispatchable
+  // même si tous les if passent à false demain
+}
+```
+
+</div>
+</div>
 
 <div v-click class="mt-4 border-l-4 border-orange-500 pl-3">
-Un état impossible est un bug qui n'attend que les bonnes conditions pour se manifester.
+Etat impossible = bug potentiel qui se produira dans les bonnes conditions.
 </div>
 
 <!--
-useReducer centralise, mais n'importe quelle action reste dispatchable depuis n'importe quel état.
+Toutes les libs basées sur des actions ont ce problème : elles centralisent le state, pas les transitions.
 Qui empêche les combinaisons invalides ? Personne — des if dans les composants, jamais exhaustifs.
+-->
+
+---
+
+# Les machines à états finis
+
+<div class="grid grid-cols-2 gap-8 items-center pt-4">
+<div class="flex flex-col items-center gap-6">
+
+<div class="flex gap-8 items-center">
+  <div v-click="1" class="flex flex-col items-center gap-2">
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600" :class="{ 'bg-red-500 shadow-[0_0_20px_4px_rgba(239,68,68,0.6)]': true }"></div>
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
+  </div>
+  <div v-click="2" class="text-3xl text-gray-400">→</div>
+  <div v-click="2" class="flex flex-col items-center gap-2">
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600" :class="{ 'bg-orange-400 shadow-[0_0_20px_4px_rgba(251,146,60,0.6)]': true }"></div>
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
+  </div>
+  <div v-click="3" class="text-3xl text-gray-400">→</div>
+  <div v-click="3" class="flex flex-col items-center gap-2">
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600 bg-gray-700"></div>
+    <div class="w-14 h-14 rounded-full border-4 border-gray-600" :class="{ 'bg-green-500 shadow-[0_0_20px_4px_rgba(34,197,94,0.6)]': true }"></div>
+  </div>
+</div>
+
+<div v-click="4" class="text-xs opacity-50 text-center">
+  rouge → orange → vert → rouge…<br>jamais rouge → vert directement
+</div>
+
+</div>
+<div>
+
+<v-clicks at="5">
+
+- Un seul **état actif** à la fois
+- Des **événements** déclenchent des **transitions**
+- Ce qui n'est pas défini **ne peut pas arriver**
+- Formalisé par David Harel (1987) — électronique, protocoles, jeux vidéo
+
+</v-clicks>
+
+</div>
+</div>
+
+<!--
+Insister sur l'absence : rouge → vert n'existe pas dans le graphe, donc c'est impossible par construction.
+C'est ça, la garantie. Pas un if, pas une convention — une absence dans la spec.
 -->
 
 ---
 
 # La machine d'états
 
-<div class="grid grid-cols-[1fr_2fr] gap-8 items-center pt-2">
+<div class="grid grid-cols-[1fr_2fr] gap-8 items-start pt-2">
 <div>
 
 ```mermaid {scale: 0.55}
@@ -129,21 +226,28 @@ stateDiagram-v2
 ```
 
 </div>
-<div>
-
-<v-clicks>
-
-- **États** : une seule valeur active à la fois
-- **Transitions** : les flèches nommées entre états
-- **Guards** : conditions pour qu'une transition ait lieu
-- **Contexte** : les données qui accompagnent les états
-
-</v-clicks>
-
-<div v-click class="border-l-4 border-orange-500 mt-4 pl-3 text-sm">
+<div class="flex flex-col gap-3 pt-2">
+<div class="grid grid-cols-2 gap-3">
+<div v-click class="border border-gray-500 rounded-lg p-3 text-center">
+<div class="font-bold text-orange-400 text-sm pb-1">États</div>
+<div class="text-xs opacity-70">Une seule valeur active à la fois</div>
+</div>
+<div v-click class="border border-gray-500 rounded-lg p-3 text-center">
+<div class="font-bold text-orange-400 text-sm pb-1">Transitions</div>
+<div class="text-xs opacity-70">Les flèches nommées entre états</div>
+</div>
+<div v-click class="border border-gray-500 rounded-lg p-3 text-center">
+<div class="font-bold text-orange-400 text-sm pb-1">Guards</div>
+<div class="text-xs opacity-70">Conditions pour qu'une transition ait lieu</div>
+</div>
+<div v-click class="border border-gray-500 rounded-lg p-3 text-center">
+<div class="font-bold text-orange-400 text-sm pb-1">Contexte</div>
+<div class="text-xs opacity-70">Les données qui accompagnent les états</div>
+</div>
+</div>
+<div v-click class="border-l-4 border-orange-500 pl-3 text-sm mt-2">
 Ce qui n'est pas dans le graphe <b>n'existe pas</b>.<br>Les états impossibles sont impossibles par construction.
 </div>
-
 </div>
 </div>
 
@@ -277,24 +381,86 @@ Montrer setup() + createMachine() dans l'IDE pendant submitting.
 
 ---
 
-# `useReducer` vs `Zustand` vs `XState`
+# Envoyer des événements — côté React
 
-<div class="pt-2">
+<div class="grid grid-cols-2 gap-8 pt-4">
+<div v-click>
 
-| | `useReducer` | `Zustand` | `XState` |
-|---|---|---|---|
-| Transitions contraintes | Non | Non | **Oui** |
-| Guards | `if` dans les composants | `if` dans les composants | Déclaratifs, dans la machine |
-| États async | Booléens combinés | Booléens combinés | États nommés |
-| Visualisation | — | DevTools | **Stately Inspector** |
-| Courbe d'apprentissage | Faible | Faible | Moyenne |
-| Idéal pour | CRUD simple | State global partagé | **Workflows, processus métier** |
+```tsx
+// useMachine retourne snapshot + send
+const [snapshot, send] = useMachine(wizardMachine)
 
+// send() dans les handlers
+<input
+  value={snapshot.context.name}
+  onChange={e => send({ type: 'SET_NAME', value: e.target.value })}
+/>
+
+<button onClick={() => send({ type: 'NEXT' })}>
+  Suivant
+</button>
+```
+
+</div>
+<div>
+
+<v-clicks>
+
+- Pas d'import de fonctions — juste `send()`
+- Un événement = un objet `{ type, ...payload }`
+- La machine décide si la transition a lieu
+- Le composant ne connaît pas l'état courant
+
+</v-clicks>
+
+</div>
 </div>
 
 <!--
-XState n'est pas un upgrade de useReducer, c'est un paradigme différent pour un problème différent.
-Insister sur la dernière ligne : wizard, checkout, onboarding, player — dès que le problème ressemble à un graphe.
+Montrer que send() est la seule interface — pas d'action creator, pas de dispatch nommé. Le composant est ignorant.
+-->
+
+---
+
+# Lire l'état — côté React
+
+<div class="grid grid-cols-2 gap-8 pt-4">
+<div v-click>
+
+```tsx
+const [snapshot, send] = useMachine(wizardMachine)
+
+// état courant
+snapshot.value          // 'name' | 'confirm' | …
+
+// données du contexte
+snapshot.context.name
+snapshot.context.budget
+
+// tester l'état actif
+snapshot.matches('submitting')
+
+// transition disponible ?
+snapshot.can({ type: 'NEXT' })
+```
+
+</div>
+<div>
+
+<v-clicks>
+
+- `snapshot.value` = l'état actif (string ou objet imbriqué)
+- `snapshot.context` = les données, toujours disponibles
+- `snapshot.matches()` pour le rendu conditionnel
+- `snapshot.can()` pour activer/désactiver un bouton
+
+</v-clicks>
+
+</div>
+</div>
+
+<!--
+snapshot.can() est la clé : le composant demande à la machine si NEXT est possible, il ne le calcule pas lui-même.
 -->
 
 ---
