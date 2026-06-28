@@ -963,36 +963,453 @@ C'est le prix de la richesse — et ça reste LE standard du state serveur en Re
 -->
 
 ---
+layout: center
+class: text-center
+---
 
-# 3b · `Apollo` — quand le préférer
+<h1 class="text-7xl font-bold">Apollo Client</h1>
+<div class="text-2xl opacity-60 pt-6">Le client GraphQL de référence</div>
+
+---
+
+# `Apollo Client`
+
+<FicheSolution
+  annee="2016"
+  auteur="Meteor Development Group → Apollo GraphQL"
+  tagline="Un client GraphQL complet : cache normalisé, mutations, subscriptions."
+  probleme="REST impose la forme des réponses côté serveur (over-fetching, under-fetching, allers-retours multiples)."
+  creneau="API GraphQL existante avec des entités partagées entre plusieurs vues, subscriptions temps réel, ou grands projets avec fragments co-localisés."
+  :infos="[
+    'Apollo Client est le client GraphQL le plus utilisé dans l\'écosystème React.',
+    'Maintenu par Apollo GraphQL, qui développe aussi Apollo Server et Apollo Studio.',
+    'Inclut InMemoryCache, un cache normalisé qui synchronise automatiquement les entités entre les vues.',
+  ]"
+/>
+
+<!--
+Apollo n'est pas un remplaçant de TanStack Query — c'est un outil pour une situation précise.
+La question à poser : est-ce que le backend expose du GraphQL ? Si non, Apollo n'a aucun intérêt.
+-->
+
+---
+
+# GraphQL inverse le contrat REST
+
+<div class="grid grid-cols-2 gap-10 pt-6 items-start">
+<div v-click>
+
+### REST
+<div class="text-xs opacity-50 pt-1">le serveur décide de la forme</div>
+
+```tsx
+// on reçoit ce que le serveur veut
+GET /api/trips
+→ { id, name, destination,
+    budget, steps, users, … }
+```
+
+<div class="text-sm opacity-70 pt-3">
+<b>Over-fetching</b> — des champs inutiles<br>
+<b>Under-fetching</b> — plusieurs requêtes pour assembler une vue
+</div>
+
+</div>
+<div v-click class="border-l border-gray-600 pl-8">
+
+### GraphQL
+<div class="text-xs opacity-50 pt-1">le client décide de la forme</div>
+
+```tsx
+// on demande exactement ce dont on a besoin
+query GetTrip($id: ID!) {
+  trip(id: $id) {
+    id
+    name
+    budget   # uniquement ces champs
+  }
+}
+```
+
+<div class="text-sm opacity-70 pt-3">
+Un seul endpoint · une seule requête<br>
+La réponse a <span v-mark.orange>exactement la forme demandée</span>
+</div>
+
+</div>
+</div>
+
+<!--
+Exemple concret d'under-fetching : une vue "détail de voyage" qui a besoin des étapes, du budget
+et des membres — avec REST ça peut être 3 endpoints. GraphQL : une seule requête, zéro aller-retour superflu.
+-->
+
+---
+
+# `useQuery` — le composant déclare ses besoins
+
+```tsx {all|3-9|1-2}
+// Le composant déclare ses besoins, Apollo s'occupe du reste
+const { data, loading, error } = useQuery(gql`
+  query GetTrip($id: ID!) {
+    trip(id: $id) {
+      id
+      name
+      budget
+    }
+  }
+`, { variables: { id: tripId } })
+```
+
+<div class="grid grid-cols-3 gap-6 pt-4 text-sm">
+<div v-click class="border border-gray-600 rounded-lg p-3">
+<code class="text-orange-400">data</code>
+<div class="text-xs opacity-60 pt-1">La réponse GraphQL résolue</div>
+</div>
+<div v-click class="border border-gray-600 rounded-lg p-3">
+<code class="text-orange-400">loading</code>
+<div class="text-xs opacity-60 pt-1">Vrai pendant le premier chargement</div>
+</div>
+<div v-click class="border border-gray-600 rounded-lg p-3">
+<code class="text-orange-400">error</code>
+<div class="text-xs opacity-60 pt-1">Erreur réseau ou GraphQL</div>
+</div>
+</div>
+
+<div v-click class="pt-5 text-center opacity-80">
+Même ergonomie que TanStack Query — sauf que la <span v-mark.orange>query GraphQL est le contrat</span>, pas une clé arbitraire.
+</div>
+
+<!--
+Les variables jouent le rôle de la queryKey de TanStack : si tripId change, Apollo refetch automatiquement.
+Différence notable : loading (pas isPending) — Apollo garde son API historique.
+-->
+
+---
+
+# Le cache normalisé — le cœur d'Apollo
+
+<div class="text-center text-sm opacity-70 pb-4">La différence fondamentale avec TanStack Query ou SWR</div>
+
+<div class="grid grid-cols-2 gap-10 items-start">
+<div>
+
+<div v-click>
+
+**TanStack Query / SWR**
+<div class="text-xs opacity-50 pb-2">cache par clé de requête</div>
+
+```
+cache
+├── ['trips']       → [Trip, Trip, Trip]
+├── ['trips', '1']  → Trip (copie)
+└── ['trips', '2']  → Trip (copie)
+```
+
+<div class="text-xs opacity-60 pt-1">Muter Trip:1 → invalider manuellement toutes les clés concernées.</div>
+
+</div>
+
+</div>
+<div v-click class="border-l border-gray-600 pl-8">
+
+**Apollo — InMemoryCache**
+<div class="text-xs opacity-50 pb-2">cache normalisé par entité</div>
+
+```
+InMemoryCache (store plat)
+├── Trip:1  → { id, name, budget }
+├── Trip:2  → { id, name, budget }
+└── Step:7  → { …, trip: __ref:Trip:1 }
+```
+
+<div class="text-xs opacity-60 pt-1">Muter Trip:1 → <span class="text-orange-400">toutes les vues</span> qui référencent Trip:1 se mettent à jour automatiquement.</div>
+
+</div>
+</div>
+
+<div v-click class="pt-6 text-center text-sm opacity-80">
+Chaque objet a une clé : <code class="text-orange-400">__typename + id</code> → <code class="text-orange-400">Trip:1</code>, <code class="text-orange-400">Step:7</code>…
+</div>
+
+<!--
+La clé de normalisation est construite automatiquement depuis __typename et id.
+Si un objet n'a pas d'id, Apollo ne peut pas le normaliser — il stocke la réponse brute.
+C'est le cas à connaître quand la normalisation ne fonctionne pas comme attendu.
+-->
+
+---
+
+# Une entité, une source de vérité
+
+<div class="text-sm opacity-70 pb-6 text-center">
+Deux queries ramènent le même voyage — une seule entrée dans le cache.
+</div>
+
+```mermaid {scale: 0.85}
+graph LR
+    Q1(Query\ngetTrips) -->|__ref| C[(Trip:1\nname: Japon)]
+    Q2(Query\ngetTrip id:1) -->|__ref| C
+    C -->|re-render| V1(TripList)
+    C -->|re-render| V2(TripDetail)
+    style C fill:#f97316,stroke:#ea580c,color:#fff
+```
+
+<div v-click class="pt-4 grid grid-cols-2 gap-8 text-sm">
+<div class="border-l-4 border-orange-500 pl-3">
+Pas de copie dupliquée — les deux queries <b>pointent</b> vers la même entrée.
+</div>
+<div class="border-l-4 border-gray-600 pl-3">
+Une mutation renvoie Trip:1 → <b>TripList et TripDetail</b> se re-rendent. Automatiquement.
+</div>
+</div>
+
+<!--
+C'est le scénario le plus courant dans une vraie app : une liste et une page détail
+qui affichent la même entité. Avec TanStack il faudrait invalider les deux clés après une mutation.
+Avec Apollo : rien à écrire.
+-->
+
+---
+
+# La propagation automatique — mutations
+
+<div class="grid grid-cols-2 gap-10 items-center pt-2">
+<div>
+
+```mermaid {scale: 0.8}
+graph TD
+    M(Mutation\nupdateBudget) -->|renvoie Trip:1| C[(InMemoryCache\nTrip:1)]
+    C -->|re-render| V1(TripList)
+    C -->|re-render| V2(TripDetail)
+    C -->|re-render| V3(BudgetSummary)
+    style C fill:#f97316,stroke:#ea580c,color:#fff
+```
+
+</div>
+<div class="space-y-6">
+
+<div v-click>
+Apollo calcule la clé de l'objet renvoyé (<code>Trip:1</code>),
+merge les champs mis à jour dans le store,
+et <span v-mark.orange>déclenche le re-render de tous les abonnés</span>.
+</div>
+
+<div v-click class="text-sm opacity-60 border-t border-gray-700 pt-4">
+Pas d'invalidation à écrire. Pas de refetch manuel.<br>
+<b>C'est un store global qui se met à jour lui-même.</b>
+</div>
+
+</div>
+</div>
+
+<!--
+Condition nécessaire : la mutation doit renvoyer les champs modifiés dans sa réponse.
+Si elle ne renvoie rien (204), Apollo ne peut pas merger — il faut invalider manuellement ou
+mettre à jour le cache via cache.modify(). C'est l'exception, pas la règle.
+-->
+
+---
+
+# Les fragments — co-location des données
+
+<div class="text-sm opacity-70 pb-4">Chaque composant déclare <b>ses propres besoins</b> — indépendamment de la query qui l'encapsule.</div>
+
+```tsx {all|1-6|8-14|16-20}
+// TripCard déclare ses besoins — colocalisés avec le composant
+const TRIP_CARD_FIELDS = gql`
+  fragment TripCardFields on Trip {
+    id
+    name
+    destination
+  }
+`
+
+// La page compose les fragments — sans connaître les détails
+const { data } = useQuery(gql`
+  ${TRIP_CARD_FIELDS}
+  query GetTrips { trips { ...TripCardFields } }
+`)
+
+function TripList() {
+  return data.trips.map(trip =>
+    <TripCard key={trip.id} trip={trip} />
+  )
+}
+```
+
+<div v-click class="pt-3 text-center text-sm opacity-80">
+Ajouter un champ à <code>TripCard</code> = modifier <b>uniquement son fragment</b>.<br>
+La query s'adapte — <span v-mark.orange>comme la co-location CSS ou les tests unitaires</span>.
+</div>
+
+<!--
+En pratique : quand un designer ajoute un champ à une card, le dev ne touche que le fragment
+de cette card — pas la query de la page. Dans une grande équipe, c'est ce qui évite les
+dépendances croisées et les PR qui cassent la query partagée.
+-->
+
+---
+
+# Les subscriptions GraphQL natives
+
+<div class="text-sm opacity-70 pb-4">GraphQL définit trois opérations : <code>query</code>, <code>mutation</code>, et <code>subscription</code>.</div>
+
+```tsx
+// Même API que useQuery — le composant reçoit les updates en temps réel
+const { data } = useSubscription(gql`
+  subscription OnTripUpdated($id: ID!) {
+    tripUpdated(id: $id) { id budget }
+  }
+`, { variables: { id: tripId } })
+```
+
+<div class="grid grid-cols-3 gap-4 pt-5 text-sm">
+<div v-click class="border border-gray-600 rounded-lg p-3">
+<div class="font-bold pb-1">🔌 WebSocket</div>
+<div class="opacity-70 text-xs">Connexion ouverte au montage, fermée au démontage.</div>
+</div>
+<div v-click class="border border-gray-600 rounded-lg p-3">
+<div class="font-bold pb-1">🗃️ Cache intégré</div>
+<div class="opacity-70 text-xs">Les données reçues passent par l'InMemoryCache → propagation automatique.</div>
+</div>
+<div v-click class="border border-gray-600 rounded-lg p-3">
+<div class="font-bold pb-1">🧹 Cleanup</div>
+<div class="opacity-70 text-xs">Comme un <code>useEffect</code> avec cleanup — Apollo gère la connexion.</div>
+</div>
+</div>
+
+<!--
+Contrairement à Convex qui arrive juste après, les subscriptions Apollo nécessitent
+une configuration WebSocket côté serveur (subscriptions-transport-ws ou graphql-ws).
+Ce n'est pas zéro config — mais une fois en place, le comportement est identique à useQuery.
+-->
+
+---
+
+# Les Apollo DevTools
+
+<div class="text-sm opacity-70 pb-6">
+Une fenêtre sur le cache normalisé, en direct — extension Chrome et Firefox, zéro config.
+</div>
+
+<div class="grid grid-cols-3 gap-4 text-sm">
+<div v-click class="border border-gray-600 rounded-lg p-4">
+<div class="font-bold pb-1">🗂️ Le cache</div>
+<div class="opacity-70">Toutes les entités <code>Trip:1</code>, <code>Step:7</code>… leurs champs et leurs références.</div>
+</div>
+<div v-click class="border border-gray-600 rounded-lg p-4">
+<div class="font-bold pb-1">🔍 Les queries</div>
+<div class="opacity-70">Chaque opération GraphQL active, ses variables et la réponse du cache.</div>
+</div>
+<div v-click class="border border-gray-600 rounded-lg p-4">
+<div class="font-bold pb-1">🔄 Les mutations</div>
+<div class="opacity-70">Historique des mutations et leur impact sur les entités du cache.</div>
+</div>
+</div>
+
+<div v-click class="pt-8 text-center opacity-80">
+On <span v-mark.orange>voit le cache normalisé vivre</span> — indispensable pour déboguer<br>
+quand une entité ne se propage pas comme attendu.
+</div>
+
+<!--
+Le cas d'usage typique : une entité ne se met pas à jour après une mutation.
+On ouvre les DevTools, on inspecte l'entrée Trip:1 — soit le champ n'est pas dans la réponse
+de la mutation, soit l'id est absent et la normalisation n'a pas fonctionné.
+-->
+
+---
+
+# Quand choisir Apollo
 
 <div class="grid grid-cols-2 gap-8 pt-6">
 <div v-click class="border border-gray-600 rounded-lg p-5">
 
-### TanStack Query
+### Choisir TanStack Query
 - n'importe quelle API (REST, RPC…)
 - cache **par query** (par clé)
 - agnostique du transport
+- pas d'API GraphQL côté back
 
 </div>
 <div v-click class="border-2 border-orange-500 rounded-lg p-5">
 
-### Apollo
-- API **GraphQL** existante
-- cache **normalisé par entité**
-- **subscriptions** GraphQL natives
-- **fragments** : co-location des données
+### Choisir Apollo
+- API **GraphQL** existante côté backend
+- entités partagées entre **plusieurs vues**
+- **subscriptions** temps réel natives
+- **fragments** : grands projets, co-location
 
 </div>
 </div>
 
-<div v-click class="pt-6 text-center opacity-70">
-<span class="text-sm">THÉORIE</span> — même use case, deux philosophies de cache.
+<div v-click class="pt-6 text-center text-sm opacity-70">
+Apollo n'est pas un remplaçant de TanStack Query — <span v-mark.orange>c'est un outil pour une situation précise</span>.
 </div>
 
 <!--
-4a théorie uniquement. Choisir Apollo quand : backend GraphQL, besoin d'un cache
-normalisé par entité, subscriptions, fragments. Montrer un snippet comparatif.
+La question de départ est simple : est-ce que le back expose du GraphQL ?
+Non → TanStack Query. Oui, avec des entités partagées entre vues → Apollo.
+Les deux peuvent coexister dans un même projet si une partie de l'API est REST et l'autre GraphQL.
+-->
+
+---
+
+# Apollo — limites honnêtes
+
+<div class="grid grid-cols-3 gap-4 pt-6 text-sm">
+<div v-click class="border border-gray-600 rounded-lg p-4">
+<div class="text-2xl pb-2">📦</div>
+<div class="font-bold pb-1">Bundle size</div>
+<div class="opacity-70">~50 kB minifié + gzip — significatif pour une app légère.</div>
+</div>
+<div v-click class="border border-gray-600 rounded-lg p-4">
+<div class="text-2xl pb-2">🔬</div>
+<div class="font-bold pb-1">Complexité du cache</div>
+<div class="opacity-70">Puissant, mais difficile à déboguer. Il faut comprendre <code>__typename</code>, <code>keyFields</code>, la normalisation.</div>
+</div>
+<div v-click class="border border-gray-600 rounded-lg p-4">
+<div class="text-2xl pb-2">🚫</div>
+<div class="font-bold pb-1">GraphQL uniquement</div>
+<div class="opacity-70">Inutilisable avec REST sans couche de traduction. Nécessite une API GraphQL.</div>
+</div>
+</div>
+
+<div v-click class="pt-6 text-center opacity-80">
+Le cache normalisé est à double tranchant : <span v-mark.orange>quand une entité ne se met pas à jour comme attendu</span>,<br>
+il faut comprendre les règles de normalisation pour déboguer.
+</div>
+
+<!--
+À l'oral : insister sur le rapport 50 kB vs 13 kB (TanStack). Le delta se justifie
+uniquement si on exploite vraiment le cache normalisé — sinon autant utiliser TanStack + un client GraphQL léger comme graphql-request.
+-->
+
+---
+
+# Apollo Client — bilan
+
+<Bilan
+  :scores="[2, 1, 4, 4, 5]"
+  poids="~50 kB (gzip)"
+  perimetre="State serveur GraphQL"
+  idealPour="API GraphQL, entités partagées entre vues, subscriptions, grands projets"
+  :avantages="[
+    'Cache normalisé : propagation automatique sans invalidation',
+    'Subscriptions temps réel intégrées nativement',
+    'Fragments : co-location des besoins en données par composant',
+  ]"
+  :limites="[
+    'Bundle lourd (~50 kB) — justifié uniquement avec GraphQL',
+    'Cache normalisé complexe à déboguer (__typename, keyFields)',
+    'Nécessite une API GraphQL — inutilisable avec REST',
+  ]"
+/>
+
+<!--
+Enchaîner sur Convex : "on vient de voir deux approches où le client gère un cache.
+Et si le cache n'existait tout simplement pas ?"
 -->
 
 ---
