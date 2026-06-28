@@ -7,6 +7,7 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "preview": "vite preview",
+    "api": "tsx server/index.ts",
     "chapter:1a": "node ../../scripts/set-chapter.mjs 1a",
     "chapter:1b": "node ../../scripts/set-chapter.mjs 1b",
     "chapter:2": "node ../../scripts/set-chapter.mjs 2",
@@ -16,9 +17,13 @@
     "chapter:5a": "node ../../scripts/set-chapter.mjs 5a"
   },
   "dependencies": {
+    "@hono/node-server": "^2.0.6",
     "@statelyai/inspect": "^0.7.2",
+    "@tanstack/react-query": "^5.101.2",
+    "@tanstack/react-query-devtools": "^5.101.2",
     "@xstate/react": "^6.1.0",
     "convex": "^1.42.0",
+    "hono": "^4.12.27",
     "nuqs": "^2.8.9",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
@@ -28,6 +33,7 @@
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.0.2",
+    "tsx": "^4.22.4",
     "typescript": "~6.0.3",
     "vite": "^8.0.16"
   }
