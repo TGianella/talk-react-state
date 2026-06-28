@@ -44,15 +44,14 @@ Mais le client n'est <b>pas</b> l'unique source de vérité du state.
 
 <div v-click class="text-center pt-6 text-lg">
 La vraie question n'est pas <b>où c'est centralisé</b><br>
-mais <span v-mark.underline.orange>est-ce que la source de vérité est à l'endroit où le state est géré ou non</span>.
+mais <span v-mark.underline.orange>est-ce que la source de vérité est à l'endroit où le state est géré ou non</span> ?
 </div>
 
 <!--
-Le pivot conceptuel du chapitre, dans la continuité de « tout l'état finit dans le client ».
-Le client n'oppose pas serveur : il les CONTIENT tous les deux. Donc « client vs serveur » est
+Le client n'est pas opposé au serveur niveau state : il les CONTIENT tous les deux. Donc « client vs serveur » est
 trompeur — à l'écran tout est state client. Le bon axe, c'est la PROPRIÉTÉ : du state local
 (que ton client possède, même global) vs du state serveur (une copie d'une donnée que tu ne
-possèdes pas). C'est ce déplacement d'axe qui prépare la slide suivante.
+possèdes pas).
 -->
 
 ---
@@ -102,7 +101,7 @@ TanStack Query n'est PAS qu'un wrapper réseau : c'est du server-state managemen
 
 ---
 
-# Les outils habituels ne suffisent pas
+# Limitations des outils classiques
 
 <div class="grid grid-cols-2 gap-6 items-center">
 <div>
@@ -180,16 +179,7 @@ beaucoup de code pour un seul fetch, et il manque encore tout le reste. D'où un
 </div>
 
 <!--
-Slide-charnière à poser AVANT SWR, parce que c'est le contresens classique : « c'est une lib de
-fetch ». Non. La frontière, c'est la Promise. À droite, la stack réseau (fetch nu, axios, un
-client GraphQL, headers d'auth, gestion d'erreur) — l'outil n'a aucun avis dessus. À gauche, le
-gestionnaire de state async : il gère la donnée une fois arrivée au client — cache, dédup,
-revalidation, états, invalidation. Bien insister sur le sens des flèches : le gestionnaire
-ORCHESTRE l'appel (il décide QUAND déclencher, refetch, retry…) mais ne le FAIT pas lui-même —
-c'est la stack réseau qui exécute et lui rend une promesse. Le seul contrat entre les deux : une
-fonction qui renvoie une promesse de donnée. C'est ce qui rend le terme
-« state serveur » plus juste que « data fetching » — et ça prépare le fetcher de SWR et la
-queryFn de TanStack, qui ne sont que ce point de contact.
+Tout est dans le titre, les libs d'état asynchrone demandent juste qu'on leur passe une fonction qui renvoie une promesse, elles ne gèrent pas cette fonction elles-mêmes.
 -->
 
 ---
@@ -262,15 +252,15 @@ Nécessité de définir une fonction <i>fetcher</i> qui va chercher la donnée.
 </div>
 
 <!--
-Le point à marteler : SWR n'est rien d'autre qu'un hook. Pas de Provider à monter, pas de
+SWR n'est rien d'autre qu'un hook. Pas de Provider à monter, pas de
 store global à câbler, pas de config. On importe useSWR, on l'appelle dans le composant avec
 une clé + un fetcher, et il renvoie data / error / isLoading. Le fetcher est trivial :
-args ⇒ fetch(...).then(r ⇒ r.json()). À l'oral : on pense en dépendances de données, pas en appels.
+args ⇒ fetch(...).then(r ⇒ r.json()). On pense en dépendances de données, pas en appels.
 -->
 
 ---
 
-# La clé — le cœur de SWR
+# La clé : le cœur de SWR
 
 ```tsx {all|1-3|5-7}
 // clé simple
@@ -343,7 +333,7 @@ Flexibilité : il est toujours possible de <b>surcharger</b> le fetcher par déf
 </div>
 
 <!--
-Corollaire de la slide précédente : comme la clé porte toute la spécificité de la requête, le
+Comme la clé porte toute la spécificité de la requête, le
 fetcher, lui, est générique. Un projet définit UN fetcher (fetch nu, axios, un client GraphQL,
 avec ses headers d'auth, sa gestion d'erreurs…) et le réutilise partout — voire le pose en
 global via SWRConfig. La seule chose qui change d'un appel à l'autre, c'est la clé.
@@ -351,7 +341,7 @@ global via SWRConfig. La seule chose qui change d'un appel à l'autre, c'est la 
 
 ---
 
-# Un hook custom par ressource
+# Bonne pratique : un hook custom par ressource
 
 ```tsx {all|1-2|4-7}
 const useTrips = ()   => useSWR('/api/trips', fetcher)
@@ -380,6 +370,10 @@ ni le fetcher — juste useTrips(). La dépendance de données devient explicite
 ---
 
 # Requêtes conditionnelles & dépendantes
+
+<div class="text-center opacity-70 text-sm pb-2">
+Les <b>rules of hooks</b> interdisent d'appeler <code>useSWR</code> conditionnellement → c'est la <b>clé</b> qui porte la condition.
+</div>
 
 ```tsx {all|1-2|4-6}
 // clé null ⇒ pas de requête
@@ -455,9 +449,7 @@ const { data, mutate } = useSWR('/api/trips', f)
 </div>
 
 <!--
-Quelques patterns avancés qui montrent que SWR n'est pas qu'un toy : isLoading vs isValidating,
-keepPreviousData (clé pilotée par un input de recherche), re-render fin (on ne re-rend que sur
-les champs lus), et mutate pour écrire dans le cache.
+Patterns avancés pour faire des choses plus poussées.
 -->
 
 ---
@@ -482,10 +474,7 @@ les champs lus), et mutate pour écrire dans le cache.
 />
 
 <!--
-Bilan SWR sur la grille de critères PARTAGÉE (réutilisée pour chaque solution). Forces :
-prise en main et légèreté maximales, bonnes perfs (re-render fin). Faiblesses : écosystème
-(petite communauté, pas de devtools, doc imprécise) et montée en charge (API trop pauvre dès
-qu'on mute beaucoup). D'où le passage à TanStack Query.
+Bilan, tout est sur la slide.
 -->
 
 ---
@@ -499,49 +488,30 @@ credit: Wolfgang Weiser
 <div class="text-xl opacity-80 pt-3">Le standard de la gestion de state serveur</div>
 
 ---
-layout: center
----
 
-# Les origines
+# TanStack Query
 
-<div class="grid grid-cols-2 gap-10 pt-6 items-center">
-<div v-click>
-
-<div class="text-lg">D'abord <b>React Query</b></div>
-<div class="opacity-70 pt-2 text-sm leading-relaxed">
-Créé par <b>Tanner Linsley</b> en 2020 pour résoudre le state serveur en React.<br>
-Devenu une référence de l'écosystème.
-</div>
-
-</div>
-<div v-click class="border-l border-gray-600 pl-8">
-
-<div class="text-lg">Puis <b>TanStack Query</b></div>
-<div class="opacity-70 pt-2 text-sm leading-relaxed">
-Le cœur a été <b>extrait du React</b> : un noyau agnostique + des adaptateurs.<br>
-React, Vue, Svelte, Solid, Angular…
-</div>
-
-</div>
-</div>
-
-<div v-click class="pt-10 text-center">
-Tanstack : une famille de libs <span v-mark.orange>framework-agnostic</span> pour le frontend moderne
-</div>
-
-<div class="grid grid-cols-4 gap-3 pt-4 text-xs text-center opacity-70">
-<div v-click class="border border-gray-600 rounded p-2">Query</div>
-<div v-click class="border border-gray-600 rounded p-2">Table</div>
-<div v-click class="border border-gray-600 rounded p-2">Router</div>
-<div v-click class="border border-gray-600 rounded p-2">Form · Virtual…</div>
-</div>
+<FicheSolution
+  annee="2020"
+  auteur="Tanner Linsley — TanStack"
+  tagline="Le state serveur résolu : cache, déduplication, revalidation et invalidation, prêts à l'emploi."
+  probleme="Le fetch « à la main » (useEffect + useState) impose de réécrire loading, erreurs, cache et synchronisation entre composants à chaque requête. Beaucoup de code, autant d'occasions de se tromper."
+  creneau="Tout state serveur : la donnée asynchrone qu'on ne possède pas, quelle que soit la stack réseau (REST, GraphQL, fonctions RPC…)."
+  :infos="[
+    'Né React Query en 2020, devenu LE standard du state serveur côté React.',
+    'Refactoré en un noyau agnostique + adaptateurs : React, Vue, Svelte, Solid, Angular.',
+    'D\'où le rebrand TanStack — une famille de libs headless : Query, Table, Router, Form, Virtual…',
+    'Va plus loin que SWR : mutations, invalidation ciblée par clé, et des Devtools dédiés.',
+  ]"
+/>
 
 <!--
-Repositionner avant d'entrer dans l'API. L'outil est né React Query — Tanner Linsley, devenu LE
-standard du state serveur côté React. Le projet a ensuite été refactoré : un noyau pur,
-framework-agnostic, et des adaptateurs (React, Vue, Svelte, Solid, Angular). D'où le rebrand
-TanStack — une famille de libs headless pour le frontend moderne : Query, Table, Router, Form,
-Virtual… On ne couvre que Query, mais le nom n'est plus « React » par hasard.
+Première slide de la sous-section, sur la même fiche que nuqs et SWR. L'outil est né React Query
+— Tanner Linsley, devenu LE standard du state serveur côté React. Le projet a ensuite été
+refactoré : un noyau pur, framework-agnostic, et des adaptateurs (React, Vue, Svelte, Solid,
+Angular). D'où le rebrand TanStack — une famille de libs headless pour le frontend moderne :
+Query, Table, Router, Form, Virtual… On ne couvre que Query, mais le nom n'est plus « React »
+par hasard.
 -->
 
 ---
@@ -616,7 +586,7 @@ Les états retournés automatiquement = la moitié de la valeur. Distinguer isPe
 
 ---
 
-# La `queryKey` — identifiant + hiérarchie
+# La `queryKey` : identifiant + hiérarchie
 
 <div class="grid grid-cols-2 gap-10 items-center pt-4">
 <div>
@@ -667,7 +637,7 @@ cache : tous les useQuery en dessous, où qu'ils soient, partagent ce cache par 
 # Invalidation manuelle
 
 <div class="text-sm opacity-70 pb-6">
-Après une mutation, on marque la donnée du cache comme <b>périmée</b>.
+Poossibilité de manuellement marquer la donnée du cache comme <b>périmée</b>.
 </div>
 
 <div class="grid grid-cols-2 gap-8 items-start">
@@ -775,6 +745,7 @@ Régler le <code>staleTime</code> est une affaire de <span v-mark.orange>straté
 Le modèle mental clé. Donnée toujours rendue depuis le cache (dispo), refetch sous
 conditions. Bien distinguer "périmé" (éligible au refetch) de "refetché". Ne pas
 confondre staleTime avec gcTime (suppression quand plus aucun consommateur).
+Différentes stratégies de staleTime: 2 minutes pour ne pas spammer, jamais si la donnée reste stable, etc.
 -->
 
 ---
@@ -812,17 +783,34 @@ Pas d'exécution automatique : le callback est renvoyé <b>décoré</b> dans <co
 Les <b>états</b> sont reçus automatiquement (<code>pending</code>, <code>error</code>…).
 </div>
 
-<div v-click class="border-l-4 border-orange-500 pl-3">
-<code>onSuccess</code> : exécuter du code <b>si</b> la mutation réussit — invalider, sans gérer la mécanique.
+</div>
 </div>
 
+<div v-click class="pt-5">
+<div class="opacity-50 uppercase text-xs tracking-widest pb-2">Callbacks de cycle de vie</div>
+<div class="grid grid-cols-4 gap-3 text-xs">
+<div class="border border-gray-600 rounded-lg p-3">
+<code class="text-orange-400">onMutate(vars)</code>
+<div class="opacity-70 pt-1"><b>avant</b> l'appel : mise à jour optimiste, prépare le rollback.</div>
+</div>
+<div class="border border-gray-600 rounded-lg p-3">
+<code class="text-orange-400">onSuccess(data, vars, ctx)</code>
+<div class="opacity-70 pt-1">la mutation a <b>réussi</b> : invalider, rediriger…</div>
+</div>
+<div class="border border-gray-600 rounded-lg p-3">
+<code class="text-orange-400">onError(err, vars, ctx)</code>
+<div class="opacity-70 pt-1">elle a <b>échoué</b> : rollback, toast d'erreur.</div>
+</div>
+<div class="border border-gray-600 rounded-lg p-3">
+<code class="text-orange-400">onSettled(data, err, vars, ctx)</code>
+<div class="opacity-70 pt-1"><b>dans tous les cas</b>, succès ou échec.</div>
+</div>
 </div>
 </div>
 
 <!--
-Démo 3a : cycle complet fetch → mutation → invalidation. Backend maison (Hono/Express).
-Message : le server state a son propre cycle de vie. TSQ le gère, useEffect le subit.
-Enchaîner sur les devtools.
+Important, useMutation ne fait pas tourner la mutation, il l'améliore juste mais nous renvoie une fonction qu'on doit appeler quand on veut (useEffect, handler, etc.)
+Les quatre callbacks suivent le cycle de vie : onMutate (avant) → onSuccess / onError → onSettled (toujours). Bien souligner que ces callbacks sont très puissants pour exécuter du code au bon moment (invalider une query en cas de succès)
 -->
 
 ---

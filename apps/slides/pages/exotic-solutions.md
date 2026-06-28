@@ -10,7 +10,7 @@ credit: German Simonson
 
 ---
 
-# Les classiques montrent leurs limites
+# Limitations des store managers classiques
 
 <div class="text-center opacity-70 text-sm pt-1">
 Un store = un sac de valeurs qu'on mute via des actions. Générique… mais aveugle à la forme du problème.
@@ -166,7 +166,7 @@ const double = useAtomValue(doubleAtom)
 </div>
 
 <div v-click class="pt-4 text-sm opacity-70 text-center">
-WanderState : <code>totalBudget</code> = somme des étapes — déclaré une fois, à jour partout. ✨
+WanderState : <code>totalBudget</code> = somme des étapes. Déclaré une fois et à jour partout. ✨
 </div>
 
 <!--
@@ -469,30 +469,30 @@ Inspiration : un tableur. Au changement d'une cellule, tout ce qui en dépend se
 <div class="text-xs opacity-60">seule à muter</div>
 </div>
 
-<div v-click class="flex items-center px-1 text-3xl text-orange-400">→</div>
+<div v-click="2" class="flex items-center px-1 text-3xl text-orange-400">→</div>
 
-<div v-click class="flex flex-col justify-center border-2 border-orange-500 bg-orange-500/15 px-5 py-3 text-center">
+<div v-click="2" class="flex flex-col justify-center border-2 border-orange-500 bg-orange-500/15 px-5 py-3 text-center">
 <div class="font-bold">state</div>
 <div class="text-xs opacity-60">observable</div>
 </div>
 
-<div v-click class="flex items-center px-1 text-3xl text-orange-400">→</div>
+<div v-click="3" class="flex items-center px-1 text-3xl text-orange-400">→</div>
 
-<div v-click class="flex flex-col justify-center border-2 border-gray-500 px-5 py-3 text-center">
+<div v-click="3" class="flex flex-col justify-center border-2 border-gray-500 px-5 py-3 text-center">
 <div class="font-bold">computed</div>
 <div class="text-xs opacity-60">valeurs dérivées</div>
 </div>
 
-<div v-click class="flex items-center px-1 text-3xl text-orange-400">→</div>
+<div v-click="4" class="flex items-center px-1 text-3xl text-orange-400">→</div>
 
-<div v-click class="flex flex-col justify-center border-2 border-gray-500 px-5 py-3 text-center">
+<div v-click="4" class="flex flex-col justify-center border-2 border-gray-500 px-5 py-3 text-center">
 <div class="font-bold">reaction</div>
 <div class="text-xs opacity-60">re-render · effet</div>
 </div>
 
 </div>
 
-<div v-click class="text-center text-xs opacity-50 pt-24">
+<div v-click="5" class="text-center text-xs opacity-50 pt-24">
 Flux <b>unidirectionnel</b> : seule une <b>action</b> mute le state — jamais l'inverse.
 </div>
 
@@ -609,15 +609,15 @@ Une **action** **groupe** ses mutations : les observers ne voient que l'état **
 </div>
 
 <div class="grid grid-cols-3 gap-4 pt-4">
-<div v-click class="border-2 border-orange-500 px-4 py-3 text-sm">
+<div v-click class="border border-gray-600 rounded-lg p-4 text-sm">
 <div class="font-bold pb-1">🔎 Comprendre / debugger</div>
 Les changements ont un nom et arrivent en bloc — pas d'incohérence transitoire à traquer.
 </div>
-<div v-click class="border-2 border-orange-500 px-4 py-3 text-sm">
+<div v-click class="border border-gray-600 rounded-lg p-4 text-sm">
 <div class="font-bold pb-1">⚡ Performance</div>
 1 seule notification → 1 re-render, au lieu d'un par mutation.
 </div>
-<div v-click class="border-2 border-orange-500 px-4 py-3 text-sm">
+<div v-click class="border border-gray-600 rounded-lg p-4 text-sm">
 <div class="font-bold pb-1">🔒 Contrainte souple</div>
 <code>configure({ enforceActions: 'always' })</code> lève une erreur si on mute hors d'une action.
 </div>
@@ -1542,8 +1542,7 @@ credit: bfenton_photo
 ---
 
 # XState
-<div class="text-2xl opacity-70 pt-2">🤖 les machines à états</div>
-<div class="opacity-50 pt-3 text-sm">rendre les états impossibles… impossibles</div>
+<div class="text-2xl opacity-70 pt-2">Les machines à états</div>
 
 ---
 

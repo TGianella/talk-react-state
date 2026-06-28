@@ -12,7 +12,7 @@ credit: Assunta Darnault
 
 # L'URL est du state
 
-<div class="text-center pt-2">
+<div class="text-center pt-2 w-fit m-auto">
 
 ```
 wanderstate.app/?trip=abc123&view=grid
@@ -84,7 +84,7 @@ useState → en mémoire, disparaît au refresh. L'URL → déjà là, gratuite,
 </div>
 
 <div v-click="8" class="pt-12 text-center text-xl">
-Ce qui doit <span v-mark.underline.orange="8">survivre à un refresh</span> ou être <span v-mark.underline.orange="8">partageable</span> appartient à l'URL. Rien d'autre.
+Ce qui doit <span v-mark.underline.orange="8">survivre à un refresh</span> ou être <span v-mark.underline.orange="8">partageable</span> appartient à l'URL.
 </div>
 
 <!--
@@ -94,7 +94,7 @@ Cas limites : champ de recherche → URL après soumission seulement. Drawer →
 
 ---
 
-# Le problème sans librairie
+# Limites de l'API native
 
 ```tsx {all|3|6-9}
 // Lecture
@@ -123,6 +123,16 @@ Tout est string | null : conversion manuelle à chaque paramètre. 5 params = 5 
 -->
 
 ---
+layout: cover
+image: /covers/factory-hans-heemsbergen.jpg
+credit: Hans Heemsbergen
+---
+
+# nuqs
+
+<div class="text-xl opacity-80 pt-3">L'URL branchée à React</div>
+
+---
 
 # `nuqs`
 
@@ -147,7 +157,7 @@ L'analogie useState est intentionnelle : même destructuring, même ergonomie.
 
 ---
 
-# `useQueryState` — le hook central
+# `useQueryState` : le hook central
 
 <div class="grid grid-cols-2 gap-6 items-center">
 <div>
@@ -186,7 +196,7 @@ setTripId(null) → supprime le paramètre de l'URL.
 
 ---
 
-# Les parsers — le contrat de typage
+# Les parsers : le contrat de typage
 
 ```tsx
 // Primitives
@@ -202,6 +212,22 @@ useQueryState('view', parseAsStringLiteral(['grid', 'list'] as const))
 Parsers déjà intégrés pour <span v-mark.underline.orange>les types courants</span> : <code>string</code>, <code>number</code>, <code>boolean</code>, dates, tableaux, JSON, enums…
 </div>
 
+<div v-click class="pt-4 grid grid-cols-[1fr_auto] gap-6 items-center">
+
+```tsx
+const parseAsLatLng = createParser({
+  parse: (q) => { const [lat, lng] = q.split(',').map(Number)
+                  return isNaN(lat) ? null : { lat, lng } },
+  serialize: ({ lat, lng }) => `${lat},${lng}`,
+})
+```
+
+<div class="opacity-70">
+Possibilité de définir son <span v-mark.circle.orange>propre parser</span>.
+</div>
+
+</div>
+
 <!--
 Un parser = parse(string → T | null) + serialize(T → string).
 withDefault() élimine le null quand il y a une valeur par défaut sensée → on voit ça slide suivante.
@@ -209,7 +235,7 @@ withDefault() élimine le null quand il y a une valeur par défaut sensée → o
 
 ---
 
-# WanderState — deux paramètres, deux approches
+# WanderState : deux paramètres, deux approches
 
 <div class="grid grid-cols-2 gap-6 text-sm">
 <div>
@@ -268,7 +294,7 @@ La promesse du lien partageable nécessite un router ou un state serveur — on 
 
 ---
 
-# Sous le capot — batching des writes
+# Sous le capot : batching des writes
 
 ```tsx
 // Sans batching — 2 entrées dans l'historique pour 1 action
@@ -356,7 +382,11 @@ Pont ch4 : Zustand/Redux = exactement le même pattern. L'URL et un store extern
 
 ---
 
-# Shallow routing vs adaptateurs
+# Interaction avec le router
+
+<div class="text-center opacity-70 text-sm pb-2">
+L'URL appartient aussi au <b>router</b> : deux acteurs écrivent au même endroit → il faut décider qui mène.
+</div>
 
 <div class="grid grid-cols-2 gap-8 pt-2 text-sm">
 <div>
@@ -371,7 +401,7 @@ URL change → History API (pushState)
 ```
 
 <div class="pt-2 opacity-70">
-Parfait pour les SPA (Vite). Le router ne sait pas, et c'est très bien.
+Parfait pour les SPA (Vite). Le router n'a pas besoin d'être notifié.
 </div>
 
 </div>

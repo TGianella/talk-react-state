@@ -22,8 +22,7 @@ class: text-center
 </div>
 
 <!--
-Présentation des deux orateurs. Remplacer les placeholders : photo (déposer l'image dans
-public/ et remplacer l'emoji 📷 par <img>), prénom/nom et intitulé de poste.
+On se présente, on peut aussi annoncer qu'on va faire des pauses toutes les heures et que les gens peuvent poser des questions quand ils veulent.
 -->
 
 ---
@@ -40,7 +39,7 @@ Quels outils de gestion de state React<br>connaissez-vous ?
 <!--
 Ice-breaker. Lever de main. On note ceux qui sortent… et surtout ceux qui ne sortent
 jamais. Intéressant : est-ce qu'on les connaît en profondeur ?
-Si personne ne cite de solution de state serveur → c'est LE signal du talk.
+Si personne ne cite de solution de state serveur, c'est intéressant.
 -->
 
 ---
@@ -55,7 +54,7 @@ Si personne ne cite de solution de state serveur → c'est LE signal du talk.
 Même entrée → même sortie.<br>Aucune mémoire.
 
 <div class="opacity-60 text-sm pt-2">
-une fonction pure · <code>grep</code> · une calculatrice
+une fonction pure · un LLM · une calculatrice
 </div>
 
 </div>
@@ -66,7 +65,7 @@ une fonction pure · <code>grep</code> · une calculatrice
 Se souvient du passé — et <b>réagit en continu</b> aux événements extérieurs.
 
 <div class="opacity-60 text-sm pt-2">
-un éditeur de texte · un jeu vidéo · un thermostat
+un éditeur de texte · un chatbot · un jeu vidéo
 </div>
 
 </div>
@@ -157,7 +156,7 @@ sur beaucoup de pièces. D'où la difficulté → le catégoriser est déjà un 
 
 <div class="text-sm opacity-70 pt-1">interaction (dropdown, formulaire)<br>vs métier (compte, panier)</div>
 
-<div class="text-sm opacity-50 pt-3">❌ frontière floue — et ça ne dit pas où le ranger</div>
+<div class="text-sm opacity-50 pt-3">❌ frontière floue, ça ne dit pas où le ranger</div>
 </div>
 
 <div v-click class="border border-gray-500 rounded-lg p-4">
@@ -167,7 +166,7 @@ sur beaucoup de pièces. D'où la difficulté → le catégoriser est déjà un 
 
 <div class="text-sm opacity-70 pt-1">local à un composant<br>vs partagé / global</div>
 
-<div class="text-sm opacity-50 pt-3">❌ ça bouge tout le temps — un état peut finir lu partout</div>
+<div class="text-sm opacity-50 pt-3">❌ pas stable, un état peut finir lu partout</div>
 </div>
 
 </div>
@@ -181,8 +180,9 @@ sur beaucoup de pièces. D'où la difficulté → le catégoriser est déjà un 
 
 <!--
 Reframe central : on pourrait classer l'état par son contenu (interaction vs métier)
-ou par où il est lu (local vs partagé), mais ces axes sont flous et instables. L'axe
-qui détermine vraiment l'outil, c'est la SOURCE DE VÉRITÉ : où l'état naît, qui le
+ou par où il est lu (local vs partagé), mais ces axes sont flous et instables. 
+Ils peuvent être utiles parfois mais c'est pas la meilleure distinction. 
+L'axe qui détermine vraiment l'outil, c'est la SOURCE DE VÉRITÉ : où l'état naît, qui le
 possède. C'est le fil rouge de tout le talk.
 -->
 
@@ -200,14 +200,14 @@ possède. C'est le fil rouge de tout le talk.
 <div v-click="2" class="border border-gray-500 rounded-lg p-3">
 🌐 <b>navigateur</b>
 <div class="text-xs opacity-60 pt-1">DOM · formulaires · scroll · localStorage · <b class="opacity-100">URL</b></div>
-<div v-click="3" class="text-xs text-orange-400 pt-2 border-l-2 border-orange-500 pl-2">
-L'<b>URL</b> à part : un state <b>partageable</b> et <b>dans l'historique</b> — gratuit, souvent oublié
+<div v-click="3" class="text-xs text-orange-400 mt-2 border-l-2 border-orange-500 pl-2">
+L'<b>URL</b> à part : un state <b>partageable</b> et <b>dans l'historique</b>
 </div>
 </div>
 
 <div v-click="2" class="border-2 border-orange-500 rounded-lg p-3 bg-orange-400/10">
 💻 <b>runtime JS</b>
-<div class="text-xs opacity-60 pt-1">variables en mémoire runtime — ⚠️ volatile, perdu au refresh</div>
+<div class="text-xs opacity-60 pt-1">variables en mémoire runtime ⚠️ volatile, perdu au refresh</div>
 </div>
 
 </div>
@@ -248,7 +248,7 @@ chapitres : URL (ch.2), state client (ch.1,4,5), serveur (ch.3).
 <div v-click="1" class="border border-gray-500 rounded-xl p-5 text-center max-w-xs">
 <div class="text-4xl">🗄️</div>
 <div class="font-bold pt-2">Donnée persistée</div>
-<div class="text-sm opacity-60 pt-2">au repos, inerte —<br>de la mémoire durable</div>
+<div class="text-sm opacity-60 pt-2">au repos, inerte,<br>mémoire durable</div>
 <div class="text-xs opacity-50 pt-2">ligne en DB · fichier · localStorage</div>
 </div>
 
@@ -266,7 +266,7 @@ chapitres : URL (ch.2), state client (ch.1,4,5), serveur (ch.3).
 <div v-click="2" class="border-2 border-orange-500 rounded-xl p-5 text-center max-w-xs bg-orange-400/10">
 <div class="text-4xl">⚡</div>
 <div class="font-bold pt-2">État</div>
-<div class="text-sm opacity-60 pt-2">vivant, en mémoire —<br>ce que l'UI lit & affiche</div>
+<div class="text-sm opacity-60 pt-2">vivant, en mémoire, <br>ce que l'UI lit & affiche</div>
 <div class="text-xs opacity-50 pt-2">disparaît quand l'app s'arrête</div>
 </div>
 
@@ -323,7 +323,7 @@ En SPA, le <b>client</b> est la source de vérité de <b>ce qui s'affiche</b>.
 </div>
 
 <div v-click="7" class="pt-2 text-center text-lg">
-On échange fluidité &amp; réactivité contre la charge de <span v-mark.underline.orange>gérer tout l'état côté client</span>.
+Tradeoff : fluidité &amp; réactivité mais <span v-mark.underline.orange>gestion de tout l'état côté client</span>.
 </div>
 
 <!--
@@ -338,7 +338,7 @@ complète. D'où la nécessité de gérer le state côté client : le sujet du r
 
 ---
 
-# Un même prisme, tous les paradigmes
+# Un angle qui rend compte de tous les paradigmes
 
 <div class="text-center opacity-70 text-sm pb-3">« Où vit l'état ? » suffit à reconnaître chaque architecture.</div>
 
@@ -372,21 +372,22 @@ complète. D'où la nécessité de gérer le state côté client : le sujet du r
 </div>
 
 <div v-click class="pt-5 text-center opacity-80">
-Du <b>tout-serveur</b> (HTMX, MPA) au <b>tout-client</b> (SPA) — un même prisme.<br>
-Partout l'état <b>affecte</b> le client ; mais le <b>gérer</b> côté client, <span v-mark.orange>c'est le pari du SPA</span>.
+Du <b>tout-serveur</b> au <b>tout-client</b>, des réponses différentes au même problème.<br>
+L'état <b>affecte</b> toujours le client, mais seulement en SPA <span v-mark.orange>il est géré par le client</span>.
 </div>
 
 <!--
 Le prisme "où vit l'état" range tous les paradigmes. HTMX = la logique poussée à fond,
-tout côté backend, le client ne tient que du markup. Conséquence centrale pour React/SPA :
+tout côté backend, le client ne tient que du markup. C'est un spectre, il y a deux extrêmes et plein de positions entre.
+Conséquence centrale pour React/SPA :
 en abstrayant le DOM, l'état doit vivre ailleurs → mémoire JS volatile.
 -->
 
 ---
 
-# Pas le même état partout
+# L'importance du métier
 
-<div class="text-center opacity-70 pb-4">Toutes les apps ne pondèrent pas ces sources de vérité de la même façon.</div>
+<div class="text-center opacity-70 pb-4">Le métier de l'application influe sur l'importance relative de chaque source de vérité.</div>
 
 <div class="grid grid-cols-3 gap-5 pt-2">
 <div v-click class="border border-gray-500 rounded-xl p-5 text-center">
@@ -418,19 +419,19 @@ Retour sur les sources de vérité : toutes les apps ne les pondèrent pas parei
 ≈ quasi pas d'état (un peu de navigateur/URL) ; e-commerce/back-office ≈ surtout du serveur
 (catalogue, stock, commandes en base) ; éditeur/Figma/Gmail ≈ surtout du client (document
 vivant en mémoire, interactions riches). La plupart des vraies apps mélangent les trois — mais
-identifier la source dominante oriente déjà le choix des outils. C'est tout le plan du talk.
+identifier la source dominante oriente déjà le choix des outils. Bien sûr il y a une corrélation avec le paradigme choisi en général.
 -->
 
 ---
 
-# React
+# Le state en React
 
 <div v-click="1" class="text-center text-2xl pt-8">
-Toute la donnée ne circule que dans <span v-mark.orange>un seul sens</span> — et l'état reste <b class="text-orange-400">immuable</b>.
+La donnée ne circule que dans <span v-mark.orange>un seul sens</span>. L'état reste <b class="text-orange-400">immuable</b>.
 </div>
 
 <div v-click="2" class="flex flex-col items-center gap-1 pt-8">
-<div class="border-2 border-orange-500 rounded-lg px-6 py-2 bg-orange-400/10 font-medium">Parent — détient le state</div>
+<div class="border-2 border-orange-500 rounded-lg px-6 py-2 bg-orange-400/10 font-medium">Parent (détient le state)</div>
 <div class="flex gap-16 pt-1">
 <div class="flex flex-col items-center">
 <div class="flex flex-col items-center text-orange-400 leading-tight">
@@ -450,7 +451,7 @@ Toute la donnée ne circule que dans <span v-mark.orange>un seul sens</span> —
 </div>
 
 <div v-click="3" class="pt-8 text-center opacity-70">
-La donnée ne va que <b>vers le bas</b> — jamais vers le haut, jamais à l'horizontale.<br>On sait toujours d'où vient chaque valeur.
+La donnée ne va que <b>vers le bas</b>. jamais de l'enfant au parent, jamais entre enfants.<br>On sait toujours d'où vient chaque valeur.
 </div>
 
 <div v-click="4" class="pt-6 text-center text-lg">
@@ -492,7 +493,7 @@ commun → point de départ des chapitres (prop drilling → contexte → stores
 
 <div v-click="3" class="pt-10 text-center text-lg">
 Vue &amp; Angular : on <b>mute</b>, le framework réagit.<br>
-React : l'état est <span v-mark.underline.orange>immuable</span> — on ne le modifie pas, on le remplace.
+React : l'état est <span v-mark.underline.orange>immuable</span>, il est remplacé.
 </div>
 
 <div v-click="4" class="pt-3 text-center opacity-70">
@@ -521,10 +522,10 @@ Une UI n'est qu'une <b>projection de l'état</b> à un instant T.
 </div>
 
 <div v-click="3" class="text-xl opacity-70 pt-2">
-Changer l'UI = changer l'état. <b>Rien d'autre.</b>
+Changer l'UI = changer l'état.
 </div>
 
-<div class="flex justify-center pt-12">
+<div v-click="4" class="flex justify-center pt-12">
 
 ```mermaid {scale: 0.9}
 graph LR
@@ -538,7 +539,7 @@ graph LR
 
 <!--
 Le modèle mental qui accompagne le flux : UI = projection de l'état. Pas unique à React (Vue,
-Solid le partagent), mais c'est ainsi qu'on raisonne. Changer l'écran = changer l'état, rien
+Solid le partagent), mais c'est ainsi qu'on raisonne. Corollaire: changer l'écran = changer l'état, rien
 d'autre. Tout le reste du talk : où vit le state, et comment on le change.
 -->
 
@@ -583,7 +584,7 @@ En React, il faut trouver une façon de <b>tout gérer côté client</b>.
 </div>
 
 <div v-click="7" class="text-center text-sm opacity-50 pt-10">
-…et chacun finit par faire un peu de <b>tout</b> : cache, sélecteurs, middleware, persistance, optimistic updates, normalisation…
+Chaque outil finit par faire un peu de <b>tout</b> : cache, sélecteurs, middleware, persistance, optimistic updates, normalisation…
 </div>
 
 <style>
@@ -597,14 +598,11 @@ En React, il faut trouver une façon de <b>tout gérer côté client</b>.
 </style>
 
 <!--
-Slide-charnière entre l'intro conceptuelle et le plan. On rembobine : l'état n'est pas un
+L'état n'est pas un
 concept simple, et React/SPA rapatrie TOUT le state côté client — c'est à nous de trouver
-une façon de tout gérer. Réaction de l'écosystème : une avalanche d'outils. Les trois premiers
-(Redux, TanStack Query, Zustand) tombent un par un, puis au dernier clic le reste dégringole
-en cascade — l'effet doit submerger, volontairement chaotique et illisible. Double problème :
+une façon de tout gérer. Réaction de l'écosystème : une avalanche d'outils. Double problème :
 il y a BEAUCOUP d'outils, ET chacun déborde de son rôle (un store qui fait du cache, un client
-réseau qui fait du state global…). C'est exactement le brouillard qu'on va dissiper — à l'oral :
-on va remettre de l'ordre dans ce nuage, chapitre par chapitre, via la grille "où vit l'état".
+réseau qui fait du state global…). C'est exactement le brouillard qu'on va dissiper.
 -->
 
 ---
@@ -635,8 +633,7 @@ On sort du brouillard du nuage pour poser les trois questions auxquelles le talk
 (1) Se repérer dans l'écosystème — une carte, pas une liste à apprendre par cœur.
 (2) Choisir : associer un type d'état à l'outil adapté, plutôt qu'un outil par défaut pour tout.
 (3) Maîtriser : une fois le bon outil choisi, en exploiter les forces (sélecteurs, cache,
-invalidation, machines à états…). À l'oral : le fil rouge qui répond aux trois reste "où vit
-l'état ?" — la grille de lecture posée en intro, qu'on déroule chapitre par chapitre.
+invalidation, machines à états…).
 -->
 
 ---
@@ -682,7 +679,7 @@ l'état ?" — la grille de lecture posée en intro, qu'on déroule chapitre par
 <div class="text-2xl font-bold text-orange-400 opacity-80 w-8">4</div>
 <div>
 <div class="text-xl font-medium">Les state managers classiques</div>
-<div class="text-sm opacity-50">Redux &amp; RTK · Zustand</div>
+<div class="text-sm opacity-50">Zustand · Redux &amp; RTK</div>
 </div>
 </div>
 
@@ -690,7 +687,7 @@ l'état ?" — la grille de lecture posée en intro, qu'on déroule chapitre par
 <div class="text-2xl font-bold text-orange-400 opacity-80 w-8">5</div>
 <div>
 <div class="text-xl font-medium">Les solutions exotiques</div>
-<div class="text-sm opacity-50">XState · Jotai · MobX</div>
+<div class="text-sm opacity-50">Jotai · MobX · XState </div>
 </div>
 </div>
 

@@ -70,14 +70,13 @@ Dans la majorité des apps, les chapitres précédents suffisent.
 </div>
 
 <!--
-Mise en garde d'ouverture, version diagramme. Le réflexe « j'installe Redux/Zustand » est
+Le réflexe « j'installe Redux/Zustand » est
 souvent prématuré. On situe la donnée par son lieu de vie : l'URL au milieu (état partageable
 → nuqs, ch. 2), le serveur (état serveur → cache réseau, ch. 3), le client (état purement
 client). Apparition URL → serveur → client : une fois l'URL et le serveur retirés, ce qui
 reste est de l'état client — et c'est là, seulement là, que les store managers se justifient.
 Côté client, ils ne font pas autre chose que les API natives (useState → useReducer → Context) :
-ils font le MÊME travail, en mieux à l'échelle (réactivité fine, outillage). D'où les lignes du
-bas : outil de niche (gros projets, beaucoup de state client) ; dans la majorité des apps, les
+ils font le MÊME travail, en mieux à l'échelle (réactivité fine, outillage). Outil de niche (gros projets, beaucoup de state client) ; dans la majorité des apps, les
 chapitres précédents suffisent.
 -->
 
@@ -121,8 +120,7 @@ chapitres précédents suffisent.
 <!--
 Le problème que résolvent les stores : à grande échelle, Context+Reducer re-render tout
 l'arbre, pas d'abonnement fin, pas d'outillage. Un store = état externe + sélecteurs +
-devtools. Mécanisme commun : useSyncExternalStore. Mais ils ne se ressemblent pas tous,
-d'où deux axes pour les ranger.
+devtools. Mécanisme commun : useSyncExternalStore.
 -->
 
 ---
@@ -170,13 +168,11 @@ Reste à brancher cet état externe au rendu de React → <span v-mark.orange>us
 </div>
 
 <!--
-Le socle commun des store managers « standalone » (Zustand, Redux). Avant de les opposer,
-montrer ce qu'ils PARTAGENT : l'état ne vit pas dans React, c'est un objet JS externe. Le store
+Le socle commun des store managers « standalone » (Zustand, Redux). L'état ne vit pas dans React, c'est un objet JS externe. Le store
 expose un mécanisme d'abonnement (pub/sub) : les composants s'abonnent, le store les notifie à
 chaque changement. On lit via un sélecteur (une part du state) → re-render ciblé, à l'opposé du
 Context qui re-render tout. Et la mise à jour est immuable : set (Zustand) / dispatch (Redux)
-produit un nouvel état, jamais une mutation en place. Reste le pont avec React : useSyncExternalStore,
-qui fait justement l'objet de la slide suivante (et de son compromis avec le concurrent rendering).
+produit un nouvel état, jamais une mutation en place. Reste le pont avec React : useSyncExternalStore.
 -->
 
 ---
@@ -256,39 +252,39 @@ de fait le time-slicing pour ce state. D'où le compromis de la slide suivante (
   </g>
 
   <g v-click="4">
-    <text x="400" y="200" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">Zustand</text>
-    <text x="422" y="245" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">Redux</text>
+    <text x="397" y="197" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">Zustand</text>
+    <text x="422" y="226" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">XState</text>
+    <text x="426" y="255" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">Redux</text>
   </g>
   <g v-click="5">
-    <text x="185" y="225" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">MobX</text>
-    <text x="175" y="260" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">Jotai</text>
-    <text x="215" y="190" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">XState</text>
+    <text x="200" y="200" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">MobX</text>
+    <text x="175" y="250" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">Jotai</text>
   </g>
   <g v-click="6">
     <text x="300" y="410" text-anchor="middle" fill="currentColor" font-size="5.5" font-weight="600">React natif</text>
   </g>
 
   <g v-click="8">
-    <text x="300" y="283" text-anchor="middle" fill="#4ade80" font-size="6.5" font-weight="700">React</text>
-    <text x="300" y="308" text-anchor="middle" fill="#4ade80" font-size="6.5" font-weight="700">compiler</text>
+    <text x="300" y="283" text-anchor="middle" fill="#09973d" font-size="6.5" font-weight="700">React</text>
+    <text x="300" y="308" text-anchor="middle" fill="#09973d" font-size="6.5" font-weight="700">compiler</text>
   </g>
 </svg>
 
 </div>
 <div>
 
-<div class="text-lg pb-2">Trois propriétés désirables — on n'en cumule que <span v-mark.orange="3">deux sur trois</span>.</div>
+<div class="text-lg pb-2">Trois propriétés désirables mais il faut en choisir <span v-mark.orange="3">deux sur trois</span>.</div>
 
 <v-clicks at="4">
 
-- **Fine + sans tearing** → on perd le concurrent rendering<br><span class="text-xs opacity-60">c'est le rôle de <code>useSyncExternalStore</code> — Redux, Zustand</span>
+- **Fine + sans tearing** → pas de concurrent rendering<br><span class="text-xs opacity-60">c'est le rôle de <code>useSyncExternalStore</code> — Redux, Zustand</span>
 - **Fine + concurrent** → tearing temporaire possible<br><span class="text-xs opacity-60">signaux / observables lus pendant un rendu interruptible — MobX, Jotai, XState</span>
 - **Concurrent + sans tearing** → trop de re-renders<br><span class="text-xs opacity-60">l'état natif de React — Context, <code>useReducer</code></span>
 
 </v-clicks>
 
 <div v-click="7" class="pt-4 text-base">
-Tout store choisit son <b>compromis</b> — il n'y a pas de gagnant absolu.
+Tout store choisit son <b>compromis</b> il n'y a pas de solution parfaite pour le moment.
 </div>
 
 </div>
@@ -303,8 +299,7 @@ force un rendu synchrone : on renonce aux bénéfices du concurrent rendering po
 Le triangle (Daishi Kato / Tanner Linsley) : réactivité fine, concurrent rendering, pas de
 tearing — on ne peut en garantir que deux. React natif sacrifie la finesse (re-renders en
 cascade) ; les libs uSES sacrifient le concurrent ; les signaux/MobX acceptent un tearing
-temporaire. À placer en tête de chapitre : ça explique POURQUOI les libs diffèrent autant.
-Réf : interbolt.org/blog/react-ui-tearing, thread Tanner Linsley.
+temporaire.
 -->
 
 ---
@@ -334,24 +329,13 @@ const back = JSON.parse(snap)        // string → état
 </div>
 
 <!--
-On reste général : sérialiser, c'est transformer l'état vivant (un graphe d'objets en mémoire)
+Sérialiser, c'est transformer l'état vivant (un graphe d'objets en mémoire)
 en une représentation texte transportable, et désérialiser c'est reconstruire ce graphe. En
 pratique JSON.stringify / JSON.parse.
 Le point clé : une chaîne ne contient que des données plates, et il y a DEUX raisons distinctes
 qu'une valeur n'y rentre pas.
-1) Elle est liée au runtime — ce n'est pas vraiment une donnée, mais un état vivant de la VM.
-Une fonction, c'est du code + une closure (des variables capturées dans une portée) : aucune
-chaîne ne peut capturer ça. Une instance de classe : les champs sont des données, mais les
-méthodes vivent sur le prototype, dans le runtime — JSON.stringify ne sérialise que les champs
-propres et on récupère un objet nu, sans son comportement ni son type. Une référence circulaire :
-JSON représente un arbre, pas un graphe avec des pointeurs qui bouclent → TypeError.
-2) C'est un type que la grammaire JSON ne définit pas. JSON ne connaît que objet, tableau,
-string, number, boolean, null. Tout le reste est traité au cas par cas par stringify, en général
-silencieusement : Date → string ISO (on perd le type, parse rend une string), Map/Set → {} (vidés),
-undefined / fonction / Symbol → la clé est carrément omise, BigInt → TypeError. Le piège, c'est
-que la plupart de ces cas ne lèvent PAS d'erreur : la donnée disparaît sans bruit.
-D'où la question qui structure la slide suivante : est-ce que le store GARANTIT un état
-sérialisable, ou est-ce qu'il laisse passer n'importe quel objet ? C'est un vrai choix de design.
+1) Liée au runtime — ce n'est pas vraiment une donnée, mais un état vivant de la VM
+2) C'est un type que la grammaire JSON ne définit pas.
 -->
 
 ---
@@ -395,73 +379,72 @@ L'angle : le bénéfice de NE PAS contraindre est évident (pas de contrainte = 
 veut, instances, méthodes, Map). Donc on passe vite dessus. Ce qui mérite qu'on s'y attarde, c'est
 ce que la contrainte DÉBLOQUE — pas intuitif tant qu'on ne l'a pas vu. D'où une slide tournée vers
 les bénéfices de la sérialisabilité.
-Les quatre, c'est le même mécanisme (state ↔ string) sous quatre angles :
-- Persistance : tout l'état tient dans localStorage / IndexedDB, donc il survit au refresh et à la
-  fermeture de l'onglet. JSON.stringify au save, JSON.parse au boot.
-- SSR & hydratation : le serveur calcule un état, le sérialise dans le HTML envoyé, le client le
-  désérialise et reprend exactement là où le serveur s'est arrêté — sans refetch.
-- Time-travel & DevTools : si chaque état est un snapshot, on peut les empiler, revenir en arrière,
-  rejouer une séquence, et exporter l'historique dans un rapport de bug reproductible.
-- Transport & sync : un état sérialisable se met sur le réseau — synchro multi-onglets, client ↔
-  serveur (c'est exactement ce que fait un Convex, par ex.).
-La dernière ligne pose l'alternative sans s'y attarder : ne rien contraindre, c'est juste la liberté
-de stocker des objets riches — évident — au prix de tout ce qui précède.
-À NUANCER si on te pose la question : presque aucune lib n'IMPOSE la sérialisabilité au runtime.
+Presque aucune lib n'IMPOSE la sérialisabilité au runtime.
 Zustand stocke des objets plats par convention mais ne t'empêche pas d'y mettre une Map ; rien ne
 casse jusqu'à ce que tu actives persist ou devtools, qui eux exigent un état sérialisable. C'est
 opt-in partout via middleware/plugins ; même Redux ne bloque pas, RTK se contente d'avertir
-(serializableCheck). Enchaîne sur l'axe immuable/mutable — un état sérialisable est presque
-toujours immuable et plat.
+(serializableCheck).
 -->
 
 ---
 
-# Critères distinctifs
+# Mutable ou immuable ?
 
-<div class="text-sm opacity-70 pb-2">
-<b>Mutabilité</b> : on remplace l'état (immuable) ou on le modifie en place (mutable) ?<br>
-<b>Provider</b> : faut-il wrapper l'app dans un contexte React, ou non ?
+<div class="text-sm opacity-70 pb-3">
+Le clivage de fond entre state managers : on <b>remplace</b> l'état par une nouvelle référence, ou on le <b>modifie en place</b> ?
 </div>
 
-<div class="grid grid-cols-[7rem_1fr_1fr] gap-3 pt-3 text-center items-stretch">
+<div class="grid grid-cols-2 gap-6 text-sm">
+<div v-click>
 
-<div></div>
-<div class="font-bold opacity-70 self-center">Sans Provider</div>
-<div class="font-bold opacity-70 self-center">Avec Provider</div>
+**Immuable** <span class="opacity-50 text-xs">— Redux, Zustand, Jotai</span>
 
-<div class="font-bold opacity-70 self-center text-right pr-2">Immuable</div>
-<div v-click class="border border-gray-600 rounded-lg p-4">
-<b class="text-lg">Zustand</b>
-<div class="opacity-60 text-xs pt-1">un hook, set() immuable</div>
-</div>
-<div v-click class="border border-gray-600 rounded-lg p-4">
-<b class="text-lg">Redux</b> <span class="opacity-50 text-xs">+ RTK</span>
-<div class="opacity-60 text-xs pt-1">action → reducer pur → store</div>
+```ts
+set((s) => ({ ...s, count: s.count + 1 }))
+// nouvelle référence à chaque changement
+```
+
+<div class="pt-3 space-y-1.5">
+<div class="text-green-400">＋ comparaison par référence (<code>===</code>) triviale</div>
+<div class="text-green-400">＋ sérialisation plus simple</div>
+<div class="text-green-400">＋ prévisible, aligné avec le modèle React</div>
+<div class="text-red-400">－ verbeux : copies imbriquées (atténué par Immer)</div>
+<div class="text-red-400">－ coût de copie sur grosses structures</div>
 </div>
 
-<div class="font-bold opacity-70 self-center text-right pr-2">Mutable</div>
-<div class="flex flex-col gap-2">
-<div v-click class="border border-gray-600 rounded-lg p-3">
-<b class="text-lg">MobX</b>
-<div class="opacity-60 text-xs pt-1">observables, mutation directe</div>
 </div>
-<div v-click class="border border-gray-600 rounded-lg p-3">
-<b class="text-lg">Jotai</b>
-<div class="opacity-60 text-xs pt-1">atomes, granulaire <span class="opacity-80">· provider optionnel</span></div>
-</div>
-</div>
-<div v-click class="self-center opacity-40 text-3xl">—</div>
+<div v-click>
 
+**Mutable** <span class="opacity-50 text-xs">— MobX</span>
+
+```ts
+state.count++
+// l'observable détecte l'accès et la mutation
+```
+
+<div class="pt-3 space-y-1.5">
+<div class="text-green-400">＋ code concis et naturel, zéro boilerplate</div>
+<div class="text-green-400">＋ re-renders ultra-granulaires (ce qui est lu)</div>
+<div class="text-green-400">＋ pas de copie, mutations imbriquées directes</div>
+<div class="text-red-400">－ tracking implicite : « magie », debug moins lisible</div>
+<div class="text-red-400">－ time-travel / sérialisation non gratuits</div>
+</div>
+
+</div>
+</div>
+
+<div v-click class="pt-4 text-center opacity-80">
+Immuable = <span v-mark.orange>traçabilité</span> au prix de la verbosité. Mutable = <span v-mark.orange>ergonomie & granularité</span> au prix de la prévisibilité.
 </div>
 
 <!--
-Deux axes orthogonaux. Mutabilité : immuable (fonctionnel, comme React — Redux, Zustand)
-vs mutable (signaux/observables — MobX, Jotai). Provider : SEUL Redux impose de wrapper l'app
-dans un <Provider>. Zustand et MobX n'en ont pas, et Jotai marche sans (store global par
-défaut) — son <Provider> est optionnel et niche (scoping de plusieurs stores, SSR, isolation
-en test). D'où la colonne « Avec Provider » qui ne contient que Redux, et la case mutable +
-provider laissée vide. Jotai range-able en mutable car modèle atomique/granulaire proche des
-signaux. On démarre par Zustand (coin simple), puis Redux.
+Immuable (Redux, Zustand) : chaque changement
+crée une nouvelle référence — d'où comparaison par === triviale, snapshots gratuits (time-travel,
+DevTools, undo), et un modèle prévisible aligné sur React. Le prix : la verbosité des copies
+imbriquées, qu'Immer (intégré à RTK) masque. Mutable (MobX) : on modifie en place, un
+système d'observables track les accès en lecture → re-renders ultra-granulaires et code naturel,
+mais un tracking implicite plus dur à débugger et pas de time-travel gratuit. Pas de gagnant :
+un compromis traçabilité vs ergonomie.
 -->
 
 ---
@@ -603,7 +586,7 @@ fine — à opposer à Context, qui re-render tous les consommateurs dès que sa
 
 ---
 
-# Actions « standalone » — `setState`
+# Actions « standalone » : `setState`
 
 <div class="text-sm opacity-80 pt-1 pb-3 text-center">Le hook expose une <b>API statique</b> (<code>getState</code>, <code>setState</code>, <code>subscribe</code>) utilisable <b>hors de React</b>, sans s'abonner.</div>
 
@@ -686,7 +669,7 @@ slices, où le couplage (ex. logout vide user ET trips) vit dans l'action. (useS
 
 ---
 
-# Bound store — composer des slices
+# Bound store : composer des slices
 
 <div class="text-sm opacity-80 pt-1 pb-2 text-center">Découper le store en <b>slices</b> ciblées, mais les réunir dans <b>un seul store</b> cohérent.</div>
 
@@ -827,7 +810,7 @@ des mutations « directes » tout en restant immuable. Diff vs Context+Reducer :
 
 ---
 
-# `Zustand` — bilan
+# Bilan
 
 <Bilan
   :scores="[5, 5, 4, 4, 3]"
@@ -927,7 +910,7 @@ sainte trinité state-action-reducer.
 ### Comment Redux l'implémente
 <v-clicks>
 
-- **un seul store** (Flux en autorise plusieurs)
+- **un seul store**
 - **pas de dispatcher** séparé → `dispatch` intégré au store
 - la logique sort des stores → **reducers purs**
 
@@ -989,8 +972,7 @@ tient dans UN objet → on peut le sérialiser intégralement : c'est ce qui per
 debugging (rejouer/annuler les actions), la persistance, l'hydratation SSR. Comme toute mutation
 passe par dispatch sur ce store unique, on obtient un journal ordonné et complet de chaque
 changement (les devtools). Et contrairement à Flux (plusieurs stores) ou à une approche multi-stores,
-il n'y a aucune cohérence inter-stores à maintenir à la main. NUANCE IMPORTANTE (fait le lien avec
-la slide réputation suivante) : un seul store ne veut pas dire un blob fourre-tout — on le découpe
+il n'y a aucune cohérence inter-stores à maintenir à la main. Un seul store ne veut pas dire un blob fourre-tout — on le découpe
 en slices (createSlice / combineReducers), mais la source de vérité reste unique.
 -->
 
@@ -998,7 +980,7 @@ en slices (createSlice / combineReducers), mais la source de vérité reste uniq
 
 # Les DevTools : la vraie raison d'être
 
-<div class="text-sm opacity-80 pb-1 text-center">Redux est né d'une démo pour <b>React Europe 2015</b> — « <i>Hot Reloading with Time Travel</i> ». Les DevTools n'étaient pas un bonus : c'était <span v-mark.orange>l'objectif</span>.</div>
+<div class="text-sm opacity-80 pb-1 text-center">Redux est né d'une démo pour <b>React Europe 2015</b> : « <i>Hot Reloading with Time Travel</i> ». Les DevTools sont à l'origine de la lib.</div>
 
 <div class="grid grid-cols-2 gap-8 pt-3 items-center">
 <div>
@@ -1047,18 +1029,11 @@ un state manager d'abord — Dan Abramov l'a écrit pour sa démo à React Europ
 Hot Reloading with Time Travel ». Le but premier, c'était les DevTools (hot reloading + voyage
 dans le temps) ; l'API a été dessinée POUR rendre cette démo possible.
 D'où le retournement à marteler : les contraintes qu'on reproche souvent à Redux ne sont pas
-arbitraires, chacune existe pour l'outillage —
-- store unique → tout l'état est UN objet sérialisable → on peut le snapshotter/exporter ;
-- actions = objets simples (sérialisables) → un journal ordonné et rejouable de ce qui s'est passé ;
-- reducers purs et déterministes → rejouer la même séquence d'actions reproduit exactement le même
-  état → c'est ce qui rend le time-travel fiable ;
-- immuabilité → chaque dispatch produit un nouveau snapshot distinct → on peut se déplacer entre
-  les états (avant/après) sans les écraser.
+arbitraires, chacune existe pour l'outillage.
 Le mock illustre le journal d'actions + le curseur de time-travel (l'action « à venir » grisée =
 on a rembobiné). Conséquences concrètes : inspection état/diff, import/export d'une séquence
 d'actions (bug reports reproductibles), hot reloading. Citer Dan Abramov : la « rigidité » de
-Redux est le prix à payer pour cet outillage. Transition vers la sainte trinité : ces 3 pièces
-(action/reducer/store) sont précisément ce que les DevTools observent.
+Redux est le prix à payer pour cet outillage.
 -->
 
 ---
@@ -1225,7 +1200,7 @@ const logger = (store) => (next) => (action) => {
 </div>
 
 <div v-click="5" class="pt-4 text-center text-sm opacity-80">
-Le point d'extension de Redux — c'est ici que vit l'<b>asynchrone</b> : <code>redux-thunk</code>, devtools, persistance…
+Le point d'extension de Redux : c'est ici que vit l'<b>asynchrone</b> : <code>redux-thunk</code>, devtools, persistance…
 </div>
 
 <!--
@@ -1235,8 +1210,8 @@ avant d'atteindre le reducer. Signature curryfiée store => next => action. On a
 pour passer au maillon suivant — mais comme on peut écrire du code après next(), on agit aussi
 APRÈS que le reducer a tourné (d'où le « avant / après » du logger). Très puissant : intercepter,
 transformer, bloquer, ou dispatcher d'autres actions. C'est là que vit l'asynchrone (redux-thunk),
-le logging, les devtools, la persistance. RTK fournit createAsyncThunk par-dessus ce mécanisme
-(slide RTK suivante).
+le logging, les devtools, la persistance. Ca peut être vu comme un défaut de Redux qu'il y ait besoin de Middleware
+juste pour faire tourner des effets de bord.
 -->
 
 ---
@@ -1265,6 +1240,7 @@ const shareTrip = (id) => (dispatch, getState) => {
 
 <!-- reducer pur vs thunk -->
 <div v-click="5" class="flex justify-center gap-3 text-xs pb-4">
+<span class="border border-gray-600 rounded px-3 py-1.5 text-center">Action<br><span class="opacity-60">un simple objet JS</span></span>
 <span class="border border-gray-600 rounded px-3 py-1.5 text-center">Reducer<br><span class="opacity-60">pur · aucun effet</span></span>
 <span class="border-2 border-orange-500 rounded px-3 py-1.5 text-center">Thunk<br><span class="opacity-60">effets autorisés</span></span>
 </div>
@@ -1499,7 +1475,7 @@ Sélecteur = <span v-mark.orange>petit, pur, stable</span>. Clé de la réactivi
 </div>
 
 <!--
-useSelector mérite sa slide : c'est le point de perf #1 côté lecture. (1) On lit le strict
+(1) On lit le strict
 minimum : un sélecteur large = abonnement large = re-render inutiles. (2) PIÈGE classique :
 renvoyer un objet/tableau littéral. useSelector compare le résultat précédent et le nouveau
 en === (référence) ; un littéral est recréé à chaque rendu → toujours !== → re-render à chaque
@@ -2039,10 +2015,10 @@ dans des slices à la main : c'est précisément le mésusage historique dénonc
 
 ---
 
-# `Redux` + RTK — bilan
+# Bilan
 
 <Bilan
-  :scores="[2, 2, 4, 5, 5]"
+  :scores="[2, 2, 3, 5, 4]"
   poids="≈ 14 kB (gzip, RTK + react-redux)"
   perimetre="gros état client complexe"
   idealPour="les grosses apps où traçabilité, outillage et conventions partagées priment"
@@ -2055,7 +2031,7 @@ dans des slices à la main : c'est précisément le mésusage historique dénonc
   :limites="[
     'Courbe d\'apprentissage : plus de concepts qu\'un simple hook',
     'Plus verbeux et plus lourd que Zustand',
-    'Pas de concurrent rendering (useSyncExternalStore)',
+    'Peu performant à l\'échelle : tous les sélecteurs tournent à chaque changement du store',
     'Surdimensionné pour la majorité des apps',
   ]"
 />
