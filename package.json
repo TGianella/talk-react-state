@@ -5,5 +5,8 @@
     "dev:slides": "pnpm --filter slides dev",
     "build:slides": "pnpm --filter slides build",
     "dev:app": "pnpm --filter wanderstate dev"
+  },
+  "dependencies": {
+    "convex": "^1.42.0"
   }
 }
