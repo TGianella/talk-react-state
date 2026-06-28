@@ -951,8 +951,9 @@ C'est le prix de la richesse — et ça reste LE standard du state serveur en Re
 -->
 
 ---
-layout: center
-class: text-center
+layout: cover
+image: /covers/factory-gnep-photo.avif
+credit: Gnep Photo
 ---
 
 <h1 class="text-7xl font-bold">Apollo Client</h1>
@@ -1412,8 +1413,9 @@ Et si le cache n'existait tout simplement pas ?"
 -->
 
 ---
-layout: center
-class: text-center
+layout: cover
+image: /covers/factory-dietmar-rabich.avif
+credit: Dietmar Rabich
 ---
 
 <h1 class="text-7xl font-bold">Convex</h1>
