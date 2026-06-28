@@ -3,6 +3,34 @@ layout: center
 class: text-center
 ---
 
+<div class="grid grid-cols-2 gap-30 pt-10 max-w-3xl mx-auto">
+
+<div class="flex flex-col items-center">
+<img :src="'/photo-theo.png'" class="w-50 h-50 rounded-full border-2 border-orange-500 object-cover" />
+<div class="text-3xl font-bold pt-5">Théo Gianella</div>
+<div class="text-xl opacity-60 pt-1">Développeur Web</div>
+<img :src="'Logo Zenika Horizontal_Noir.svg'" class="w-30 pt-5"/>
+</div>
+
+<div class="flex flex-col items-center">
+<img :src="'/photo-yoann.jpeg'" class="w-50 h-50 rounded-full border-2 border-orange-500 object-cover" />
+<div class="text-3xl font-bold pt-5">Yoann Frommelt</div>
+<div class="text-xl opacity-60 pt-1">Tech Lead web</div>
+<img :src="'bedrock_streaming_logo.jpeg'" class="w-15 pt-2"/>
+</div>
+
+</div>
+
+<!--
+Présentation des deux orateurs. Remplacer les placeholders : photo (déposer l'image dans
+public/ et remplacer l'emoji 📷 par <img>), prénom/nom et intitulé de poste.
+-->
+
+---
+layout: center
+class: text-center
+---
+
 # 🙋 Avant de commencer
 
 <div v-click class="text-2xl pt-8 leading-relaxed">

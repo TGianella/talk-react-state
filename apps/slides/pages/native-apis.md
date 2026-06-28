@@ -1,12 +1,12 @@
 ---
 layout: section
-image: /covers/hatfield-coilliery-mechanical-landscapes.jpg
-credit: Industrial Landscapes
+image: /covers/factory-bernt-and-hilla-becher.jpg
+credit: Bernt et Hilla Becher
 ---
 
 # Chapitre 1
 ## Les API natives de React
-<div class="opacity-60 pt-2">Des outils méconnus qui suffisent souvent</div>
+<div class="opacity-80 pt-2">Jusqu'où peut-on aller avec ?</div>
 
 ---
 

@@ -15,7 +15,7 @@ defineProps<{
 </script>
 
 <template>
-  <Cover :image="image" :position="position" :credit="credit">
+  <Cover :image="image" :position="position" :credit="credit" variant="section">
     <slot />
   </Cover>
 </template>

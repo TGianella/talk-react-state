@@ -22,6 +22,8 @@ const props = defineProps<{
   image?: string
   position?: string
   credit?: string
+  /** `section` → larger type, used by chapter dividers (see section.vue). */
+  variant?: string
 }>()
 
 function resolveAssetUrl(url: string) {
@@ -33,9 +35,9 @@ function resolveAssetUrl(url: string) {
 const style = computed(() => {
   if (!props.image)
     return {}
-  // Neutral (greyscale) dim so the already-greyscale photo keeps no colour cast
-  // while the white title stays readable.
-  const dim = 'linear-gradient(rgb(0 0 0 / 0.45), rgb(0 0 0 / 0.6))'
+  // Light, neutral (greyscale) dim — the photo stays visible. Legibility comes
+  // from the text's own halo shadow (see styles/index.css), not from this layer.
+  const dim = 'linear-gradient(rgb(0 0 0 / 0.35), rgb(0 0 0 / 0.5))'
   return {
     backgroundImage: `${dim}, url("${resolveAssetUrl(props.image)}")`,
     backgroundPosition: props.position ?? 'center',
@@ -46,7 +48,7 @@ const style = computed(() => {
 <template>
   <div
     class="slidev-layout cover-slide"
-    :class="{ 'has-image': image }"
+    :class="[{ 'has-image': image }, variant ? `cover-${variant}` : '']"
     :style="style"
   >
     <div class="cover-panel">

@@ -6,7 +6,7 @@ credit: German Simonson
 
 # Chapitre 4
 ## Les state managers classiques
-<div class="opacity-60 pt-2">Tout faire — mais pas aussi bien qu'un outil spécialisé</div>
+<div class="opacity-80 pt-2">Centraliser l'état dans un store global</div>
 
 ---
 
@@ -277,7 +277,7 @@ de fait le time-slicing pour ce state. D'où le compromis de la slide suivante (
 </div>
 <div>
 
-<div class="text-lg pb-2">Trois propriétés désirables — on n'en cumule que <span v-mark="{ at: 3, color: 'orange' }">deux sur trois</span>.</div>
+<div class="text-lg pb-2">Trois propriétés désirables — on n'en cumule que <span v-mark.orange="3">deux sur trois</span>.</div>
 
 <v-clicks at="4">
 
@@ -466,13 +466,13 @@ signaux. On démarre par Zustand (coin simple), puis Redux.
 
 ---
 layout: cover
-image: /covers/factory-luca-cavallin.jpeg
-credit: Luca Cavallin
+image: /covers/factory-postrh-2.avif
+credit: postrh
 ---
 
 # Zustand
 
-<div class="text-xl opacity-60 pt-3">Le state manager minimaliste — un hook, sans provider</div>
+<div class="text-xl opacity-80 pt-3">Le state manager minimaliste</div>
 
 ---
 
@@ -857,13 +857,13 @@ imposer ses propres conventions (slices, un store par domaine) sur les gros proj
 
 ---
 layout: cover
-image: /covers/factory-pablo-unzueta.jpg
-credit: Pablo Unzueta
+image: /covers/factory-atsushi-maeda-2.jpg
+credit: Atsushi Maeda
 ---
 
 # Redux
 
-<div class="text-xl opacity-60 pt-3">Le pionnier des store managers — un état prévisible, chaque changement tracé</div>
+<div class="text-xl opacity-80 pt-3">Le pionnier des store managers</div>
 
 ---
 
