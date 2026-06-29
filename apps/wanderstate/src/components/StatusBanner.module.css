@@ -1,0 +1,67 @@
+.banner {
+  position: relative;
+  text-align: center;
+  padding: 48px 32px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  border: 2px dashed var(--color-border-muted);
+}
+
+.close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px;
+  height: 30px;
+  border: 2px solid currentColor;
+  background: transparent;
+  color: inherit;
+  font-size: 1.4rem;
+  font-weight: 800;
+  line-height: 1;
+  font-family: inherit;
+  cursor: pointer;
+}
+
+.close:hover {
+  background: rgb(from var(--color-error) r g b / 12%);
+}
+
+.error {
+  color: var(--color-error);
+  border-color: var(--color-error);
+  border-style: solid;
+}
+
+/* Barre fine d'activité réseau (refetch / mutation en cours) */
+.compact {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  font-size: 0.9rem;
+  text-align: left;
+  color: var(--color-text);
+  border: 2px solid var(--color-accent);
+  border-style: solid;
+}
+
+.compact::before {
+  content: '';
+  flex-shrink: 0;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--color-accent);
+  animation: statusPulse 0.9s ease-in-out infinite;
+}
+
+@keyframes statusPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.2; }
+}

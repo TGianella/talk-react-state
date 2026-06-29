@@ -176,4 +176,10 @@
   box-shadow: 1px 1px 0 var(--color-primary);
 }
 
+.btnSubmit:disabled {
+  cursor: progress;
+  opacity: 0.55;
+  box-shadow: 1px 1px 0 var(--color-primary);
+}
+
 

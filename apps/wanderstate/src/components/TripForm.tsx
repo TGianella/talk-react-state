@@ -5,6 +5,7 @@ import DropdownSelect from './DropdownSelect'
 
 export interface TripFormProps {
   onAddTrip: (trip: Trip) => void
+  isSubmitting?: boolean
 }
 
 const INITIAL_BUDGET = 500
@@ -23,9 +24,10 @@ const DESTINATIONS = [
   'Saint-Cirq-Lapopie',
   'Sophia Antipolis',
   'Vézelay',
+  'Atlantide',
 ]
 
-export default function TripForm({ onAddTrip }: TripFormProps) {
+export default function TripForm({ onAddTrip, isSubmitting = false }: TripFormProps) {
   const [name, setName] = useState('')
   const [destination, setDestination] = useState('')
   const [budget, setBudget] = useState(INITIAL_BUDGET)
@@ -105,8 +107,8 @@ export default function TripForm({ onAddTrip }: TripFormProps) {
           <span className={styles.fieldError}>{errors.budget ? errors.budget : '\u00a0'}</span>
         </div>
 
-        <button type="submit" className={styles.btnSubmit}>
-          Créer le voyage
+        <button type="submit" className={styles.btnSubmit} disabled={isSubmitting}>
+          {isSubmitting ? 'Création…' : 'Créer le voyage'}
         </button>
       </form>
     </section>
