@@ -11,6 +11,129 @@ credit: Bernt et Hilla Becher
 
 ---
 
+# Le state en React
+
+<div v-click="1" class="text-center text-2xl pt-8">
+La donnée ne circule que dans <span v-mark.orange>un seul sens</span>. L'état reste <b class="text-orange-400">immuable</b>.
+</div>
+
+<div v-click="2" class="flex flex-col items-center gap-1 pt-8">
+<div class="border-2 border-orange-500 rounded-lg px-6 py-2 bg-orange-400/10 font-medium">Parent (détient le state)</div>
+<div class="flex gap-16 pt-1">
+<div class="flex flex-col items-center">
+<div class="flex flex-col items-center text-orange-400 leading-tight">
+<span class="text-2xl leading-none">↓</span>
+<span class="text-xs">props</span>
+</div>
+<div class="border border-gray-500 rounded-lg px-6 py-2 mt-1">Enfant A</div>
+</div>
+<div class="flex flex-col items-center">
+<div class="flex flex-col items-center text-orange-400 leading-tight">
+<span class="text-2xl leading-none">↓</span>
+<span class="text-xs">props</span>
+</div>
+<div class="border border-gray-500 rounded-lg px-6 py-2 mt-1">Enfant B</div>
+</div>
+</div>
+</div>
+
+<div v-click="3" class="pt-8 text-center opacity-70">
+La donnée ne va que <b>vers le bas</b>. jamais de l'enfant au parent, jamais entre enfants.<br>On sait toujours d'où vient chaque valeur.
+</div>
+
+<div v-click="4" class="pt-6 text-center text-lg">
+Ça se complique quand deux composants <span v-mark.orange>éloignés</span> doivent partager la donnée.
+</div>
+
+<!--
+Le trait unique de React : flux de données unidirectionnel. La donnée ne descend QUE vers le
+bas, du parent vers l'enfant via les props — jamais vers le haut, jamais entre frères. Pour
+qu'une donnée « remonte », il n'y a qu'un mécanisme (à expliquer à l'oral) : le parent passe
+un callback en prop, et l'enfant l'appelle en lui passant des arguments. Ce n'est donc pas un
+vrai flux remontant, juste l'enfant qui déclenche du code du parent. Très prévisible → facile
+à débugger. Le coût : pour partager entre composants éloignés, il faut tout remonter au parent
+commun → point de départ des chapitres (prop drilling → contexte → stores).
+-->
+
+---
+disabled: true
+---
+
+# Et dans les autres frameworks ?
+
+<div class="max-w-4xl mx-auto pt-8 grid grid-cols-[auto_1fr_1fr_1fr] gap-x-5 gap-y-5 items-center">
+
+<div></div>
+<div class="text-center font-bold text-orange-400">React</div>
+<div class="text-center font-bold opacity-80">Vue</div>
+<div class="text-center font-bold opacity-80">Angular</div>
+
+<div v-click="1" class="text-sm opacity-60 whitespace-nowrap">Lier état ↔ vue</div>
+<div v-click="1" class="text-center"><code class="text-xs whitespace-nowrap">&lt;Field value={count}<br/>onChange={setCount} /&gt;</code></div>
+<div v-click="1" class="text-center"><code class="text-xs whitespace-nowrap">&lt;Field v-model="count" /&gt;</code></div>
+<div v-click="1" class="text-center"><code class="text-xs whitespace-nowrap">&lt;app-field [(value)]="count" /&gt;</code></div>
+
+<div v-click="2" class="text-sm opacity-60 whitespace-nowrap">Changer l'état</div>
+<div v-click="2" class="text-center"><code class="text-sm whitespace-nowrap">setCount(count + 1)</code></div>
+<div v-click="2" class="text-center"><code class="text-sm whitespace-nowrap">count.value++</code></div>
+<div v-click="2" class="text-center"><code class="text-sm whitespace-nowrap">this.count++</code></div>
+
+</div>
+
+<div v-click="3" class="pt-10 text-center text-lg">
+Vue &amp; Angular : on <b>mute</b>, le framework réagit.<br>
+React : l'état est <span v-mark.underline.orange>immuable</span>, il est remplacé.
+</div>
+
+<div v-click="4" class="pt-3 text-center opacity-70">
+Immutabilité &amp; flux à sens unique vont de pair → un flux <b>prévisible et traçable</b>.
+</div>
+
+<!--
+Deux axes pour enfoncer le clou. (1) Lier état ↔ vue : Vue (v-model) et Angular ([(x)]) font du
+two-way binding (sur composant aussi, pas que les inputs natifs : modelValue/update:modelValue,
+@Input x + @Output xChange) ; React reste explicite (value en prop, onChange en callback).
+(2) Changer l'état : Vue et Angular MUTENT directement la donnée et le framework réagit
+(Proxy / détection de changement) ; React n'autorise jamais la mutation — on passe par le
+setter et l'état reste immuable. Bilan : plus verbeux, mais un seul sens, prévisible et traçable.
+-->
+
+---
+layout: center
+---
+
+<div class="text-6xl font-mono pt-6 pb-4">
+  UI = <span v-mark.circle.orange="1">f(state)</span>
+</div>
+
+<div v-click="2" class="text-xl opacity-70">
+Une UI n'est qu'une <b>projection de l'état</b> à un instant T.
+</div>
+
+<div v-click="3" class="text-xl opacity-70 pt-2">
+Changer l'UI = changer l'état.
+</div>
+
+<div v-click="4" class="flex justify-center pt-12">
+
+```mermaid {scale: 0.9}
+graph LR
+  A(Action) --> S(State)
+  S --> V(Vue / UI)
+  V --> A
+  style S fill:#f97316,stroke:#ea580c,color:#fff
+```
+
+</div>
+
+<!--
+Le modèle mental qui accompagne le flux : UI = projection de l'état. Pas unique à React (Vue,
+Solid le partagent), mais c'est ainsi qu'on raisonne. Corollaire: changer l'écran = changer l'état, rien
+d'autre. Tout le reste du talk : où vit le state, et comment on le change.
+-->
+
+---
+
 # `useState` : la clé de voûte de la réactivité
 
 <div class="grid grid-cols-2 gap-6 items-start pt-2">
@@ -65,9 +188,11 @@ Ces deux propriétés relient <b>la donnée</b> <span class="opacity-40">⇄</sp
 </div>
 
 <!--
-useState fait seulement deux choses, persister une valeur entre les re-rendus, et déclencher un re-rendu quand une nouvelle valeur est passée au setter.
+Passer très vite : useState fait seulement deux choses, persister une valeur entre les re-rendus, et déclencher un re-rendu quand une nouvelle valeur est passée au setter.
 -->
 
+---
+disabled: true
 ---
 
 # `useState` : passer une valeur, ou une fonction
@@ -123,15 +248,7 @@ Même idée des deux côtés : <span v-mark.orange>une fonction = « laisse Reac
 </div>
 
 <!--
-Les deux formes "fonction" de useState, souvent mal comprises.
-INITIALISEUR : passer useState(loadFromStorage()) exécute le calcul à CHAQUE render —
-la valeur n'est utilisée qu'au montage, mais la fonction tourne quand même. La forme
-() => loadFromStorage() ne s'exécute qu'une fois. Réservé aux inits coûteuses (localStorage,
-parsing, gros tableau) — inutile pour useState(0).
-UPDATER : setCount(count + 1) capture le count du render courant via la closure — si plusieurs
-updates sont batchés ou si on est dans une closure ancienne, on travaille sur une valeur périmée
-(stale). setCount(c => c + 1) reçoit la dernière valeur connue par React → toujours correct.
-C'est pour ça que WanderState fait setTrips(p => [...p, t]) plus loin.
+Détail à montrer vite
 -->
 
 ---
@@ -240,6 +357,8 @@ reverra exactement ce principe avec les sélecteurs (Zustand) et les computed (M
 -->
 
 ---
+disabled: true
+---
 
 # Le state vit dans React — pas dans le composant
 
@@ -318,6 +437,8 @@ Conséquences concrètes :
 Transition : et si on veut maîtriser cette identité à la main ? → slide `key`.
 -->
 
+---
+disabled: true
 ---
 
 # `key` : changer l'identité réinitialise le state
@@ -450,7 +571,7 @@ const [count, dispatch] = useReducer(reducer, 0)
 dispatch({ type: 'inc' }) // → re-render, count = 1
 ```
 
-<div v-click="8">
+<div v-click="4">
 
 ```ts
 function useState(initial) {
@@ -475,7 +596,7 @@ function useState(initial) {
 
 </v-clicks>
 
-<div v-click="7" class="mt-4 text-sm opacity-80 pt-8">
+<div v-click="4" class="mt-4 text-sm opacity-80 pt-8">
 En interne, <code>useState</code> <b>n'est qu'un</b> <code>useReducer</code> avec un reducer trivial.
 </div>
 
@@ -685,7 +806,7 @@ plusieurs niveaux devient vite douloureux — le prop drilling. C'est ce qui mot
 </div>
 
 <div v-click class="text-center pt-10 text-xl">
-<span v-mark.orange>Pas de sur-ingénierie</span> : c'est leur <b>produit</b> qui fait mal, pas un facteur seul.
+<span v-mark.orange>Pas d'optimisation prématurée</span> : c'est leur <b>produit</b> qui fait mal, pas un facteur seul.
 </div>
 
 <!--
@@ -840,24 +961,33 @@ LE point qui justifie tous les stores dédiés. Workaround natif : splitter les 
 -->
 
 ---
-layout: quote
----
 
-# « useContext n'est pas un state manager. »
+# Les API natives — bilan
 
-C'est de l'**injection de dépendances**.
-
-<div class="text-base opacity-60 pt-4">
-Il rend une valeur disponible à plusieurs consommateurs.<br>
-Mais il faut <b>quand même gérer le state</b> — avec <code>useState</code> / <code>useReducer</code>.
-</div>
-
-<div v-click class="text-sm opacity-50 pt-8">
-À terme, le React Compiler pourrait mémoïser correctement un contexte —<br>la limite principale tomberait.
-</div>
+<Bilan
+  :scores="[5, 5, 3, 5, 2]"
+  poids="0 kB (intégré à React)"
+  perimetre="State local, remonté plus ou moins haut dans l'arbre"
+  idealPour="State local et données globales peu changeantes (thème, user, locale)"
+  :avantages="[
+    'Zéro dépendance — déjà là, rien à installer',
+    'Modèle mental simple : UI = f(state), flux unidirectionnel',
+    'useReducer : transitions nommées, pures, testables',
+  ]"
+  :limites="[
+    'Context = injection de dépendances, pas un state manager',
+    'Pas de sélecteurs → re-renders non ciblés de tous les consommateurs',
+    'Prop drilling douloureux dès que l\'arbre grandit',
+  ]"
+/>
 
 <!--
-Recadrage conceptuel important. Context = DI, pas du state management.
-Note prospective : React Compiler pourrait lever la limite des re-renders.
+Le bilan du chapitre, en miroir des autres (mêmes axes sur 5). Scores : prise en main 5
+(c'est React, rien à apprendre de plus), poids 5 (intégré, 0 kB), perf 3 (le talon d'Achille :
+re-renders non ciblés du Context, faute de sélecteurs), écosystème 5 (c'est React lui-même +
+React DevTools), montée en charge 2 (prop drilling + re-renders généralisés rendent les grands
+arbres pénibles — c'est exactement ce qui motive les stores dédiés du chapitre suivant).
+À marteler : Context n'est PAS un state manager, c'est de la DI. Note prospective : le React
+Compiler pourrait à terme lever la limite des re-renders.
 -->
 
