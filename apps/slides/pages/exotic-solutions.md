@@ -48,8 +48,8 @@ réactivité fine et synchrone → Jotai / MobX. Le bon outil épouse la forme d
 
 ---
 layout: section
-image: /covers/factory-dietmar-rabich.avif
-credit: Dietmar Rabich
+image: /covers/factory-istock.avif
+credit: IStock
 ---
 
 # Jotai
