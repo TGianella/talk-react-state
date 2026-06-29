@@ -1,5 +1,6 @@
 ---
 layout: section
+crumb: { chapter: "3 · L'état serveur" }
 image: /covers/factory-atsushi-maeda.jpg
 credit: Atsushi Maeda
 ---
@@ -106,7 +107,7 @@ TanStack Query n'est PAS qu'un wrapper réseau : c'est du server-state managemen
 <div class="grid grid-cols-2 gap-6 items-center">
 <div>
 
-```tsx {all|2-4|6-11|13-15}
+```tsx
 function TripList() {
   const [data, setData] = useState()
   const [error, setError] = useState()
@@ -184,6 +185,7 @@ Tout est dans le titre, les libs d'état asynchrone demandent juste qu'on leur p
 
 ---
 layout: cover
+crumb: { tool: "SWR" }
 image: /covers/factory-jon-meyer.jpg
 credit: Jon Meyer
 ---
@@ -191,6 +193,31 @@ credit: Jon Meyer
 # SWR
 
 <div class="text-xl opacity-80 pt-3">Une bibliothèque minimaliste de gestion de state serveur</div>
+
+---
+
+# SWR
+
+<FicheSolution
+  annee="2019"
+  auteur="Shu Ding — Vercel"
+  tagline="La donnée distante en un hook : on sert le cache, on revalide en fond."
+  probleme="Le fetch « à la main » (useEffect + useState) impose de réécrire loading, erreurs, cache et synchronisation entre composants à chaque requête. Beaucoup de code, autant d'occasions de se tromper."
+  creneau="Le state serveur simple, surtout en lecture : afficher de la donnée fraîche sans réécrire le cache et la revalidation à chaque fois. Minimaliste et quasi sans config."
+  :infos="[
+    'Développé par Vercel, l\'équipe derrière Next.js — intégration naturelle avec.',
+    'Très léger (~4 kB) : un seul hook, pas de Provider obligatoire, presque pas de config.',
+    'Centré sur la lecture et la revalidation ; les mutations restent plus minimalistes que chez TanStack Query.',
+  ]"
+/>
+
+<!--
+Première slide de la sous-section, sur la même fiche que nuqs et TanStack Query. SWR est né
+chez Vercel (l'équipe Next.js) en 2019 — d'où son intégration naturelle avec le framework.
+Le nom est l'acronyme de stale-while-revalidate, le pattern de cache qu'il implémente. Sa
+promesse : la donnée distante en un seul hook, ultra-léger et quasi sans config. Sa contrepartie,
+qu'on verra au bilan : centré sur la lecture, il va moins loin que TanStack sur les mutations.
+-->
 
 ---
 layout: center
@@ -221,7 +248,7 @@ standard HTTP (RFC 5861) — la librairie ne fait que l'implémenter côté Reac
 
 Un seul hook : <code>useSWR(clé, fetcher)</code>
 
-```tsx {all|1|3|4-5}
+```tsx
 import useSWR from 'swr'
 
 const fetcher = (url) => fetch(url).then(r => r.json())
@@ -262,7 +289,7 @@ args ⇒ fetch(...).then(r ⇒ r.json()). On pense en dépendances de données, 
 
 # La clé : le cœur de SWR
 
-```tsx {all|1-3|5-7}
+```tsx
 // clé simple
 const fetcher = (url) => fetch(url).then(r => r.json())
 useSWR('/api/trips', fetcher)            // → fetch('/api/trips')
@@ -302,7 +329,7 @@ plusieurs composants qui demandent la même clé partagent une seule requête.
 <div class="grid grid-cols-[3fr_2fr] gap-8 items-center pt-2">
 <div>
 
-```tsx {all|1-2|4-6|8-9}
+```tsx
 // défini une fois pour toute l'app
 const fetcher = (url) => fetch(url).then(r => r.json())
 
@@ -343,7 +370,7 @@ global via SWRConfig. La seule chose qui change d'un appel à l'autre, c'est la 
 
 # Bonne pratique : un hook custom par ressource
 
-```tsx {all|1-2|4-7}
+```tsx
 const useTrips = ()   => useSWR('/api/trips', fetcher)
 const useTrip  = (id) => useSWR(`/api/trips/${id}`, fetcher)
 
@@ -375,7 +402,7 @@ ni le fetcher — juste useTrips(). La dépendance de données devient explicite
 Les <b>rules of hooks</b> interdisent d'appeler <code>useSWR</code> conditionnellement → c'est la <b>clé</b> qui porte la condition.
 </div>
 
-```tsx {all|1-2|4-6}
+```tsx
 // clé null ⇒ pas de requête
 useSWR(userId ? `/api/users/${userId}` : null, fetcher)
 
@@ -454,7 +481,7 @@ Patterns avancés pour faire des choses plus poussées.
 
 ---
 
-# SWR — bilan
+# Bilan
 
 <Bilan
   :scores="[5, 5, 4, 2, 2]"
@@ -479,6 +506,7 @@ Bilan, tout est sur la slide.
 
 ---
 layout: cover
+crumb: { tool: "TanStack Query" }
 image: /covers/factory-wolfgang-weiser.jpg
 credit: Wolfgang Weiser
 ---
@@ -518,7 +546,7 @@ par hasard.
 
 # `useQuery`
 
-```tsx {all|2|3|5}
+```tsx
 const { data, isPending, isError } = useQuery({
   queryKey: ['trips', tripId],          // identifiant unique de la donnée
   queryFn: () => fetchTrip(tripId),     // comment la récupérer (renvoie une promesse)
@@ -552,7 +580,7 @@ ce qu'il y a entre "je veux la donnée" et "je l'ai". TSQ ne fetch pas (on garde
 
 # Etats de la requête
 
-```tsx {all|2|4|6}
+```tsx
 function TripList() {
   if (isPending) return <Skeleton />        // 1er fetch
   if (isError)   return <Error />           // échec
@@ -591,7 +619,7 @@ Les états retournés automatiquement = la moitié de la valeur. Distinguer isPe
 <div class="grid grid-cols-2 gap-10 items-center pt-4">
 <div>
 
-```ts {none|1|2|3}
+```ts
 ['trips']                 // toute la racine
 ['trips', 'list']         // la liste
 ['trips', tripId]         // un item particulier
@@ -924,7 +952,7 @@ Slide de clôture de la partie TanStack Query. Renvoyer vers la ressource vidéo
 
 ---
 
-# TanStack Query — bilan
+# Bilan
 
 <Bilan
   :scores="[4, 3, 5, 5, 5]"
@@ -952,6 +980,7 @@ C'est le prix de la richesse — et ça reste LE standard du state serveur en Re
 
 ---
 layout: cover
+crumb: { tool: "Apollo Client" }
 image: /covers/factory-gnep-photo.avif
 credit: Gnep Photo
 ---
@@ -1037,7 +1066,7 @@ et des membres — avec REST ça peut être 3 endpoints. GraphQL : une seule req
 
 # `useQuery` — le composant déclare ses besoins
 
-```tsx {all|3-9|1-2}
+```tsx
 // Le composant déclare ses besoins, Apollo s'occupe du reste
 const { data, loading, error } = useQuery(gql`
   query GetTrip($id: ID!) {
@@ -1215,7 +1244,7 @@ mettre à jour le cache via cache.modify(). C'est l'exception, pas la règle.
 
 <div class="text-sm opacity-70 pb-4">Chaque composant déclare <b>ses propres besoins</b> — indépendamment de la query qui l'encapsule.</div>
 
-```tsx {all|1-6|8-14|16-20}
+```tsx
 // TripCard déclare ses besoins — colocalisés avec le composant
 const TRIP_CARD_FIELDS = gql`
   fragment TripCardFields on Trip {
@@ -1416,6 +1445,7 @@ Et si le cache n'existait tout simplement pas ?"
 layout: cover
 image: /covers/factory-dietmar-rabich.avif
 credit: Dietmar Rabich
+crumb: { tool: "Convex" }
 ---
 
 <h1 class="text-7xl font-bold">Convex</h1>

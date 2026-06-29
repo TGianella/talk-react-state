@@ -1,5 +1,6 @@
 ---
 layout: section
+crumb: { chapter: "4 · Les state managers classiques" }
 image: /covers/factory-german-simonson-1.jpg
 credit: German Simonson
 ---
@@ -449,6 +450,7 @@ un compromis traçabilité vs ergonomie.
 
 ---
 layout: cover
+crumb: { tool: "Zustand" }
 image: /covers/factory-postrh-2.avif
 credit: postrh
 ---
@@ -486,7 +488,7 @@ d'où ça vient, quel problème, son créneau. Enchaîner sur le hook + sélecte
 
 <div class="text-sm opacity-80 pb-1">La fonction <code>create()</code> renvoie un <b>hook</b> qui permet d'interagir avec le store.</div>
 
-```ts {all|1|2-5|7}
+```ts
 const useTripStore = create((set) => ({
   trips: [],                                          // state
   addTrip:    (t)  => set((s) => ({ trips: [...s.trips, t] })),
@@ -516,7 +518,7 @@ plusieurs. Encourage plusieurs stores (un par domaine). persist en 1 ligne. Diff
 
 <div class="text-sm opacity-80 pb-1">Dans un composant, on appelle le hook avec un <b>sélecteur</b> pour ne lire que ce qu'on utilise.</div>
 
-```tsx {all|2|3|6}
+```tsx
 function TripList() {
   const trips   = useTripStore((s) => s.trips)       // on lit un morceau de state
   const addTrip = useTripStore((s) => s.addTrip)     // … et une action, de la même façon
@@ -673,7 +675,7 @@ slices, où le couplage (ex. logout vide user ET trips) vit dans l'action. (useS
 
 <div class="text-sm opacity-80 pt-1 pb-2 text-center">Découper le store en <b>slices</b> ciblées, mais les réunir dans <b>un seul store</b> cohérent.</div>
 
-```ts {all|2-5|6-9|12-15}
+```ts
 // 1 slice = 1 domaine, défini comme une fonction
 const createTripSlice = (set) => ({
   trips: [],
@@ -720,7 +722,7 @@ une autre slice (ex. logout vide user ET trips) — le couplage est explicite et
 <span class="border-2 border-orange-500 rounded px-2 py-1 font-mono">userTripsSlice</span>
 </div>
 
-```ts {all|4|5-8|13-15}
+```ts
 const createUserTripsSlice = (set, get) => ({
   // action de jonction : lit user + trips, met à jour trips
   archiveMyTrips: () => {
@@ -840,6 +842,7 @@ imposer ses propres conventions (slices, un store par domaine) sur les gros proj
 
 ---
 layout: cover
+crumb: { tool: "Redux / RTK" }
 image: /covers/factory-atsushi-maeda-2.jpg
 credit: Atsushi Maeda
 ---
@@ -1223,7 +1226,7 @@ juste pour faire tourner des effets de bord.
 <div class="grid grid-cols-2 gap-8 pt-4 items-center">
 <div>
 
-```ts {all|2|3-4|6-7|8}
+```ts
 // on dispatche une fonction, pas un objet
 const shareTrip = (id) => (dispatch, getState) => {
   const trip = getState().trips.find((t) => t.id === id)

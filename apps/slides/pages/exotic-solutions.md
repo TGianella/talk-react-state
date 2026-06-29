@@ -1,5 +1,6 @@
 ---
 layout: section
+crumb: { chapter: "5 · Les solutions exotiques" }
 image: /covers/factory-german-simonson-2.jpg
 credit: German Simonson
 ---
@@ -48,6 +49,7 @@ réactivité fine et synchrone → Jotai / MobX. Le bon outil épouse la forme d
 
 ---
 layout: section
+crumb: { tool: "Jotai" }
 image: /covers/factory-istock.avif
 credit: IStock
 ---
@@ -98,7 +100,7 @@ const countAtom = atom(0)
 
 <div class="text-xs opacity-50 uppercase tracking-widest pt-4 pb-1">Dans un composant</div>
 
-```ts {all|3|4|5}
+```ts
 function Counter() {
   // au choix, selon le besoin :
   const [count, setCount] = useAtom(countAtom)      // lire + écrire (= useState)
@@ -141,7 +143,7 @@ On passe une <b>fonction</b> au lieu d'une valeur → un atome <b>lecture seule<
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|3|6}
+```ts
 const countAtom  = atom(0)
 
 const doubleAtom = atom((get) => get(countAtom) * 2)
@@ -188,7 +190,7 @@ pour les actions). Pont démo : le budget total de WanderState devient un atome 
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|4|5|8}
+```ts
 const countAtom = atom(0)
 
 const incrementAtom = atom(
@@ -242,7 +244,7 @@ Les 2 fonctions réunies : un <b>read</b> et un <b>write</b> → l'atome est lis
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|4|5|8}
+```ts
 const countAtom = atom(0)
 
 const doubleAtom = atom(
@@ -291,7 +293,7 @@ La fonction <code>read</code> peut être <b>async</b> → l'atome résout une <c
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|1-3|6}
+```ts
 const userAtom = atom(async (get) =>
   fetch(`/api/users/${get(idAtom)}`).then(r => r.json())
 )
@@ -416,6 +418,7 @@ aussi quand l'état est très dérivé et qu'on veut une réactivité fine sans 
 
 ---
 layout: section
+crumb: { tool: "MobX" }
 image: /covers/factory-jra9393.avif
 credit: jra9393
 ---
@@ -512,7 +515,7 @@ pas l'objet. Attention au déréférencement hors d'un observer → perte de ré
 <div>
 <div class="text-xs opacity-70 pb-1">👉 <b>Le défaut</b> — objet <i>ou</i> <code>this</code> dans une classe, rôles inférés. Renvoie l'objet modifié <b>sans changer sa référence</b></div>
 
-```ts {all|2|3|4}
+```ts
 const store = makeAutoObservable({
   trips: [],                                // observable
   get total() { return this.trips.length }, // computed
@@ -728,7 +731,7 @@ décalage : pas de « stale state », pas de useEffect pour réagir à son propr
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|2-5|8-9}
+```ts
 const store = makeAutoObservable({
   trips: [],
   get totalBudget() {                  // computed
@@ -781,7 +784,7 @@ Ré-exécuter du code <b>impur</b> à chaque changement du state observé.
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|1-3|5-8|10-11}
+```ts
 autorun(() => {     
   console.log(store.totalBudget)
 })
@@ -885,7 +888,7 @@ Principal effet de bord : re-rendre un composant React !
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```tsx {all|1|3|5}
+```tsx
 import { observer } from 'mobx-react-lite'
 
 const Header = observer(({observable}) => {
@@ -935,7 +938,7 @@ MobX s'abonne à la propriété <b>lue</b>, pas à l'objet. Lire trop tôt = val
 <div class="grid grid-cols-2 gap-6 items-start pt-3">
 <div>
 
-```tsx {all|2-3|5-6}
+```tsx
 const Parent = observer(() => (
   // ❌ on lit .length ICI → on passe un nombre figé
   <Header count={store.trips.length} />
@@ -949,7 +952,7 @@ const Header = observer(({ count }) => <p>{count}</p>)
 </div>
 <div>
 
-```tsx {all|2-3|5-6}
+```tsx
 const Parent = observer(() => (
   // ✅ on passe l'observable, pas la valeur
   <Header store={store} />
@@ -991,7 +994,7 @@ Le cache <b>absorbe</b> les changements qui ne modifient pas la valeur dérivée
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|1-2|4-6|8-9}
+```ts
 get tripCount() { return this.trips.length }
 // budget, notes, dates… changent souvent
 
@@ -1046,7 +1049,7 @@ MobX réagit à toute propriété observable <b>lue pendant</b> l'exécution d'u
 <div class="grid grid-cols-2 gap-6 items-start pt-3">
 <div>
 
-```ts {all|2|6|10}
+```ts
 // ❌ lu trop tôt : on capture la valeur, pas la propriété
 const n = store.tripCount
 autorun(() => console.log(n))          // muet
@@ -1062,7 +1065,7 @@ autorun(() => setTimeout(() => console.log(store.tripCount)))
 </div>
 <div>
 
-```ts {all|2|6}
+```ts
 // ✅ on lit la propriété DANS la fonction trackée
 autorun(() => console.log(store.tripCount))
 
@@ -1269,7 +1272,7 @@ Un store racine, instancié une fois, distribué par <b>Context</b> — pas d'im
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|2-4|7-8|11-13}
+```ts
 class RootStore {
   trips = new TripStore(this)   // slices
   ui = new UiStore(this)        // ↑ référence au root
@@ -1332,7 +1335,7 @@ MobX optimise la réactivité sur des objets <b>quelconques</b> — au prix d'un
 <div class="grid grid-cols-2 gap-6 items-start pt-3">
 <div>
 
-```ts {all|1-4|6-7}
+```ts
 // un observable peut contenir N'IMPORTE QUOI
 const store = makeAutoObservable({
   trips: [],
@@ -1384,7 +1387,7 @@ classes mais contraintes via TypeScript.
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|1-6|8-11|13-16}
+```ts
 const Trip = types.model('Trip', {  // schéma runtime
   name: types.string,               
   budget: types.number,
@@ -1448,7 +1451,7 @@ Des <b>classes TS contraintes</b> plutôt qu'un DSL runtime.
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|1-5|7-8|11-13}
+```ts
 @model('app/Trip')
 class Trip extends Model({   // contrainte : Model
   name: prop<string>(),      // contrainte : prop<T>()
@@ -1537,6 +1540,7 @@ RootStore vanille suffit.
 
 ---
 layout: section
+crumb: { tool: "XState" }
 image: /covers/factory-bfenton_photo.avif
 credit: bfenton_photo
 ---
@@ -1625,7 +1629,7 @@ impossibles… impossibles. La donnée granulaire ne disparaît pas — elle se 
 
 ---
 
-# `XState` · rendre les états impossibles… impossibles
+# Rendre les états impossibles… impossibles
 
 Toutes les solutions basées sur des actions partagent la même limite :
 
@@ -1978,24 +1982,36 @@ snapshot.can() est la clé : le composant demande à la machine si NEXT est poss
 -->
 
 ---
-layout: quote
----
 
-# « XState rend les états impossibles… impossibles. »
+# Bilan
 
-Par construction, pas par convention.
-
-<div class="text-base opacity-60 pt-4">
-Ce qui n'est pas dans le graphe n'existe pas.<br>
-Les guards centralisent la validation dans la machine, hors des composants.
-</div>
-
-<div v-click class="text-sm opacity-50 pt-8">
-Machine = définition. Acteur = instance. <code>useMachine</code> = <code>useSyncExternalStore</code>.<br>
-Le même pattern que Zustand et nuqs — l'acteur est un store externe.
-</div>
+<Bilan
+  :scores="[2, 3, 4, 5, 5]"
+  poids="~15 kB (gzip) + @xstate/react"
+  perimetre="Logique d'état complexe : machines à états / statecharts"
+  idealPour="un flux à états explicites — wizard, checkout, onboarding, player — avec transitions, gardes et états parallèles. Dès que le problème ressemble à un graphe."
+  :avantages="[
+    'États impossibles rendus impossibles par construction, pas par convention',
+    'Transitions, gardes et états hiérarchiques/parallèles explicites et centralisés',
+    'Outillage exceptionnel : visualiseur Stately, inspector, devtools',
+    'Logique framework-agnostique, testable hors de React',
+  ]"
+  :limites="[
+    'Vraie courbe d\'apprentissage : les statecharts sont un paradigme à part',
+    'Verbeux et sur-dimensionné pour un état simple',
+    'Poids non négligeable face à un Zustand ou un useReducer',
+    'À contre-courant du state « à la React » pour les cas courants',
+  ]"
+/>
 
 <!--
-Wizard, checkout, onboarding, player audio/vidéo — dès que le problème ressemble à un graphe, XState est le bon outil.
+Bilan XState, sur la même grille que les autres solutions (notes sur 5). Perf 4 et montée en
+charge 5 : l'acteur est un store externe, re-renders ciblés, et plus le flux est complexe plus
+XState tient la charge là où le useState/useReducer s'effondre. Écosystème 5 : l'outillage Stately
+(visualiseur, inspector) est unique dans tout l'écosystème React. Prise en main 2 : c'est sa vraie
+contrepartie — les statecharts (Harel, 1987) sont un paradigme à apprendre, pas un upgrade de store.
+Poids 3 : plus lourd qu'un Zustand. LE positionnement : dès que le problème ressemble à un graphe
+— wizard, checkout, onboarding, player — XState est le bon outil ; pour un état simple, il est
+sur-dimensionné.
 -->
 

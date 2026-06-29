@@ -1,5 +1,6 @@
 ---
 layout: section
+crumb: { chapter: "1 · Les API natives" }
 image: /covers/factory-bernt-and-hilla-becher.jpg
 credit: Bernt et Hilla Becher
 ---
@@ -17,7 +18,7 @@ credit: Bernt et Hilla Becher
 
 <div class="text-sm opacity-60 pb-1">Une simple variable</div>
 
-```tsx {all|3|4}
+```tsx
 function Compteur() {
   let count = 0
   return <button onClick={() => count++}>
@@ -38,7 +39,7 @@ function Compteur() {
 
 <div class="text-sm opacity-60 pb-1">Avec <code>useState</code></div>
 
-```tsx {all|2|3}
+```tsx
 function Compteur() {
   const [count, setCount] = useState(0)
   return <button onClick={() => setCount(count + 1)}>
@@ -76,7 +77,7 @@ useState fait seulement deux choses, persister une valeur entre les re-rendus, e
 
 <div class="text-sm opacity-60 pb-1">À l'initialisation</div>
 
-```tsx {all|2|5}
+```tsx
 // ❌ valeur : calculée à CHAQUE render
 const [items] = useState(loadFromStorage())
 
@@ -93,7 +94,7 @@ L'<b>initialiseur paresseux</b> : pour un calcul de départ coûteux.
 
 <div class="text-sm opacity-60 pb-1">À la mise à jour</div>
 
-```tsx {all|2|5}
+```tsx
 // ❌ valeur directe : le state est mis à jour de manière asynchrone
 handleClick(() => {
   setCount(count + 1) // count = 0 -> 1
@@ -435,7 +436,7 @@ qu'implicite. La "magie" de Vue/Solid est moins visible mais plus ergonomique.
 <div class="grid grid-cols-2 gap-6 items-center pt-2">
 <div>
 
-```ts {all|1-7|9|10-11}
+```ts
 // le reducer : une fonction pure (state, action) => state
 function reducer(count, action) {
   switch (action.type) {
@@ -644,7 +645,7 @@ plusieurs niveaux devient vite douloureux — le prop drilling. C'est ce qui mot
 
 # Le problème du prop drilling
 
-```tsx {all|4}
+```tsx
 <App user={user} onLogout={onLogout}>
   <Header user={user} />
   <Layout user={user} onLogout={onLogout}>
@@ -703,7 +704,7 @@ PRODUIT des trois qui croît non-linéairement — une seule grande dimension re
 
 # `useContext` : partager sans drilling
 
-```tsx {all|1|4-6|11}
+```tsx
 const ThemeContext = createContext('light')
 
 function App() {
@@ -808,7 +809,7 @@ contexte, muté via le reducer. Plus de prop drilling.
 
 # La limite : re-renders non ciblés
 
-```tsx {all|3}
+```tsx
 function TripBadge() {
   const { trips } = useTripContext()
   return <span>{trips.length}</span> // re-rend même si seul `budget` a changé

@@ -1,5 +1,6 @@
 ---
 layout: section
+crumb: { clear: true }
 image: /covers/factory.avif
 ---
 

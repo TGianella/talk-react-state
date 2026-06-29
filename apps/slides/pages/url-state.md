@@ -1,5 +1,6 @@
 ---
 layout: section
+crumb: { chapter: "2 · L'état dans l'URL" }
 image: /covers/factory-assunta-darnault.jpg
 credit: Assunta Darnault
 ---
@@ -96,7 +97,7 @@ Cas limites : champ de recherche → URL après soumission seulement. Drawer →
 
 # Limites de l'API native
 
-```tsx {all|3|6-9}
+```tsx
 // Lecture
 const searchParams = new URLSearchParams(window.location.search)
 const tripId = searchParams.get('trip') // string | null — pas typé
@@ -124,6 +125,7 @@ Tout est string | null : conversion manuelle à chaque paramètre. 5 params = 5 
 
 ---
 layout: cover
+crumb: { tool: "nuqs" }
 image: /covers/factory-hans-heemsbergen.jpg
 credit: Hans Heemsbergen
 ---
@@ -242,7 +244,7 @@ withDefault() élimine le null quand il y a une valeur par défaut sensée → o
 
 **`tripId` — ressource navigable**
 
-```tsx {all|2|6}
+```tsx
 const [tripId, setTripId] =
   useQueryState('trip', parseAsString)
 
@@ -263,7 +265,7 @@ const [tripId, setTripId] =
 
 **`view` — état UI**
 
-```tsx {all|3-4|7}
+```tsx
 const [view, setView] =
   useQueryState('view',
     parseAsStringLiteral(['grid', 'list'] as const)

@@ -705,3 +705,55 @@ niche. À l'oral : dans ~90 % des cas aujourd'hui (API natives + URL + state ser
 pas besoin d'un state manager dédié — d'où l'ordre du talk.
 -->
 
+---
+
+# Notre fil rouge : <span class="text-orange-500">WanderState</span>
+
+<div class="grid grid-cols-2 gap-10 items-center pt-4">
+
+<div>
+
+<div v-click="1" class="text-lg pb-4">Une app de <b>planification de voyages</b>. 🗺️</div>
+
+<div v-click="2" class="border-2 border-orange-500 rounded-lg p-4 mt-6 bg-orange-400/10">
+À chaque chapitre, <b>les écrans ne changent pas</b>.<br>
+Seule <b>la couche de state</b> est remplacée.
+</div>
+
+<div v-click="3" class="text-sm opacity-60 pt-4">
+Même UI, même feature — pour voir <b>uniquement</b> ce que l'outil change.
+</div>
+
+</div>
+
+<div v-click="1" class="border-2 border-gray-700 rounded-xl bg-white text-gray-900 p-4 shadow-[6px_6px_0_#0f172a]">
+<div class="flex items-center justify-between border-b-2 border-gray-200 pb-2 mb-3">
+<div class="font-bold text-lg">✈️ WanderState</div>
+<div class="text-xs border-2 border-orange-500 text-orange-600 rounded px-2 py-0.5 font-medium">+ Nouveau voyage</div>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="border-2 border-gray-800 rounded-lg p-3 shadow-[3px_3px_0_#0f172a]">
+<div class="font-bold">Road trip <br>Sicile</div>
+<div class="text-xs opacity-60">Palerme</div>
+<div class="text-orange-600 font-bold pt-2">1 200 €</div>
+</div>
+<div class="border-2 border-gray-800 rounded-lg p-3 shadow-[3px_3px_0_#0f172a]">
+<div class="font-bold">Week-end Lisbonne</div>
+<div class="text-xs opacity-60">Lisbonne</div>
+<div class="text-orange-600 font-bold pt-2">450 €</div>
+</div>
+</div>
+</div>
+
+</div>
+
+<!--
+Présentation du fil rouge. WanderState = app de planification de voyages (créer un voyage,
+destination, budget, étapes…). UI volontairement minimaliste : l'attention reste sur le state,
+pas sur le design. Point clé à marteler : on ne réécrit pas l'app à chaque chapitre, on
+remplace UNIQUEMENT la couche de gestion de state. Les composants présentationnels (les cards
+qu'on voit ici) sont réutilisés tels quels — seul change ce qui fournit et met à jour la donnée.
+Comme ça l'audience voit en isolation ce que chaque outil apporte, sans bruit visuel.
+-->
+
+
