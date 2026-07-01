@@ -1611,14 +1611,14 @@ Granulaire, nombre <b>infini</b> de valeurs possibles.
 
 <div class="text-sm opacity-70 pt-2">
 <b>Mode</b> qualitatif dans lequel le système se trouve.<br>
-Discret, énumérable :  nombre <b>fini</b> d'états.
+Discret, énumérable : nombre <b>fini</b> d'états.
 </div>
 
 </div>
 </div>
 
-<div v-click class="mt-4 border-l-4 border-orange-500 pl-3 text-sm">
-Machine = <b>mode</b>. Donnée = <b>contexte</b>.
+<div v-click class="pt-12 text-center text-xl">
+La machine dit <b>où on est</b>. Le contexte dit <b>ce qu'on sait</b>.
 </div>
 
 <!--
@@ -1668,7 +1668,7 @@ function handleNext() {
 </div>
 </div>
 
-<div v-click class="mt-4 border-l-4 border-orange-500 pl-3">
+<div v-click class="pt-12 text-center text-xl">
 Etat impossible = bug potentiel qui se produira dans les bonnes conditions.
 </div>
 
@@ -1735,8 +1735,7 @@ stateDiagram-v2
     [*] --> closed
     closed --> name : OPEN
     name --> destination : NEXT [hasName]
-    destination --> budget : NEXT [hasDestination]
-    budget --> confirm : NEXT [hasBudget]
+    destination --> confirm : NEXT [hasDestination]
     confirm --> submitting : SUBMIT
     submitting --> closed : SUCCESS
     submitting --> error : FAILURE
@@ -1884,7 +1883,6 @@ Remplir le nom → <code>hasName ✓</code> → <code>NEXT</code> devient actif.
 - Les composants envoient des événements
 - La machine décide si la transition a lieu
 - L'Inspector rend ça **visible en temps réel**
-- Ce qui n'est pas dans le graphe ne peut pas arriver
 
 </v-clicks>
 
@@ -1925,7 +1923,7 @@ const [snapshot, send] = useMachine(wizardMachine)
 <v-clicks>
 
 - Pas d'import de fonctions — juste `send()`
-- Un événement = un objet `{ type, ...payload }`
+- Un événement = un objet `{type, ...payload}`
 - La machine décide si la transition a lieu
 - Le composant ne connaît pas l'état courant
 
@@ -1953,7 +1951,7 @@ snapshot.value          // 'name' | 'confirm' | …
 
 // données du contexte
 snapshot.context.name
-snapshot.context.budget
+snapshot.context.destination
 
 // tester l'état actif
 snapshot.matches('submitting')

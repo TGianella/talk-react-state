@@ -48,7 +48,7 @@ function Compteur() {
 }
 ```
 
-<div v-click="5" class="text-sm pt-2 space-y-1">
+<div v-click="4" class="text-sm pt-2 space-y-1">
 
 - ✅ la valeur **survit** aux re-renders
 - ✅ `setCount` **déclenche** un re-render
@@ -59,7 +59,7 @@ function Compteur() {
 </div>
 </div>
 
-<div v-click="6" class="text-center pt-5 text-lg">
+<div v-click="5" class="text-center pt-5 text-lg">
 Ces deux propriétés relient <b>la donnée</b> <span class="opacity-40">⇄</span> <b>l'UI</b> :
 <span v-mark.orange>c'est ça, la réactivité.</span>
 </div>
@@ -198,12 +198,12 @@ const [query, setQuery] = useState('')
 const [visible, setVisible] = useState<Item[]>([])
 ```
 
-<div v-click="2" class="text-sm pt-2 opacity-80">
+<div v-click="1" class="text-sm pt-2 opacity-80">
 Chaque modif de <code>items</code> ou <code>query</code> oblige à recalculer <code>visible</code>. Un oubli = UI fausse.
 </div>
 
 </div>
-<div v-click="3">
+<div v-click="2">
 
 <div class="text-sm opacity-60 pb-1">✅ Dérivé pendant le render</div>
 
@@ -215,14 +215,14 @@ const visible = items.filter((i) =>
   i.name.includes(query))
 ```
 
-<div v-click="4" class="text-sm pt-2 opacity-80">
+<div v-click="3" class="text-sm pt-2 opacity-80">
 Une seule source de vérité. <code>visible</code> ne peut pas <b>diverger</b>.
 </div>
 
 </div>
 </div>
 
-<div v-click="5" class="text-center pt-6">
+<div v-click="4" class="text-center pt-6">
 Ne mettre dans <code>useState</code> que ce qui ne peut <b>pas</b> être recalculé. <span v-mark.orange>Moins de state, moins de bugs.</span>
 <span class="opacity-60 text-sm block pt-1">(<code>useMemo</code> peut être utilisé pour limiter les re-calculs coûteux)</span>
 </div>
@@ -513,7 +513,7 @@ const [loading, setLoading] = useState(false)
 ```
 
 </div>
-<div v-click="2">
+<div v-click="1">
 
 <div class="text-sm opacity-60 pb-1">✅ un objet, des transitions nommées</div>
 
@@ -528,7 +528,7 @@ dispatch({ type: 'failure', error }) // 1 état cohérent
 </div>
 </div>
 
-<div v-click="3" class="grid grid-cols-3 gap-4 pt-6 text-sm text-center">
+<div v-click="2" class="grid grid-cols-3 gap-4 pt-6 text-sm text-center">
 <div>reducer <b>pur</b> → testable sans React</div>
 <div>une action ⇒ <b>un seul</b> re-render</div>
 <div>états impossibles <b>éliminés</b></div>
@@ -559,21 +559,21 @@ Deux choses seulement peuvent déclencher le re-rendu d'un composant.
 une mise à jour de <b>state</b><br>
 <code>setState</code> · <code>dispatch</code>
 </div>
-<div v-click="2" class="border border-gray-500 rounded px-4 py-5 text-center">
+<div v-click="1" class="border border-gray-500 rounded px-4 py-5 text-center">
 <div class="text-3xl font-bold opacity-30 pb-1">2</div>
 le <b>re-render du parent</b>
 </div>
 </div>
 
-<div v-click="3" class="text-center pt-6 opacity-80">
+<div v-click="2" class="text-center pt-6 opacity-80">
 Mais un parent ne se re-rend <b>jamais spontanément</b> : en remontant la chaîne, il y a toujours un <code>setState</code> à la racine.
 </div>
 
-<div v-click="4" class="text-center pt-6 text-xl">
+<div v-click="3" class="text-center pt-6 text-xl">
 ⇒ changer le state est le <span v-mark.orange>seul déclencheur spontané</span> d'un rendu.
 </div>
 
-<div v-click="5" class="text-center pt-5 text-4xl font-bold">
+<div v-click="4" class="text-center pt-5 text-4xl font-bold">
 <code>UI = f(state)</code>
 </div>
 
