@@ -72,6 +72,12 @@ The point of this structure: the *same* presentational components are reused acr
 - **Neo-brutalist** styling: flat shadows `box-shadow: Xpx Xpx 0 var(--color-primary)`. Don't combine `transform: translate` with a shadow on hover/active (it shifts the focus outline — animate shadow size only). No `border-radius` on shadowed elements (Firefox/Windows corner artifacts).
 - **Conditional rendering**: always use a ternary, never `&&` with a possibly-falsy non-boolean (avoids rendering `0`): `{value ? value : ' '}`.
 
+## Slides theming (`apps/slides`)
+
+- The deck runs in **light theme** (`colorSchema: light` in `slides.md`). Content slides render on a **white background** — any opaque overlay/occlusion layer must use `#ffffff`, never a dark colour.
+- The **only** dark surfaces are cover/section dividers (`layout: cover` / `section`), which use a photo or the `linear-gradient(135deg, #262626, #0a0a0a)` fallback — see `styles/index.css` (`.cover-slide`). Don't generalise that dark background to normal slides.
+- The accent (orange) is **theme-aware** via the `--accent` CSS var: `styles/index.css` sets orange-600 on light / orange-400 on dark, and `uno.config.ts` remaps the `orange` palette (`DEFAULT`, `400`, `500`, `600`) to it. Use `text-orange` / `orange-400/500/600` (and `v-mark.orange`) for accents so they stay legible in both schemes. **Avoid other shades like `orange-300`** — they are *not* remapped and stay pale/washed-out on white.
+
 ## Deployment
 
 `apps/slides` ships both `netlify.toml` and `vercel.json` (SPA rewrite to `/index.html`, build `npm run build` → `dist`).
