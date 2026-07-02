@@ -484,7 +484,7 @@ Patterns avancés pour faire des choses plus poussées.
 # Bilan
 
 <Bilan
-  :scores="[5, 5, 4, 2, 2]"
+  :scores="[5, 4, 4, 2, 1]"
   poids="5 kB (gzip)"
   perimetre="State serveur / async"
   idealPour="Apps simples à moyennes, surtout en lecture"
@@ -1794,7 +1794,7 @@ Le gratuit est généreux pour une démo ou un side project — en production il
 # `Convex` — bilan
 
 <Bilan
-  :scores="[4, 4, 5, 3, 3]"
+  :scores="[4, 3, 5, 3, 3]"
   poids="~13 kB (gzip)"
   perimetre="State serveur / temps réel"
   idealPour="App React avec données partagées en temps réel, sans backend custom"
@@ -1813,7 +1813,7 @@ Le gratuit est généreux pour une démo ou un side project — en production il
 <!--
 Bilan Convex. Score Prise en main : 4 — l'API est familière (ressemble à TanStack Query) mais le paradigme
 "base réactive" demande un vrai changement mental.
-Poids : 4 — ~13 kB, raisonnable. Mais le vrai poids c'est la dépendance à l'infra externe.
+Poids : 3 — ~13 kB, honnête mais loin des plus légers. Le vrai poids, c'est surtout la dépendance à l'infra externe.
 Performance : 5 — c'est le point fort, latence <100ms, WebSocket unique, dependency tracking fin.
 Écosystème : 3 — jeune, moins de ressources que Firebase ou Supabase.
 Montée en charge : 3 — vendor lock-in + pricing à la consommation = incertitude sur les gros volumes.

@@ -2021,7 +2021,7 @@ dans des slices à la main : c'est précisément le mésusage historique dénonc
 # Bilan
 
 <Bilan
-  :scores="[2, 2, 3, 5, 4]"
+  :scores="[2, 3, 3, 5, 5]"
   poids="≈ 14 kB (gzip, RTK + react-redux)"
   perimetre="gros état client complexe"
   idealPour="les grosses apps où traçabilité, outillage et conventions partagées priment"
@@ -2043,8 +2043,9 @@ dans des slices à la main : c'est précisément le mésusage historique dénonc
 Bilan Redux + RTK, en miroir du bilan Zustand (mêmes axes, sur 5 : prise en main, poids, perf,
 écosystème, montée en charge).
 Scores : prise en main 2 (le plus de concepts à intégrer — action/reducer/store/middleware/thunk ;
-RTK adoucit mais la courbe reste réelle), poids 2 (RTK + react-redux ≈ 14 kB gzip, loin des ~500 B
-de Zustand), perf 4 (sélecteurs + reselect = lecture ciblée, mais re-renders à surveiller),
+RTK adoucit mais la courbe reste réelle), poids 3 (RTK + react-redux ≈ 14 kB gzip — moyenne haute
+du chapitre, mais loin des ~500 B de Zustand), perf 3 (sélecteurs + reselect = lecture ciblée, mais
+tous les sélecteurs re-tournent à chaque dispatch),
 écosystème 5 (le plus mûr et le mieux outillé de tout le chapitre — RTK Query, middlewares,
 devtools), montée en charge 5 (structure imposée + traçabilité = la valeur sûre sur gros projet
 et en équipe).

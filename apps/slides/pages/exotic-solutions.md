@@ -1984,7 +1984,7 @@ snapshot.can() est la clé : le composant demande à la machine si NEXT est poss
 # Bilan
 
 <Bilan
-  :scores="[2, 3, 4, 5, 5]"
+  :scores="[1, 3, 4, 5, 5]"
   poids="~15 kB (gzip) + @xstate/react"
   perimetre="Logique d'état complexe : machines à états / statecharts"
   idealPour="un flux à états explicites — wizard, checkout, onboarding, player — avec transitions, gardes et états parallèles. Dès que le problème ressemble à un graphe."
@@ -2006,8 +2006,9 @@ snapshot.can() est la clé : le composant demande à la machine si NEXT est poss
 Bilan XState, sur la même grille que les autres solutions (notes sur 5). Perf 4 et montée en
 charge 5 : l'acteur est un store externe, re-renders ciblés, et plus le flux est complexe plus
 XState tient la charge là où le useState/useReducer s'effondre. Écosystème 5 : l'outillage Stately
-(visualiseur, inspector) est unique dans tout l'écosystème React. Prise en main 2 : c'est sa vraie
-contrepartie — les statecharts (Harel, 1987) sont un paradigme à apprendre, pas un upgrade de store.
+(visualiseur, inspector) est unique dans tout l'écosystème React. Prise en main 1 : c'est sa vraie
+contrepartie — les statecharts (Harel, 1987) sont un paradigme à apprendre à part entière, pas un
+upgrade de store ; la courbe la plus raide du talk.
 Poids 3 : plus lourd qu'un Zustand. LE positionnement : dès que le problème ressemble à un graphe
 — wizard, checkout, onboarding, player — XState est le bon outil ; pour un état simple, il est
 sur-dimensionné.
