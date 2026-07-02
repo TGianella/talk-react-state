@@ -51,7 +51,7 @@ Si personne ne cite de solution de state serveur, c'est intéressant.
 
 ### Programme sans état
 
-Même entrée → même sortie.<br>Aucune mémoire.
+Tout dépend des paramètres d'entrée. Même entrée → même sortie.
 
 <div class="opacity-60 text-sm pt-2">
 une fonction pure · un LLM · une calculatrice
@@ -62,7 +62,7 @@ une fonction pure · un LLM · une calculatrice
 
 ### Programme avec état
 
-Se souvient du passé — et <b>réagit en continu</b> aux événements extérieurs.
+<b>Réagit en continu</b> aux événements extérieurs et peut garder une trace des événements passés
 
 <div class="opacity-60 text-sm pt-2">
 un éditeur de texte · un chatbot · un jeu vidéo
@@ -143,6 +143,8 @@ programme mais un process distribué et asynchrone (navigateur + code JS, serveu
 sur beaucoup de pièces. D'où la difficulté → le catégoriser est déjà un défi (slide suivante).
 -->
 
+---
+disabled: true
 ---
 
 # Comment catégoriser l'état ?
@@ -281,19 +283,14 @@ Tout l'état <span v-mark.underline.orange>finit dans le client</span>.
 </div>
 
 <!--
-Distinction mémoire persistée vs état. Une ligne en DB, un fichier, du localStorage = de la
-mémoire durable, inerte, au repos. Ce n'est pas « l'état » de l'app tant que ce n'est pas
-chargé dans le client : à ce moment-là ça devient de l'état vivant, en mémoire. Et puisque
-l'état est ce qui change l'écran, TOUT l'état finit par vivre dans le client, quelle que soit
-sa source (c'est l'ancienne « règle d'or »). Corollaire : le client n'en tient qu'une COPIE —
-elle peut diverger (donnée périmée → state serveur, ch.3). Le flux est bidirectionnel : on
-charge l'état (récupération) ET on le persiste en sens inverse — une annexe nécessaire à la
-gestion de state, sans en être à proprement parler.
+L'état, c'est de la donnée vivante chargée en mémoire. 
+A ne pas confondre avec de la donnée stockée en mémoire. 
+On peut passer de l'un à l'autre.
 -->
 
 ---
 
-# MPA vs SPA : fragmenter ou tout concentrer
+# L'architecture influence l'état
 
 <div class="grid grid-cols-2 gap-6 pt-4">
 
@@ -336,6 +333,8 @@ correctement. Tout écart se paie cash — flash de données périmées, voire d
 complète. D'où la nécessité de gérer le state côté client : le sujet du reste du talk.
 -->
 
+---
+disabled: true
 ---
 
 # Un angle qui rend compte de tous les paradigmes
@@ -410,8 +409,28 @@ en abstrayant le DOM, l'état doit vivre ailleurs → mémoire JS volatile.
 </div>
 </div>
 
-<div v-click class="pt-6 text-center text-lg">
-Repérer <span v-mark.underline.orange>d'où vient surtout l'état</span> oriente le choix des outils.
+<div v-click class="flex flex-col items-center pt-5">
+
+<div class="relative" style="width: 460px; height: 130px;">
+
+<svg class="absolute inset-0" width="460" height="130" viewBox="0 0 460 130" fill="none" stroke="rgb(var(--accent))">
+<line x1="230" y1="18" x2="74" y2="112" stroke-width="2" stroke-dasharray="6 5" />
+<line x1="230" y1="18" x2="386" y2="112" stroke-width="2" stroke-dasharray="6 5" />
+<line x1="74" y1="112" x2="386" y2="112" stroke-width="2" stroke-dasharray="6 5" />
+</svg>
+
+<div class="absolute -translate-x-1/2 -translate-y-1/2 border-2 border-orange-500 rounded-lg px-4 py-1.5 bg-white font-bold whitespace-nowrap" style="left: 230px; top: 18px;">🧭 Métier</div>
+<div class="absolute -translate-x-1/2 -translate-y-1/2 border border-gray-500 rounded-lg px-4 py-1.5 bg-white font-bold whitespace-nowrap" style="left: 74px; top: 112px;">🏛️ Architecture</div>
+<div class="absolute -translate-x-1/2 -translate-y-1/2 border border-gray-500 rounded-lg px-4 py-1.5 bg-white font-bold whitespace-nowrap" style="left: 386px; top: 112px;">⚡ État</div>
+
+<div class="absolute bg-white px-1 text-orange-500 text-xl leading-none" style="left: 152px; top: 65px; transform: translate(-50%,-50%) rotate(-31deg);">⇄</div>
+<div class="absolute bg-white px-1 text-orange-500 text-xl leading-none" style="left: 308px; top: 65px; transform: translate(-50%,-50%) rotate(31deg);">⇄</div>
+<div class="absolute bg-white px-1 text-orange-500 text-xl leading-none" style="left: 230px; top: 112px; transform: translate(-50%,-50%);">⇄</div>
+
+</div>
+
+<div class="text-sm opacity-60 pt-2">Métier, architecture et état <b>s'influencent mutuellement</b>.</div>
+
 </div>
 
 <!--
@@ -419,133 +438,12 @@ Retour sur les sources de vérité : toutes les apps ne les pondèrent pas parei
 ≈ quasi pas d'état (un peu de navigateur/URL) ; e-commerce/back-office ≈ surtout du serveur
 (catalogue, stock, commandes en base) ; éditeur/Figma/Gmail ≈ surtout du client (document
 vivant en mémoire, interactions riches). La plupart des vraies apps mélangent les trois — mais
-identifier la source dominante oriente déjà le choix des outils. Bien sûr il y a une corrélation avec le paradigme choisi en général.
+identifier la source dominante oriente déjà le choix des outils. Bien sûr il y a une corrélation avec le paradigme choisi en général. Le triangle en bas résume ce lien : métier, architecture et état ne se décident jamais isolément — chacun pèse sur les deux autres.
 -->
 
 ---
 
-# Le state en React
-
-<div v-click="1" class="text-center text-2xl pt-8">
-La donnée ne circule que dans <span v-mark.orange>un seul sens</span>. L'état reste <b class="text-orange-400">immuable</b>.
-</div>
-
-<div v-click="2" class="flex flex-col items-center gap-1 pt-8">
-<div class="border-2 border-orange-500 rounded-lg px-6 py-2 bg-orange-400/10 font-medium">Parent (détient le state)</div>
-<div class="flex gap-16 pt-1">
-<div class="flex flex-col items-center">
-<div class="flex flex-col items-center text-orange-400 leading-tight">
-<span class="text-2xl leading-none">↓</span>
-<span class="text-xs">props</span>
-</div>
-<div class="border border-gray-500 rounded-lg px-6 py-2 mt-1">Enfant A</div>
-</div>
-<div class="flex flex-col items-center">
-<div class="flex flex-col items-center text-orange-400 leading-tight">
-<span class="text-2xl leading-none">↓</span>
-<span class="text-xs">props</span>
-</div>
-<div class="border border-gray-500 rounded-lg px-6 py-2 mt-1">Enfant B</div>
-</div>
-</div>
-</div>
-
-<div v-click="3" class="pt-8 text-center opacity-70">
-La donnée ne va que <b>vers le bas</b>. jamais de l'enfant au parent, jamais entre enfants.<br>On sait toujours d'où vient chaque valeur.
-</div>
-
-<div v-click="4" class="pt-6 text-center text-lg">
-Ça se complique quand deux composants <span v-mark.orange>éloignés</span> doivent partager la donnée.
-</div>
-
-<!--
-Le trait unique de React : flux de données unidirectionnel. La donnée ne descend QUE vers le
-bas, du parent vers l'enfant via les props — jamais vers le haut, jamais entre frères. Pour
-qu'une donnée « remonte », il n'y a qu'un mécanisme (à expliquer à l'oral) : le parent passe
-un callback en prop, et l'enfant l'appelle en lui passant des arguments. Ce n'est donc pas un
-vrai flux remontant, juste l'enfant qui déclenche du code du parent. Très prévisible → facile
-à débugger. Le coût : pour partager entre composants éloignés, il faut tout remonter au parent
-commun → point de départ des chapitres (prop drilling → contexte → stores).
--->
-
----
-
-# Et dans les autres frameworks ?
-
-<div class="max-w-4xl mx-auto pt-8 grid grid-cols-[auto_1fr_1fr_1fr] gap-x-5 gap-y-5 items-center">
-
-<div></div>
-<div class="text-center font-bold text-orange-400">React</div>
-<div class="text-center font-bold opacity-80">Vue</div>
-<div class="text-center font-bold opacity-80">Angular</div>
-
-<div v-click="1" class="text-sm opacity-60 whitespace-nowrap">Lier état ↔ vue</div>
-<div v-click="1" class="text-center"><code class="text-xs whitespace-nowrap">&lt;Field value={count}<br/>onChange={setCount} /&gt;</code></div>
-<div v-click="1" class="text-center"><code class="text-xs whitespace-nowrap">&lt;Field v-model="count" /&gt;</code></div>
-<div v-click="1" class="text-center"><code class="text-xs whitespace-nowrap">&lt;app-field [(value)]="count" /&gt;</code></div>
-
-<div v-click="2" class="text-sm opacity-60 whitespace-nowrap">Changer l'état</div>
-<div v-click="2" class="text-center"><code class="text-sm whitespace-nowrap">setCount(count + 1)</code></div>
-<div v-click="2" class="text-center"><code class="text-sm whitespace-nowrap">count.value++</code></div>
-<div v-click="2" class="text-center"><code class="text-sm whitespace-nowrap">this.count++</code></div>
-
-</div>
-
-<div v-click="3" class="pt-10 text-center text-lg">
-Vue &amp; Angular : on <b>mute</b>, le framework réagit.<br>
-React : l'état est <span v-mark.underline.orange>immuable</span>, il est remplacé.
-</div>
-
-<div v-click="4" class="pt-3 text-center opacity-70">
-Immutabilité &amp; flux à sens unique vont de pair → un flux <b>prévisible et traçable</b>.
-</div>
-
-<!--
-Deux axes pour enfoncer le clou. (1) Lier état ↔ vue : Vue (v-model) et Angular ([(x)]) font du
-two-way binding (sur composant aussi, pas que les inputs natifs : modelValue/update:modelValue,
-@Input x + @Output xChange) ; React reste explicite (value en prop, onChange en callback).
-(2) Changer l'état : Vue et Angular MUTENT directement la donnée et le framework réagit
-(Proxy / détection de changement) ; React n'autorise jamais la mutation — on passe par le
-setter et l'état reste immuable. Bilan : plus verbeux, mais un seul sens, prévisible et traçable.
--->
-
----
-layout: center
----
-
-<div class="text-6xl font-mono pt-6 pb-4">
-  UI = <span v-mark.circle.orange="1">f(state)</span>
-</div>
-
-<div v-click="2" class="text-xl opacity-70">
-Une UI n'est qu'une <b>projection de l'état</b> à un instant T.
-</div>
-
-<div v-click="3" class="text-xl opacity-70 pt-2">
-Changer l'UI = changer l'état.
-</div>
-
-<div v-click="4" class="flex justify-center pt-12">
-
-```mermaid {scale: 0.9}
-graph LR
-  A(Action) --> S(State)
-  S --> V(Vue / UI)
-  V --> A
-  style S fill:#f97316,stroke:#ea580c,color:#fff
-```
-
-</div>
-
-<!--
-Le modèle mental qui accompagne le flux : UI = projection de l'état. Pas unique à React (Vue,
-Solid le partagent), mais c'est ainsi qu'on raisonne. Corollaire: changer l'écran = changer l'état, rien
-d'autre. Tout le reste du talk : où vit le state, et comment on le change.
--->
-
----
-
-# Alors… comment gère-t-on tout ça ?
+# L'écosystème React de gestion de state
 
 <div v-click="1" class="text-center text-lg pt-3 opacity-80">
 L'état n'est pas un concept <b>simple</b>.
