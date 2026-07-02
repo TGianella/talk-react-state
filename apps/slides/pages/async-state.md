@@ -10,58 +10,33 @@ credit: Atsushi Maeda
 <div class="opacity-80 pt-2">Le cache d'appels réseau</div>
 
 ---
-layout: center
----
 
 # État local, état distant
 
 <div v-click class="flex items-center justify-center gap-3 pt-2 text-sm">
   <div class="border border-gray-500 rounded-lg px-4 py-2 text-center">
-    <div class="text-3xl">🗄️</div>
-    <div class="opacity-60 pt-1">Serveur / DB</div>
+    <div class="text-3xl">🖥️</div>
+    <div class="opacity-60 pt-1">UI</div>
   </div>
-  <div class="text-orange-400 text-center px-1">
-    <div class="text-[10px] uppercase tracking-wider opacity-70">réseau · async</div>
+  <div class="text-orange-400 text-center px-1 leading-tight">
+    <div class="text-2xl leading-none">←</div>
     <div class="text-2xl leading-none">→</div>
   </div>
   <div class="border-2 border-orange-500 rounded-lg px-4 py-2 text-center bg-orange-400/10">
     <div class="text-3xl">💻</div>
     <div class="opacity-80 pt-1">Client · React</div>
   </div>
-  <div class="text-orange-400 text-center px-1 leading-tight">
-    <div class="text-2xl leading-none">→</div>
+  <div class="text-orange-400 text-center px-1">
+    <div class="text-[10px] uppercase tracking-wider opacity-70">réseau · async</div>
     <div class="text-2xl leading-none">←</div>
   </div>
   <div class="border border-gray-500 rounded-lg px-4 py-2 text-center">
-    <div class="text-3xl">🖥️</div>
-    <div class="opacity-60 pt-1">UI</div>
+    <div class="text-3xl">🗄️</div>
+    <div class="opacity-60 pt-1">Serveur / DB</div>
   </div>
 </div>
 
-<div v-click class="text-center pt-4 opacity-80">
-Toute donnée affichée doit être connue du client → <span v-mark.orange>le client doit gérer le state</span>.<br>
-Mais le client n'est <b>pas</b> l'unique source de vérité du state.
-</div>
-
-<div v-click class="text-center pt-6 text-lg">
-La vraie question n'est pas <b>où c'est centralisé</b><br>
-mais <span v-mark.underline.orange>est-ce que la source de vérité est à l'endroit où le state est géré ou non</span> ?
-</div>
-
-<!--
-Le client n'est pas opposé au serveur niveau state : il les CONTIENT tous les deux. Donc « client vs serveur » est
-trompeur — à l'écran tout est state client. Le bon axe, c'est la PROPRIÉTÉ : du state local
-(que ton client possède, même global) vs du state serveur (une copie d'une donnée que tu ne
-possèdes pas).
--->
-
----
-layout: center
----
-
-# Deux states de <span v-mark.underline.orange>nature</span> différente
-
-<div class="grid grid-cols-2 gap-10 pt-4">
+<div class="grid grid-cols-2 gap-10 pt-16">
 <div v-click class="text-center">
 
 ### State local
@@ -90,14 +65,12 @@ Peut périmer à tout moment
 </div>
 </div>
 
-<div v-click class="pt-8 text-center opacity-80">
-Le state asynchrone demande une gestion particulière :<br>cache, déduplication, invalidation…
-</div>
-
 <!--
-Le point conceptuel le plus important du chapitre. State serveur = capture à un
-instant T d'une donnée qu'on ne possède pas. C'est ce qui justifie un outil dédié.
-TanStack Query n'est PAS qu'un wrapper réseau : c'est du server-state management.
+Le client centralise le state mais il ne le possède pas intégralement.
+
+On revient à la question : "où vit le state" ?
+
+Le state asynchrone demande à être géré différemment du state synchrone.
 -->
 
 ---
@@ -139,15 +112,8 @@ function TripList() {
 </div>
 </div>
 
-<div v-click class="pt-6 text-center opacity-80">
-Il nous faut un <span v-mark.underline.orange>outil dédié</span>,<br>pensé pour les spécificités du state asynchrone.
-</div>
-
 <!--
-Bridge vers SWR / TanStack Query. Les API natives et les state managers classiques savent
-STOCKER du state synchrone, pas gérer l'async : cache partagé, déduplication des requêtes en
-vol, refetch en fond, invalidation, retry, race conditions. Le hook « à la main » le montre :
-beaucoup de code pour un seul fetch, et il manque encore tout le reste. D'où un outil dédié.
+Problème de faire ça à la main : beaucoup de code fragile, et aucune synchro entre composants.
 -->
 
 ---
@@ -157,7 +123,6 @@ beaucoup de code pour un seul fetch, et il manque encore tout le reste. D'où un
 <div class="flex items-stretch justify-center gap-4 pt-10 text-sm">
 <div v-click class="border-2 border-orange-500 rounded-lg p-4 text-center w-56 bg-orange-400/10 flex flex-col justify-center">
 <div class="font-bold pb-2">Le gestionnaire de state async</div>
-<div class="opacity-80 leading-relaxed">gère la donnée quand elle arrive au client</div>
 <div class="text-xs opacity-50 pt-2">cache · dédup · revalidation · invalidation · gestion d'erreurs</div>
 </div>
 
@@ -168,19 +133,18 @@ beaucoup de code pour un seul fetch, et il manque encore tout le reste. D'où un
 </div>
 <div class="flex flex-col items-center pt-3">
 <div class="text-2xl leading-none">←</div>
-<div class="text-[11px] uppercase tracking-wider opacity-80 pt-1">une <b>Promise</b> de donnée</div>
+<div class="text-[11px] uppercase tracking-wider opacity-80 pt-1">Promesse</div>
 </div>
 </div>
 
 <div v-click class="border border-gray-600 rounded-lg p-4 text-center w-56 flex flex-col justify-center">
 <div class="font-bold pb-2">La stack réseau</div>
 <div class="opacity-70 leading-relaxed"><code>fetch</code> · <code>axios</code><br>client GraphQL · headers d'auth…</div>
-<div class="text-xs opacity-50 pt-2">au choix, l'outil s'en moque</div>
 </div>
 </div>
 
 <!--
-Tout est dans le titre, les libs d'état asynchrone demandent juste qu'on leur passe une fonction qui renvoie une promesse, elles ne gèrent pas cette fonction elles-mêmes.
+Les libs d'état asynchrone demandent juste qu'on leur passe une fonction qui renvoie une promesse, elles ne gèrent pas cette fonction elles-mêmes.
 -->
 
 ---
@@ -202,8 +166,8 @@ credit: Jon Meyer
   annee="2019"
   auteur="Shu Ding — Vercel"
   tagline="La donnée distante en un hook : on sert le cache, on revalide en fond."
-  probleme="Le fetch « à la main » (useEffect + useState) impose de réécrire loading, erreurs, cache et synchronisation entre composants à chaque requête. Beaucoup de code, autant d'occasions de se tromper."
-  creneau="Le state serveur simple, surtout en lecture : afficher de la donnée fraîche sans réécrire le cache et la revalidation à chaque fois. Minimaliste et quasi sans config."
+  probleme="La gestion manuelle de state asynchrone est pénible, peu maintenable et ne scale pas."
+  creneau="Le state serveur simple : afficher de la donnée fraîche facilement. Minimaliste et quasi sans config."
   :infos="[
     'Développé par Vercel, l\'équipe derrière Next.js — intégration naturelle avec.',
     'Très léger (~4 kB) : un seul hook, pas de Provider obligatoire, presque pas de config.',
@@ -212,11 +176,7 @@ credit: Jon Meyer
 />
 
 <!--
-Première slide de la sous-section, sur la même fiche que nuqs et TanStack Query. SWR est né
-chez Vercel (l'équipe Next.js) en 2019 — d'où son intégration naturelle avec le framework.
-Le nom est l'acronyme de stale-while-revalidate, le pattern de cache qu'il implémente. Sa
-promesse : la donnée distante en un seul hook, ultra-léger et quasi sans config. Sa contrepartie,
-qu'on verra au bilan : centré sur la lecture, il va moins loin que TanStack sur les mutations.
+SWR est la solution la plus minimaliste pour gérer du state serveur.
 -->
 
 ---
@@ -234,19 +194,17 @@ layout: center
 </div>
 
 <!--
-Poser le concept avant la lib. SWR = stale-while-revalidate, une stratégie d'invalidation de
+SWR = stale-while-revalidate, une stratégie d'invalidation de
 cache classique : on sert le cache, on revalide en fond, on remplace si besoin. C'est un
 standard HTTP (RFC 5861) — la librairie ne fait que l'implémenter côté React.
 -->
 
 ---
 
-# Un **hook** et c'est tout
+# `useSWR`
 
 <div class="grid grid-cols-[3fr_2fr] gap-10 items-center pt-5">
 <div>
-
-Un seul hook : <code>useSWR(clé, fetcher)</code>
 
 ```tsx
 import useSWR from 'swr'
@@ -256,70 +214,105 @@ const { data, error, isLoading } =
   useSWR('/api/trips', fetcher)
 ```
 
-<div class="space-y-2 pt-5 text-sm">
-<div v-click><code class="text-orange-400">data</code> — la donnée résolue, <code>undefined</code> tant qu'elle n'est pas là</div>
-<div v-click><code class="text-orange-400">error</code> — l'erreur si le <i>fetcher</i> a rejeté</div>
-<div v-click><code class="text-orange-400">isLoading</code> — vrai pendant le premier chargement, sans donnée en cache</div>
-</div>
-
 </div>
 <div>
 
-<div class="space-y-5">
-<div v-click>❌ pas de provider</div>
-<div v-click>❌ pas de store global</div>
-<div v-click>❌ pas de config</div>
-</div>
-
 </div>
 </div>
 
-<div v-click class="pt-10 text-center opacity-80">
-Nécessité de définir une fonction <i>fetcher</i> qui va chercher la donnée.
+<div class="flex items-center justify-center gap-4 pt-8 text-sm">
+
+<div class="flex flex-col gap-3">
+<div v-click="1" class="border border-gray-500 rounded-lg px-4 py-2 text-center">
+<div class="opacity-60 text-xs pb-1">Composant A</div>
+<code>useSWR('trips')</code>
+</div>
+<div v-click="5" class="border border-gray-500 rounded-lg px-4 py-2 text-center">
+<div class="opacity-60 text-xs pb-1">Composant B</div>
+<code>useSWR('trips')</code>
+</div>
+</div>
+
+<div class="flex flex-col items-center text-orange-400 px-1">
+<div v-click="2" class="text-2xl leading-none">→</div>
+<div v-click="5" class="text-[10px] uppercase tracking-wider opacity-80 pt-1">même clé</div>
+</div>
+
+<div v-click="2" class="border-2 border-orange-500 rounded-lg px-5 py-3 text-center bg-orange-400/10">
+<div class="font-bold pb-1">Cache SWR</div>
+<div class="text-xs opacity-70"><code>'trips'</code> → 1 entrée</div>
+</div>
+
+<div v-click="[3,4]" class="flex flex-col items-center text-orange-400 px-1">
+<div class="text-[10px] uppercase tracking-wider opacity-80 pb-1">1 seule requête</div>
+<div class="text-2xl leading-none">→</div>
+</div>
+
+<div v-click="[3,4]" class="border border-gray-500 rounded-lg px-4 py-3 text-center">
+<div class="text-3xl">🗄️</div>
+<div class="opacity-60 pt-1 text-xs">Serveur</div>
+</div>
+
 </div>
 
 <!--
-SWR n'est rien d'autre qu'un hook. Pas de Provider à monter, pas de
-store global à câbler, pas de config. On importe useSWR, on l'appelle dans le composant avec
-une clé + un fetcher, et il renvoie data / error / isLoading. Le fetcher est trivial :
-args ⇒ fetch(...).then(r ⇒ r.json()). On pense en dépendances de données, pas en appels.
+SWR = un seul hook. On passe une clé et une fonction de fetch.
+Trois valeurs de retours (de base) : data, error, isLoading.
+Les requêtes pour une clé sont dédupliquées puis stockées en cache.
 -->
 
 ---
 
-# La clé : le cœur de SWR
+# Clé de requête
 
 ```tsx
-// clé simple
 const fetcher = (url) => fetch(url).then(r => r.json())
-useSWR('/api/trips', fetcher)            // → fetch('/api/trips')
+useSWR('/api/trips', fetcher)
 
-// clé composite
 const getTrip = ([url, id]) => fetch(`${url}/${id}`).then(r => r.json())
-useSWR(['/api/trips', tripId], getTrip) // → fetch('/api/trips/1')
+useSWR(['/api/trips', tripId], getTrip)
 ```
 
-<div class="grid grid-cols-2 gap-8 pt-4 text-sm">
-<div v-click class="flex items-center justify-center text-center">
+<div class="grid grid-cols-[1fr_auto_1fr] items-start gap-6 pt-16 text-2xl font-mono">
 
-La clé **identifie** la donnée dans le cache.
-
-</div>
-<div v-click class="border-l-4 border-orange-500 pl-3">
-
-Même clé dans 10 composants ⇒ <span v-mark.orange>une seule requête</span>, un cache partagé (déduplication).
-
+<!-- colonne clé -->
+<div class="flex flex-col items-end gap-3">
+<div class="text-[11px] uppercase tracking-wider opacity-50 font-sans">clé</div>
+<div class="relative h-14 w-full flex items-center justify-end">
+<div v-click="[1,3]" class="absolute inset-0 flex items-center justify-end text-orange">'/api/trips'</div>
+<div v-click="3" class="absolute inset-0 flex items-center justify-end text-orange">['/api/trips', 1]</div>
 </div>
 </div>
 
-<div v-click class="pt-4 text-center text-sm opacity-60">
-Simplicité voulue : la clé n'est pas décorrélée du fetch.
+<!-- fetcher -->
+<div class="relative w-32 h-14 self-end">
+<div v-click="[2,3]" class="absolute inset-0 flex flex-col items-center justify-center text-orange">
+<div class="text-[11px] uppercase tracking-wider opacity-70 font-sans">fetcher</div>
+<div class="text-3xl leading-none">→</div>
+</div>
+<div v-click="4" class="absolute inset-0 flex flex-col items-center justify-center text-orange">
+<div class="text-[11px] uppercase tracking-wider opacity-70 font-sans">fetcher</div>
+<div class="text-3xl leading-none">→</div>
+</div>
+</div>
+
+<!-- colonne endpoint -->
+<div class="flex flex-col items-start gap-3">
+<div class="text-[11px] uppercase tracking-wider opacity-50 font-sans">endpoint</div>
+<div class="relative h-14 w-full flex items-center justify-start">
+<div v-click="[2,3]" class="absolute inset-0 flex items-center justify-start"><span class="opacity-50">GET&nbsp;</span>/api/trips</div>
+<div v-click="4" class="absolute inset-0 flex items-center justify-start"><span class="opacity-50">GET&nbsp;</span>/api/trips/1</div>
+</div>
+</div>
+
 </div>
 
 <!--
-Le concept central. La clé est passée en argument au fetcher, donc le plus souvent c'est l'URL
-elle-même. Avantage : pas de clé à maintenir à part. Et comme le cache est indexé par clé,
-plusieurs composants qui demandent la même clé partagent une seule requête.
+La clé est passée en argument au fetcher, donc le plus souvent c'est l'URL
+elle-même. Avantage : pas de clé à maintenir à part.
+Possibilité d'avoir des clés composites avec un tableau : tous les arguments sont passés au fetcher,
+qui reconstruit l'URL (ici ['/api/trips', 1] → /api/trips/1). Possibilité d'arguments dynamiques.
+La clé sert aussi d'identifiant de cache : deux composants avec la même clé = une seule requête, dédupliquée.
 -->
 
 ---
@@ -342,28 +335,11 @@ useSWR('/api/me', fetcher)
 ```
 
 </div>
-<div>
-
-<v-clicks>
-
-- le *fetcher* encapsule **la stack réseau** — `fetch`, `axios`, client GraphQL, headers d'auth…
-- on le définit **une fois** et on le réutilise partout
-- la seule partie dynamique : <span v-mark.orange>la clé</span>
-
-</v-clicks>
-
-</div>
-</div>
-
-<div v-click class="pt-8 text-center text-sm opacity-70">
-Flexibilité : il est toujours possible de <b>surcharger</b> le fetcher par défaut en passant une autre fonction au cas par cas si nécessaire.
 </div>
 
 <!--
-Comme la clé porte toute la spécificité de la requête, le
-fetcher, lui, est générique. Un projet définit UN fetcher (fetch nu, axios, un client GraphQL,
-avec ses headers d'auth, sa gestion d'erreurs…) et le réutilise partout — voire le pose en
-global via SWRConfig. La seule chose qui change d'un appel à l'autre, c'est la clé.
+Fetcher = comment on va chercher la donnée, donc plutôt générique. On en a un par app en général.
+On peut le déterminer dans le provider de config (et surcharger dans le hook au besoin).
 -->
 
 ---
@@ -380,15 +356,6 @@ function TripList() {
 }
 ```
 
-<div v-click class="pt-6 text-center opacity-80">
-La bonne pratique : <b>wrapper chaque appel</b> dans un hook.<br>
-Le composant déclare la donnée dont il <b>dépend</b>, pas comment l'aller chercher.
-</div>
-
-<div v-click class="pt-6 text-center text-sm opacity-70">
-Bonus : la clé est définie à <b>un seul endroit</b> → <span v-mark.orange>déduplication garantie</span>, plus de typo dans la clé qui casse le partage du cache.
-</div>
-
 <!--
 Bonne pratique recommandée : un hook custom par ressource. Le composant ne voit plus ni l'URL
 ni le fetcher — juste useTrips(). La dépendance de données devient explicite et réutilisable.
@@ -398,78 +365,91 @@ ni le fetcher — juste useTrips(). La dépendance de données devient explicite
 
 # Requêtes conditionnelles & dépendantes
 
-<div class="text-center opacity-70 text-sm pb-2">
-Les <b>rules of hooks</b> interdisent d'appeler <code>useSWR</code> conditionnellement → c'est la <b>clé</b> qui porte la condition.
-</div>
-
 ```tsx
-// clé null ⇒ pas de requête
-useSWR(userId ? `/api/users/${userId}` : null, fetcher)
-
-// clé sous forme de fonction : si elle throw ou renvoie null,
-// la requête est sautée ⇒ requêtes dépendantes
-const { data: me } = useSWR('/api/me', fetcher)
-useSWR(() => `/api/projects/${me.id}`, fetcher)
+// ❌ Rules of Hooks : impossible d'appeler useSWR dans un if
+if (userId) {
+  const { data } = useSWR(`/api/users/${userId}`, fetcher)
+}
 ```
 
-<div class="grid grid-cols-2 gap-8 pt-6 text-sm">
-<div v-click><b>Conditionnelle</b> — clé <code>null</code> = aucun appel.</div>
-<div v-click><b>Dépendante</b> — la 2ᵉ attend la donnée de la 1ʳᵉ (l'accès à <code>me.id</code> throw tant que <code>me</code> est absent).</div>
+<div class="flex items-center justify-center gap-4 pt-10 text-sm">
+
+<div v-click="1" class="border border-gray-500 rounded-lg px-4 py-3 text-center">
+<div class="opacity-60 text-xs pb-2">Composant</div>
+<div class="relative">
+<code v-click="[1,2]" class="whitespace-nowrap">useSWR(userId ? `/users/${userId}` : null)</code>
+<code v-click="[2,3]" class="absolute inset-0 whitespace-nowrap text-orange-400">useSWR(null)</code>
+<code v-click="[3,4]" class="absolute inset-0 whitespace-nowrap">useSWR(() => `/projects/${me.id}`)</code>
+<code v-click="4" class="absolute inset-0 whitespace-nowrap text-orange-400">useSWR(💣)</code>
+</div>
+</div>
+
+<div class="relative flex flex-col items-center px-1 text-gray-600">
+<div v-click="[2,3]" class="text-2xl leading-none line-through decoration-2">→</div>
+<div v-click="4" class="absolute inset-0 flex items-center justify-center text-2xl leading-none line-through decoration-2">→</div>
+</div>
+
+<div class="relative">
+<div v-click="[2,3]" class="border-2 border-gray-600 rounded-lg px-5 py-3 text-center opacity-40 flex flex-col justify-center">
+<div class="font-bold pb-1">SWR</div>
+<div class="text-xs">non appelé — 0 requête</div>
+</div>
+<div v-click="4" class="absolute inset-0 border-2 border-gray-600 rounded-lg px-5 py-3 text-center opacity-40 flex flex-col justify-center">
+<div class="font-bold pb-1">SWR</div>
+<div class="text-xs">non appelé — 0 requête</div>
+</div>
+</div>
+
 </div>
 
 <!--
-Deux patterns gratuits via la clé. Si la clé vaut null, aucune requête (query conditionnelle). Impossible à faire sinon sans briser les rules of hooks.
-Si la clé est une fonction qui throw ou renvoie null, l'exception est attrapée et la requête
-n'est pas exécutée — c'est exactement ce qui permet d'enchaîner des requêtes dépendantes.
+Rules of hooks, on peut pas appeler useSWR conditionnellement (dans un if).
+La clé permet ce pattern en étant définie dynamiquement : on passe l'expression directement en clé.
+Ici userId ? url : null — quand userId est défini la clé résout en URL et la requête part ;
+quand il est undefined la clé résout en null et SWR n'exécute rien.
+Même mécanisme pour les requêtes dépendantes : une clé sous forme de fonction qui throw ou
+renvoie null (ex. () => `/projects/${me.id}` tant que me est absent) est simplement sautée.
 -->
 
 ---
 
 # Patterns avancés
 
-<div class="grid grid-cols-2 grid-rows-2 gap-4 pt-4 text-sm h-[400px]">
+<div class="grid grid-cols-2 grid-rows-2 gap-4 pt-4 text-sm">
 
-<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col justify-between">
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-center">
 <div class="font-bold pb-2"><code>isLoading</code> vs <code>isValidating</code></div>
 
 ```ts
 const { isLoading, isValidating } = useSWR(key, f)
 ```
 
-<div class="text-xs opacity-60 pt-2"><code>isLoading</code> = 1er fetch · <code>isValidating</code> = toute revalidation en fond.</div>
-
 </div>
 
-<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col justify-between">
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-center">
 <div class="font-bold pb-2"><code>keepPreviousData</code></div>
 
 ```ts
 useSWR(`/search?q=${q}`, f, { keepPreviousData: true })
 ```
 
-<div class="text-xs opacity-60 pt-2">Garde l'ancien résultat pendant que la clé change — pas de flash (ex. recherche).</div>
-
 </div>
 
-<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col justify-between">
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-center">
 <div class="font-bold pb-2">Re-render fin</div>
 
 ```ts
 const { data } = useSWR(key, f)
 ```
 
-<div class="text-xs opacity-60 pt-2">Re-render seulement sur les valeurs lues — si on ne lit que <code>data</code>, un changement d'<code>error</code> ne re-rend pas.</div>
-
 </div>
 
-<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col justify-between">
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-center">
 <div class="font-bold pb-2"><code>mutate</code> — écrire dans le cache</div>
 
 ```ts
 const { data, mutate } = useSWR('/api/trips', f)
 ```
-
-<div class="text-xs opacity-60 pt-2">Met à jour le cache à la main — revalidation ou mise à jour optimiste.</div>
 
 </div>
 
@@ -523,13 +503,12 @@ credit: Wolfgang Weiser
   annee="2020"
   auteur="Tanner Linsley — TanStack"
   tagline="Le state serveur résolu : cache, déduplication, revalidation et invalidation, prêts à l'emploi."
-  probleme="Le fetch « à la main » (useEffect + useState) impose de réécrire loading, erreurs, cache et synchronisation entre composants à chaque requête. Beaucoup de code, autant d'occasions de se tromper."
+  probleme="Problème de gestion du state asynchrone à l'échelle dans le cycle de vie complet d'une application : mutations, invalidations..."
   creneau="Tout state serveur : la donnée asynchrone qu'on ne possède pas, quelle que soit la stack réseau (REST, GraphQL, fonctions RPC…)."
   :infos="[
     'Né React Query en 2020, devenu LE standard du state serveur côté React.',
     'Refactoré en un noyau agnostique + adaptateurs : React, Vue, Svelte, Solid, Angular.',
-    'D\'où le rebrand TanStack — une famille de libs headless : Query, Table, Router, Form, Virtual…',
-    'Va plus loin que SWR : mutations, invalidation ciblée par clé, et des Devtools dédiés.',
+    'Plus complet que SWR : mutations, invalidation ciblée par clé, et des Devtools dédiés.',
   ]"
 />
 
@@ -554,169 +533,158 @@ const { data, isPending, isError } = useQuery({
 ```
 
 <div v-click class="pt-3 text-center text-sm opacity-80">
-Même principe que SWR : une <b>clé</b> + une <b>fonction async</b>.<br>
-Différence : ici la clé et la fonction sont <span v-mark.orange>découplées</span> — la clé n'est pas passée au <code>queryFn</code>.
-</div>
-
-<div class="grid grid-cols-2 gap-8 pt-4">
-<div v-click class="opacity-80 text-sm">
-
-On dit juste **comment récupérer** la donnée. TanStack gère tout l'entre-deux : fraîcheur, cohérence, dédup.
-
-</div>
-<div v-click class="border-l-4 border-orange-500 pl-3 text-sm">
-
-`queryFn` renvoie **une promesse** — pas forcément un appel réseau. D'où : librairie de **state asynchrone**, pas de fetching.
-
-</div>
+Différence : la clé et la fonction sont <span v-mark.orange>découplées</span>
 </div>
 
 <!--
-Tout part de useQuery : une queryKey + une queryFn. La magie c'est l'abstraction de
-ce qu'il y a entre "je veux la donnée" et "je l'ai". TSQ ne fetch pas (on garde fetch/axios).
+Comme SWR, sauf que la clé n'est pas passée à la fonction de query, les deux ne sont plus strictement corrélées, même si dans les faits il y a toujours une corrélation. Plus flexible.
 -->
 
 ---
 
-# Etats de la requête
+# Invalidation hiérarchique
 
-```tsx
-function TripList() {
-  if (isPending) return <Skeleton />        // 1er fetch
-  if (isError)   return <Error />           // échec
-  return <ul>{data.map(...)}</ul>           // succès
-}
-```
+<!-- panneau « cache » : chaque état d'invalidation se peint par-dessus le précédent (un seul visible à la fois) -->
+<div class="relative p-4 h-[250px]">
 
-<div class="grid grid-cols-2 gap-8 pt-4 text-sm">
-<div v-click class="border border-gray-600 rounded p-3">
-
-**`isPending`** — premier chargement
-<div class="opacity-60">→ skeleton</div>
-
+<!-- état de base : le cache, toujours visible sous les couches suivantes -->
+<div class="absolute inset-0 p-4 pt-20">
+<div class="grid grid-cols-5 gap-2 text-[11px] font-mono">
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Liste</div>
+<div class="leading-tight break-words">['trips']</div>
 </div>
-<div v-click class="border border-gray-600 rounded p-3">
-
-**`isFetching`** — inclut les refetch
-<div class="opacity-60">→ garder l'ancienne donnée + indicateur</div>
-
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Voyage 1</div>
+<div class="leading-tight break-words">['trips', 1]</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Budget V1</div>
+<div class="leading-tight break-words">['trips', 1, 'budget']</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Voyage 2</div>
+<div class="leading-tight break-words">['trips', 2]</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Profil</div>
+<div class="leading-tight break-words">['users', 'me']</div>
 </div>
 </div>
+</div>
 
-<div v-click class="pt-4 text-center">
-Zéro <code>useState</code> de loading/error. <span v-mark.orange>C'est un standard de l'industrie.</span>
+<!-- click 1 — globale : tout est stale -->
+<div v-click class="absolute inset-0 p-4 pt-20" style="background-color:#ffffff">
+<div class="grid grid-cols-5 gap-2 text-[11px] font-mono">
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips']</div>
+</div>
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips', 1]</div>
+</div>
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips', 1, 'budget']</div>
+</div>
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips', 2]</div>
+</div>
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['users', 'me']</div>
+</div>
+</div>
+<div class="text-center font-mono text-orange pt-5">invalidateQueries()</div>
+</div>
+
+<!-- click 2 — par domaine : tout le sous-arbre ['trips'] -->
+<div v-click class="absolute inset-0 p-4 pt-20" style="background-color:#ffffff">
+<div class="grid grid-cols-5 gap-2 text-[11px] font-mono">
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips']</div>
+</div>
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips', 1]</div>
+</div>
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips', 1, 'budget']</div>
+</div>
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips', 2]</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Profil</div>
+<div class="leading-tight break-words">['users', 'me']</div>
+</div>
+</div>
+<div class="text-center font-mono text-orange pt-5">invalidateQueries({ queryKey: ['trips'] })</div>
+</div>
+
+<!-- click 3 — ciblée : le voyage 1 et ses enfants -->
+<div v-click class="absolute inset-0 p-4 pt-20" style="background-color:#ffffff">
+<div class="grid grid-cols-5 gap-2 text-[11px] font-mono">
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Liste</div>
+<div class="leading-tight break-words">['trips']</div>
+</div>
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips', 1]</div>
+</div>
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips', 1, 'budget']</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Voyage 2</div>
+<div class="leading-tight break-words">['trips', 2]</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Profil</div>
+<div class="leading-tight break-words">['users', 'me']</div>
+</div>
+</div>
+<div class="text-center font-mono text-orange pt-5">invalidateQueries({ queryKey: ['trips', 1] })</div>
+</div>
+
+<!-- click 4 — exacte : uniquement la liste, sans son sous-arbre -->
+<div v-click class="absolute inset-0 p-4 pt-20" style="background-color:#ffffff">
+<div class="grid grid-cols-5 gap-2 text-[11px] font-mono">
+<div class="border border-orange-400/40 rounded-md p-2 opacity-40">
+<div class="font-sans text-[9px] uppercase tracking-wide text-orange-400 pb-1">stale</div>
+<div class="leading-tight break-words line-through">['trips']</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Voyage 1</div>
+<div class="leading-tight break-words">['trips', 1]</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Budget V1</div>
+<div class="leading-tight break-words">['trips', 1, 'budget']</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Voyage 2</div>
+<div class="leading-tight break-words">['trips', 2]</div>
+</div>
+<div class="border border-gray-500 rounded-md p-2">
+<div class="font-sans text-[9px] uppercase tracking-wide opacity-50 pb-1">Profil</div>
+<div class="leading-tight break-words">['users', 'me']</div>
+</div>
+</div>
+<div class="text-center font-mono text-orange pt-5">invalidateQueries({ queryKey: ['trips'], exact: true })</div>
+</div>
+
 </div>
 
 <!--
-Les états retournés automatiquement = la moitié de la valeur. Distinguer isPending
-(1er fetch, skeleton) de isFetching (revalidation, on peut laisser la donnée périmée).
--->
-
----
-
-# La `queryKey` : identifiant + hiérarchie
-
-<div class="grid grid-cols-2 gap-10 items-center pt-4">
-<div>
-
-```ts
-['trips']                 // toute la racine
-['trips', 'list']         // la liste
-['trips', tripId]         // un item particulier
-```
-
-<div v-click="5" class="pt-5">
-
-```tsx
-<QueryClientProvider client={queryClient}>
-  <App />
-</QueryClientProvider>
-```
-
-</div>
-
-</div>
-<div class="space-y-5 text-sm">
-
-<div>
-La clé est l'<b>identifiant unique</b> d'une query : c'est par elle que TanStack retrouve, partage et invalide la donnée dans le cache.
-</div>
-
-<div v-click="4" class="opacity-75">
-Clé <b>dynamique</b> = comme un tableau de dépendances : si elle change → refetch automatique.
-</div>
-
-<div v-click="5" class="opacity-70 border-l-4 border-orange-500 pl-3">
-Un seul <code>QueryClientProvider</code> en haut de l'app → cache partagé par tous les consommateurs d'une même clé.
-</div>
-
-</div>
-</div>
-
-<!--
-La queryKey est centrale : elle permet de retrouver la donnée de façon décentralisée
-dans toute l'app, et d'invalider hiérarchiquement. Si la query dépend d'une variable,
-cette variable DOIT être dans la clé. Le QueryClientProvider qui wrappe l'app héberge le
-cache : tous les useQuery en dessous, où qu'ils soient, partagent ce cache par leur clé.
--->
-
----
-
-# Invalidation manuelle
-
-<div class="text-sm opacity-70 pb-6">
-Poossibilité de manuellement marquer la donnée du cache comme <b>périmée</b>.
-</div>
-
-<div class="grid grid-cols-2 gap-8 items-start">
-<div>
-
-```ts
-// une query précise
-queryClient.invalidateQueries({
-  queryKey: ['trips', tripId]
-})
-```
-
-<div class="text-sm opacity-75 pt-4">
-Cible <b>exactement</b> cette clé → seule cette query est invalidée.
-</div>
-
-</div>
-<div v-click>
-
-```ts
-// un préfixe → tout le sous-arbre
-queryClient.invalidateQueries({
-  queryKey: ['trips']
-})
-```
-
-<div class="text-sm opacity-75 pt-4">
-<code>['trips']</code> invalide <b>aussi</b> <code>['trips', 'list']</code> et <code>['trips', tripId]</code>.
-</div>
-
-</div>
-</div>
-
-<div v-click class="pt-5 text-center text-sm opacity-70">
-Les clés forment une <b>arborescence hiérarchique</b> : permet une <span v-mark.orange>invalidation fine</span>.
-</div>
-
-<div v-click class="flex flex-col items-center gap-1 pt-5 text-sm">
-<div>Clé invalidée</div>
-<div class="text-orange-400 text-xl leading-none">↓</div>
-<div><b>TanStack refetch les queries des composants montés</b></div>
-<div class="text-orange-400 text-xl leading-none">↓</div>
-<div>l'UI se resynchronise toute seule</div>
-</div>
-
-<!--
-D'abord le cas normal : on invalide une clé précise — ['trips', tripId] ne touche que cette query.
-Puis le twist : la clé est un PRÉFIXE. invalidateQueries({ queryKey: ['trips'] }) marque périmé
-tout le sous-arbre 'trips' — la liste, chaque détail. C'est l'invalidation hiérarchique : on vise
-large (toute la ressource) ou précis (un seul id). Seules les queries actuellement montées sont
-refetchées ; les autres le seront au prochain montage.
+Clé complexe = invalidation fine. Tout est possible, on peut invalider tout le store ou que certaines parties, jusqu'à certaines requêtes uniques. exact : true permet d'invalider finement une requête de haut niveau.
 -->
 
 ---
@@ -756,33 +724,16 @@ refetchées ; les autres le seront au prochain montage.
 
 </div>
 
-<div class="grid grid-cols-2 gap-8 pt-6 text-sm">
-<div v-click="6" class="opacity-80">
-Par défaut <code>staleTime = 0</code> : tout est périmé d'office (l'app ne possède pas la donnée).
-</div>
-<div v-click="7" class="border-l-4 border-orange-500 pl-3">
-Périmé ≠ refetché. La donnée stale est <b>servie depuis le cache</b> et rafraîchie à <span v-mark.orange>certaines conditions</span>.
-</div>
-</div>
-
-<div v-click="8" class="pt-5 text-center text-sm opacity-80">
-Régler le <code>staleTime</code> est une affaire de <span v-mark.orange>stratégie</span> : selon la fraîcheur dont la donnée a besoin.
-</div>
-
 <!--
-Le modèle mental clé. Donnée toujours rendue depuis le cache (dispo), refetch sous
-conditions. Bien distinguer "périmé" (éligible au refetch) de "refetché". Ne pas
-confondre staleTime avec gcTime (suppression quand plus aucun consommateur).
-Différentes stratégies de staleTime: 2 minutes pour ne pas spammer, jamais si la donnée reste stable, etc.
+Cycle de vie de la donnée dans TSQ.
+Staletime = 0 par défaut (la donnée est toujours stale)
+Stale n'implique pas un refetch immédiat, éligible à un refetch lors du refocus, reconnexion, remount.
+Régler le stale time est une affaire de stratégie.
 -->
 
 ---
 
 # `useMutation`
-
-<div class="text-sm opacity-70 pb-4">
-<code>useQuery</code> est au <code>GET</code> ce que <code>useMutation</code> est au <code>POST</code> / <code>PUT</code> / <code>DELETE</code>.
-</div>
 
 <div class="grid grid-cols-[5fr_4fr] gap-8 items-center pt-2">
 <div>
@@ -797,101 +748,87 @@ const { mutate } = useMutation({
 ```
 
 </div>
-<div class="space-y-3 text-sm">
-
-<div v-click>
-Ne s'occupe pas d'<b>effectuer</b> la mutation, il l'<span v-mark.orange>orchestre</span> — comme <code>useQuery</code>.
 </div>
 
-<div v-click>
-Pas d'exécution automatique : le callback est renvoyé <b>décoré</b> dans <code>mutate</code>.
+<div v-click class="pt-6">
+<div class="opacity-50 uppercase text-xs tracking-widest pb-3">Cycle de vie des callbacks</div>
+<div class="flex items-center justify-center gap-2 text-xs">
+
+<!-- déclenchement -->
+<div class="border border-gray-600 rounded-lg px-3 py-2 text-center">
+<code>mutate()</code>
+<div class="opacity-50 text-[10px]">appel</div>
+</div>
+<span class="text-orange text-lg leading-none">→</span>
+
+<!-- onMutate -->
+<div class="border border-orange-400 rounded-lg px-3 py-2 text-center">
+<code class="text-orange">onMutate</code>
+<div class="opacity-50 text-[10px]">avant</div>
+</div>
+<span class="text-orange text-lg leading-none">→</span>
+
+<!-- mutationFn -->
+<div class="border border-gray-600 rounded-lg px-3 py-2 text-center">
+<code>mutationFn</code>
+<div class="opacity-50 text-[10px]">requête</div>
+</div>
+<span class="text-orange text-lg leading-none">→</span>
+
+<!-- fourche succès / échec -->
+<div class="flex flex-col gap-2">
+<div class="border border-orange-400 rounded-lg px-3 py-1.5 text-center">
+<code class="text-orange">onSuccess</code> <span class="opacity-50 text-[10px]">réussite</span>
+</div>
+<div class="border border-orange-400 rounded-lg px-3 py-1.5 text-center">
+<code class="text-orange">onError</code> <span class="opacity-50 text-[10px]">échec</span>
+</div>
+</div>
+<span class="text-orange text-lg leading-none">→</span>
+
+<!-- onSettled -->
+<div class="border border-orange-400 rounded-lg px-3 py-2 text-center">
+<code class="text-orange">onSettled</code>
+<div class="opacity-50 text-[10px]">toujours</div>
 </div>
 
-<div v-click>
-Les <b>états</b> sont reçus automatiquement (<code>pending</code>, <code>error</code>…).
-</div>
-
-</div>
-</div>
-
-<div v-click class="pt-5">
-<div class="opacity-50 uppercase text-xs tracking-widest pb-2">Callbacks de cycle de vie</div>
-<div class="grid grid-cols-4 gap-3 text-xs">
-<div class="border border-gray-600 rounded-lg p-3">
-<code class="text-orange-400">onMutate(vars)</code>
-<div class="opacity-70 pt-1"><b>avant</b> l'appel : mise à jour optimiste, prépare le rollback.</div>
-</div>
-<div class="border border-gray-600 rounded-lg p-3">
-<code class="text-orange-400">onSuccess(data, vars, ctx)</code>
-<div class="opacity-70 pt-1">la mutation a <b>réussi</b> : invalider, rediriger…</div>
-</div>
-<div class="border border-gray-600 rounded-lg p-3">
-<code class="text-orange-400">onError(err, vars, ctx)</code>
-<div class="opacity-70 pt-1">elle a <b>échoué</b> : rollback, toast d'erreur.</div>
-</div>
-<div class="border border-gray-600 rounded-lg p-3">
-<code class="text-orange-400">onSettled(data, err, vars, ctx)</code>
-<div class="opacity-70 pt-1"><b>dans tous les cas</b>, succès ou échec.</div>
-</div>
 </div>
 </div>
 
 <!--
-Important, useMutation ne fait pas tourner la mutation, il l'améliore juste mais nous renvoie une fonction qu'on doit appeler quand on veut (useEffect, handler, etc.)
-Les quatre callbacks suivent le cycle de vie : onMutate (avant) → onSuccess / onError → onSettled (toujours). Bien souligner que ces callbacks sont très puissants pour exécuter du code au bon moment (invalider une query en cas de succès)
+useMutation est l'équivalent de useQuery pour le POST/PUT/DELETE (action sur le serveur). Ca ne fait pas tourner la fonction,
+mais ça la renvoie décorée.
 -->
 
 ---
 
-# Les `DevTools`
+# DevTools
 
-<div class="text-sm opacity-70 pb-6">
-Une fenêtre sur le cache, en direct — sans rien instrumenter.
-</div>
-
-<div class="grid grid-cols-3 gap-4 text-sm">
-<div v-click class="border border-gray-600 rounded-lg p-4">
-<div class="font-bold pb-1">🗂️ Le cache</div>
-<div class="opacity-70">Toutes les <code>queryKey</code> présentes et leur donnée.</div>
-</div>
-<div v-click class="border border-gray-600 rounded-lg p-4">
-<div class="font-bold pb-1">🚦 Les états</div>
-<div class="opacity-70"><code>fresh</code> · <code>stale</code> · <code>fetching</code> · <code>inactive</code>, en temps réel.</div>
-</div>
-<div v-click class="border border-gray-600 rounded-lg p-4">
-<div class="font-bold pb-1">🔄 Les refetch</div>
-<div class="opacity-70">Chaque revalidation et invalidation, au moment où elle se produit.</div>
-</div>
-</div>
-
-<div v-click class="pt-8 text-center opacity-80">
-On <span v-mark.orange>voit</span> le state serveur vivre — un atout décisif pour déboguer.
-</div>
+<img :src="'/tanstack-query-devtools.png'" class="max-h-80 mx-auto shadow-lg mt-10" />
 
 <!--
-Les devtools sont une part majeure de l'adoption de TSQ : on rend visible un state habituellement
-invisible. À l'écran : ouvrir le panneau, montrer une clé passer de fresh à stale, déclencher une
-mutation et voir l'invalidation + le refetch en direct. C'est ce qui « vend » l'outil en démo.
+Feature majeure de TSQ
+Permet d'inspecter le cache, l'état de chaque requête, voir l'invalidation.
+On peut agir dessus.
 -->
 
 ---
 
 # Patterns avancés
 
-<div class="grid grid-cols-2 grid-rows-2 gap-4 pt-4 text-sm h-[400px]">
+<div class="grid grid-cols-2 grid-rows-2 gap-4 pt-4 text-sm">
 
-<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col justify-between">
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-center">
 <div class="font-bold pb-2">Mise à jour optimiste</div>
 
 ```ts
-useMutation({ mutationFn, onMutate, onError, onSettled })
+useMutation({ mutationFn, onMutate, onError,
+ onSettled })
 ```
-
-<div class="text-xs opacity-60 pt-2"><code>onMutate</code> applique le changement avant la réponse, <code>onError</code> rollback — UI instantanée.</div>
 
 </div>
 
-<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col justify-between">
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-center">
 <div class="font-bold pb-2"><code>placeholderData</code> · <code>keepPreviousData</code></div>
 
 ```ts
@@ -899,11 +836,9 @@ useQuery({ queryKey: ['trips', page], queryFn,
   placeholderData: keepPreviousData })
 ```
 
-<div class="text-xs opacity-60 pt-2">Garde l'ancienne page affichée pendant le fetch de la suivante — pagination sans flash.</div>
-
 </div>
 
-<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col justify-between">
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-center">
 <div class="font-bold pb-2"><code>select</code> · <code>prefetchQuery</code></div>
 
 ```ts
@@ -911,28 +846,25 @@ useQuery({ queryKey, queryFn, select: d => d.trips })
 queryClient.prefetchQuery({ queryKey, queryFn })
 ```
 
-<div class="text-xs opacity-60 pt-2"><code>select</code> = dérive/filtre sans re-render inutile · <code>prefetch</code> = charger avant le besoin (hover, route).</div>
-
 </div>
 
-<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col justify-between">
+<div v-click class="border border-gray-600 rounded-lg p-4 flex flex-col items-center justify-center text-center">
 <div class="font-bold pb-2"><code>useInfiniteQuery</code></div>
 
 ```ts
-useInfiniteQuery({ queryKey, queryFn, getNextPageParam })
+useInfiniteQuery({ queryKey, queryFn, 
+getNextPageParam })
 ```
-
-<div class="text-xs opacity-60 pt-2">Pagination « charger plus » / scroll infini, pages et curseurs gérés pour nous.</div>
 
 </div>
 
 </div>
 
 <!--
-Patterns qui montrent l'étendue de TSQ vs SWR : mise à jour optimiste complète (onMutate/onError/
-onSettled avec rollback), placeholderData/keepPreviousData pour la pagination sans flash, select
-pour dériver la donnée sans re-render, prefetchQuery pour précharger (hover/route), et
-useInfiniteQuery pour le scroll infini. C'est la richesse d'API qui justifie le poids.
+ * Optimistic rendering with mutations (onMutate)
+ * keepPreviousData : garde la donnée si la query change tant que la nouvelle donnée n'est pas arrivée
+ * Select (ne re-render que à une partie de la donnée) / prefetchQuery : prefetch les données
+ * useInfiniteQuery : permet de faire du chargement infini.
 -->
 
 ---
@@ -972,10 +904,7 @@ Slide de clôture de la partie TanStack Query. Renvoyer vers la ressource vidéo
 />
 
 <!--
-Bilan TanStack Query sur la même grille que SWR. Forces : couvre tout le cycle (queries +
-mutations), écosystème massif, devtools, perfs et montée en charge excellentes. Contreparties :
-plus lourd que SWR (13,3 kB) et une vraie courbe d'apprentissage (clés, staleTime, invalidation).
-C'est le prix de la richesse — et ça reste LE standard du state serveur en React.
+Bilan : standard de la gestion de state serveur. Enormément de possibilités et d'options, très puissant.
 -->
 
 ---
